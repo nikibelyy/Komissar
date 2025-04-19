@@ -1,0 +1,129 @@
+
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Аварийный комиссар Воронеж</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', sans-serif;
+      background: #f9f9f9;
+      color: #333;
+    }
+    header {
+      background: #222;
+      color: #fff;
+      padding: 40px 20px;
+      text-align: center;
+    }
+    header h1 {
+      margin: 0;
+      font-size: 2.5em;
+    }
+    .container {
+      max-width: 600px;
+      margin: 40px auto;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+    }
+    .container h2 {
+      margin-top: 0;
+    }
+    input, textarea {
+      width: 100%;
+      padding: 12px;
+      margin: 10px 0;
+      border: 1px solid #ccc;
+      border-radius: 6px;
+    }
+    button {
+      background: #007bff;
+      color: white;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      font-size: 1em;
+      width: 100%;
+    }
+    button:hover {
+      background: #0056b3;
+    }
+    .info {
+      margin-top: 30px;
+      text-align: center;
+    }
+    a.call-button {
+      display: inline-block;
+      margin-top: 20px;
+      padding: 10px 20px;
+      background: #28a745;
+      color: white;
+      border-radius: 6px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>Вызов аварийного комиссара</h1>
+  <p>г. Воронеж, ул. Антонова-Овсиенко, д. 15А, корп. 1</p>
+  <p>Тел: <a href="tel:+79100401116" style="color: #00d4ff;">+7 (910) 040-11-16</a></p>
+</header>
+
+<div class="container">
+  <h2>Оставьте заявку</h2>
+  <form id="tgForm">
+    <input type="text" name="name" placeholder="Ваше имя" required />
+    <input type="tel" name="phone" placeholder="Телефон" required />
+    <textarea name="message" rows="4" placeholder="Опишите ситуацию" required></textarea>
+    <button type="submit">Отправить</button>
+  </form>
+</div>
+
+<div class="info">
+  <p>Работаем 24/7</p>
+  <a class="call-button" href="tel:+79100401116">Позвонить комиссару</a>
+</div>
+
+<script>
+  const TOKEN = '7875147914:AAGEAZ1Bxg82z54OeSO4Q_zGaeHWeG1xJ1o';
+  const CHAT_ID = '7875147914';
+  const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+
+  document.getElementById('tgForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+
+    let name = this.name.value;
+    let phone = this.phone.value;
+    let message = this.message.value;
+
+    let text = `Новая заявка на вызов аварийного комиссара:\n\nИмя: ${name}\nТелефон: ${phone}\nСообщение: ${message}`;
+
+    fetch(URI_API, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        chat_id: CHAT_ID,
+        text: text
+      })
+    }).then(() => {
+      alert('Заявка отправлена! Мы скоро свяжемся с вами.');
+      this.reset();
+    }).catch(err => {
+      alert('Ошибка отправки. Попробуйте ещё раз.');
+      console.error(err);
+    });
+  });
+</script>
+
+</body>
+</html>

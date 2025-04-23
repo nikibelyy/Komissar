@@ -6,12 +6,6 @@
   <title>Запись на осмотр</title>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
       font-family: 'Inter', sans-serif;
       background: linear-gradient(135deg, #ece9e6, #ffffff);
@@ -21,7 +15,6 @@
       justify-content: center;
       padding: 40px 20px;
     }
-
     .form-container {
       background: #fff;
       border-radius: 16px;
@@ -30,14 +23,12 @@
       width: 100%;
       padding: 40px;
     }
-
     h2 {
       text-align: center;
       color: #1a1a1a;
       margin-bottom: 30px;
       font-weight: 600;
     }
-
     label {
       display: block;
       margin-bottom: 8px;
@@ -45,10 +36,7 @@
       color: #333;
       font-weight: 500;
     }
-
-    input,
-    textarea,
-    select {
+    input, textarea, select {
       width: 100%;
       padding: 12px;
       margin-bottom: 20px;
@@ -57,17 +45,13 @@
       font-size: 14px;
       transition: border 0.2s ease;
     }
-
-    input:focus,
-    textarea:focus {
+    input:focus, textarea:focus {
       outline: none;
       border-color: #4a90e2;
     }
-
     textarea {
       resize: vertical;
     }
-
     button {
       background-color: #4a90e2;
       color: white;
@@ -80,45 +64,60 @@
       cursor: pointer;
       transition: background 0.3s ease;
     }
-
     button:hover {
       background-color: #3b7dd8;
-    }
-
-    @media (max-width: 600px) {
-      .form-container {
-        padding: 25px;
-      }
     }
   </style>
 </head>
 <body>
   <div class="form-container">
     <h2>Запись на осмотр после ДТП</h2>
-    <form>
+    <form id="inspection-form">
       <label for="name">ФИО</label>
-      <input type="text" id="name" name="name" required />
+      <input type="text" id="name" name="name" required>
 
       <label for="phone">Телефон</label>
-      <input type="tel" id="phone" name="phone" required />
+      <input type="tel" id="phone" name="phone" required>
 
       <label for="email">Электронная почта</label>
-      <input type="email" id="email" name="email" />
+      <input type="email" id="email" name="email">
 
       <label for="car">Марка и модель автомобиля</label>
-      <input type="text" id="car" name="car" required />
+      <input type="text" id="car" name="car" required>
 
       <label for="year">Год выпуска</label>
-      <input type="number" id="year" name="year" min="1980" max="2025" />
+      <input type="number" id="year" name="year" min="1980" max="2025">
 
       <label for="damage">Описание повреждений</label>
       <textarea id="damage" name="damage" rows="4" required></textarea>
 
       <label for="date">Предпочтительная дата осмотра</label>
-      <input type="date" id="date" name="date" required />
+      <input type="date" id="date" name="date" required>
 
       <button type="submit">Отправить заявку</button>
     </form>
   </div>
+
+  <script>
+    document.getElementById("inspection-form").addEventListener("submit", function(e) {
+      e.preventDefault();
+
+      const phone = document.getElementById("phone").value.trim();
+      const email = document.getElementById("email").value.trim();
+
+      if (!/^\+?[0-9]{10,15}$/.test(phone)) {
+        alert("Введите корректный номер телефона.");
+        return;
+      }
+
+      if (email && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Введите корректный email.");
+        return;
+      }
+
+      // Если всё ок — перенаправляем
+      window.location.href = "thank-you.html";
+    });
+  </script>
 </body>
 </html>

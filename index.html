@@ -1,129 +1,124 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Аварийный комиссар Воронеж</title>
+  <title>Запись на осмотр</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
   <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
     body {
-      margin: 0;
-      font-family: 'Segoe UI', sans-serif;
-      background: #f9f9f9;
-      color: #333;
-    }
-    header {
-      background: #222;
-      color: #fff;
+      font-family: 'Inter', sans-serif;
+      background: linear-gradient(135deg, #ece9e6, #ffffff);
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 40px 20px;
-      text-align: center;
     }
-    header h1 {
-      margin: 0;
-      font-size: 2.5em;
-    }
-    .container {
-      max-width: 600px;
-      margin: 40px auto;
+
+    .form-container {
       background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+      border-radius: 16px;
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+      max-width: 600px;
+      width: 100%;
+      padding: 40px;
     }
-    .container h2 {
-      margin-top: 0;
+
+    h2 {
+      text-align: center;
+      color: #1a1a1a;
+      margin-bottom: 30px;
+      font-weight: 600;
     }
-    input, textarea {
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      font-size: 14px;
+      color: #333;
+      font-weight: 500;
+    }
+
+    input,
+    textarea,
+    select {
       width: 100%;
       padding: 12px;
-      margin: 10px 0;
-      border: 1px solid #ccc;
-      border-radius: 6px;
+      margin-bottom: 20px;
+      border: 1px solid #dcdcdc;
+      border-radius: 8px;
+      font-size: 14px;
+      transition: border 0.2s ease;
     }
+
+    input:focus,
+    textarea:focus {
+      outline: none;
+      border-color: #4a90e2;
+    }
+
+    textarea {
+      resize: vertical;
+    }
+
     button {
-      background: #007bff;
+      background-color: #4a90e2;
       color: white;
       padding: 14px;
       border: none;
-      border-radius: 6px;
-      cursor: pointer;
-      font-size: 1em;
+      border-radius: 8px;
+      font-size: 16px;
+      font-weight: 600;
       width: 100%;
+      cursor: pointer;
+      transition: background 0.3s ease;
     }
+
     button:hover {
-      background: #0056b3;
+      background-color: #3b7dd8;
     }
-    .info {
-      margin-top: 30px;
-      text-align: center;
-    }
-    a.call-button {
-      display: inline-block;
-      margin-top: 20px;
-      padding: 10px 20px;
-      background: #28a745;
-      color: white;
-      border-radius: 6px;
-      text-decoration: none;
-      font-weight: bold;
+
+    @media (max-width: 600px) {
+      .form-container {
+        padding: 25px;
+      }
     }
   </style>
 </head>
 <body>
+  <div class="form-container">
+    <h2>Запись на осмотр после ДТП</h2>
+    <form>
+      <label for="name">ФИО</label>
+      <input type="text" id="name" name="name" required />
 
-<header>
-  <h1>Вызов аварийного комиссара</h1>
-  <p>г. Воронеж, ул. Антонова-Овсиенко, д. 15А, корп. 1</p>
-  <p>Тел: <a href="tel:+79100401116" style="color: #00d4ff;">+7 (910) 040-11-16</a></p>
-</header>
+      <label for="phone">Телефон</label>
+      <input type="tel" id="phone" name="phone" required />
 
-<div class="container">
-  <h2>Оставьте заявку</h2>
-  <form id="tgForm">
-    <input type="text" name="name" placeholder="Ваше имя" required />
-    <input type="tel" name="phone" placeholder="Телефон" required />
-    <textarea name="message" rows="4" placeholder="Опишите ситуацию" required></textarea>
-    <button type="submit">Отправить</button>
-  </form>
-</div>
+      <label for="email">Электронная почта</label>
+      <input type="email" id="email" name="email" />
 
-<div class="info">
-  <p>Работаем 24/7</p>
-  <a class="call-button" href="tel:+79100401116">Позвонить комиссару</a>
-</div>
+      <label for="car">Марка и модель автомобиля</label>
+      <input type="text" id="car" name="car" required />
 
-<script>
-  const TOKEN = '7875147914:AAGEAZ1Bxg82z54OeSO4Q_zGaeHWeG1xJ1o';
-  const CHAT_ID = '7875147914';
-  const URI_API = `https://api.telegram.org/bot${TOKEN}/sendMessage`;
+      <label for="year">Год выпуска</label>
+      <input type="number" id="year" name="year" min="1980" max="2025" />
 
-  document.getElementById('tgForm').addEventListener('submit', function(e) {
-    e.preventDefault();
+      <label for="damage">Описание повреждений</label>
+      <textarea id="damage" name="damage" rows="4" required></textarea>
 
-    let name = this.name.value;
-    let phone = this.phone.value;
-    let message = this.message.value;
+      <label for="date">Предпочтительная дата осмотра</label>
+      <input type="date" id="date" name="date" required />
 
-    let text = `Новая заявка на вызов аварийного комиссара:\n\nИмя: ${name}\nТелефон: ${phone}\nСообщение: ${message}`;
-
-    fetch(URI_API, {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        chat_id: CHAT_ID,
-        text: text
-      })
-    }).then(() => {
-      alert('Заявка отправлена! Мы скоро свяжемся с вами.');
-      this.reset();
-    }).catch(err => {
-      alert('Ошибка отправки. Попробуйте ещё раз.');
-      console.error(err);
-    });
-  });
-</script>
-
+      <button type="submit">Отправить заявку</button>
+    </form>
+  </div>
 </body>
 </html>

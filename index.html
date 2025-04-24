@@ -1,96 +1,67 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Калькулятор запчастей по VIN</title>
-  <style>
-    body { font-family: sans-serif; background: #f0f0f0; padding: 0; margin: 0; }
-    header { background: #1f2937; color: white; padding: 20px; text-align: center; }
-    .container { max-width: 600px; margin: 30px auto; background: white; padding: 20px; border-radius: 8px; }
-    label { display: block; margin-top: 15px; }
-    input, select { width: 100%; padding: 10px; margin-top: 5px; }
-    button { margin-top: 15px; width: 100%; padding: 10px; background: #3b82f6; color: white; border: none; border-radius: 4px; }
-    .result { margin-top: 20px; text-align: center; font-size: 1.2em; }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Тачка за Час</title>
+    <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <header>
-    <h1>Калькулятор стоимости запчастей</h1>
-  </header>
-  <div class="container">
-    <label for="vin">VIN номер:</label>
-    <input type="text" id="vin" placeholder="Пример: 1HGCM82633A123456">
-    <button onclick="lookupVIN()">Поиск по VIN</button>
+    <header>
+        <div class="logo">Тачка за Час</div>
+        <nav>
+            <a href="#cars">Авто</a>
+            <a href="#sell">Продать авто</a>
+            <a href="#contact">Контакты</a>
+        </nav>
+    </header>
 
-    <label for="brand">Марка авто:</label>
-    <input type="text" id="brand" readonly>
+    <section class="hero">
+        <h1>Покупаем. Продаём. Решаем.</h1>
+        <p>Быстрый выкуп. Честные цены. Деньги сразу.</p>
+        <div class="hero-buttons">
+            <a href="#sell" class="btn">Продать авто</a>
+            <a href="#cars" class="btn btn-outline">Смотреть авто</a>
+        </div>
+    </section>
 
-    <label for="model">Модель:</label>
-    <input type="text" id="model" readonly>
+    <section id="cars" class="cars">
+        <h2>Авто в наличии</h2>
+        <div class="car-list">
+            <div class="car-card">
+                <img src="https://via.placeholder.com/300x180" alt="BMW">
+                <h3>BMW 530i</h3>
+                <p>2008 год / 330 000₽</p>
+            </div>
+            <div class="car-card">
+                <img src="https://via.placeholder.com/300x180" alt="Camry">
+                <h3>Toyota Camry 3.5</h3>
+                <p>2013 год / 720 000₽</p>
+            </div>
+            <div class="car-card">
+                <img src="https://via.placeholder.com/300x180" alt="Priora">
+                <h3>Lada Priora</h3>
+                <p>2011 год / 170 000₽</p>
+            </div>
+        </div>
+    </section>
 
-    <label for="part">Запчасть:</label>
-    <select id="part">
-      <option value="filter">Масляный фильтр</option>
-      <option value="brake">Тормозные колодки</option>
-      <option value="battery">Аккумулятор</option>
-    </select>
+    <section id="sell" class="sell">
+        <h2>Продай свою тачку за 1 час</h2>
+        <form>
+            <input type="text" placeholder="Марка и модель" required>
+            <input type="text" placeholder="Год выпуска" required>
+            <input type="text" placeholder="Пробег" required>
+            <input type="file" required>
+            <button type="submit">Отправить заявку</button>
+        </form>
+    </section>
 
-    <label for="quantity">Количество:</label>
-    <input type="number" id="quantity" value="1" min="1">
-
-    <button onclick="calculate()">Рассчитать</button>
-
-    <div class="result" id="result"></div>
-  </div>
-
-  <script>
-    const prices = {
-      default: { filter: 800, brake: 3000, battery: 6500 },
-      Camry: { filter: 1100, brake: 3200, battery: 6900 },
-      Corolla: { filter: 950, brake: 3100, battery: 6700 },
-      "X5": { filter: 2000, brake: 4900, battery: 9800 },
-      Granta: { filter: 700, brake: 2800, battery: 6000 }
-    };
-
-    async function lookupVIN() {
-      const vin = document.getElementById("vin").value.trim();
-      if (!vin || vin.length < 10) {
-        alert("Введите корректный VIN");
-        return;
-      }
-
-      try {
-        const response = await fetch(`https://vpic.nhtsa.dot.gov/api/vehicles/decodevin/${vin}?format=json`);
-        const data = await response.json();
-
-        const results = data.Results;
-        const brand = results.find(r => r.Variable === "Make")?.Value || "Неизвестно";
-        const model = results.find(r => r.Variable === "Model")?.Value || "Неизвестно";
-
-        document.getElementById("brand").value = brand;
-        document.getElementById("model").value = model;
-
-        loadPricesForModel(model);
-      } catch (err) {
-        alert("Ошибка при получении данных по VIN");
-        console.error(err);
-      }
-    }
-
-    function loadPricesForModel(model) {
-      const currentPrices = prices[model] || prices.default;
-      window.currentPrices = currentPrices; // глобально
-    }
-
-    function calculate() {
-      const part = document.getElementById("part").value;
-      const quantity = parseInt(document.getElementById("quantity").value, 10);
-      const partPrices = window.currentPrices || prices.default;
-      const total = (partPrices[part] || 0) * quantity;
-
-      document.getElementById("result").innerText = `Итоговая стоимость: ${total} руб.`;
-    }
-  </script>
+    <footer id="contact">
+        <div class="footer-content">
+            <p>Тел: +7 900 000-00-00 | WhatsApp | Telegram</p>
+            <p>© 2025 Тачка за Час</p>
+        </div>
+    </footer>
 </body>
 </html>

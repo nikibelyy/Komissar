@@ -1,67 +1,72 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Чудо Авто</title>
-    <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Чудо Авто – Автоперекуп №1</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-    <header>
-        <div class="logo">Чудо Авто</div>
-        <nav>
-            <a href="#cars">Авто</a>
-            <a href="#sell">Продать авто</a>
-            <a href="#contact">Контакты</a>
-        </nav>
-    </header>
+  <header>
+    <div class="logo">Чудо Авто</div>
+    <nav>
+      <a href="#cars">Авто</a>
+      <a href="#sell">Продать авто</a>
+      <a href="#order">Подбор</a>
+      <a href="#contacts">Контакты</a>
+    </nav>
+  </header>
 
-    <section class="hero">
-        <h1>Покупаем. Продаём. Решаем.</h1>
-        <p>Быстрый выкуп. Честные цены. Деньги сразу.</p>
-        <div class="hero-buttons">
-            <a href="#sell" class="btn">Продать авто</a>
-            <a href="#cars" class="btn btn-outline">Смотреть авто</a>
-        </div>
-    </section>
+  <section class="hero">
+    <h1>Чудо Авто</h1>
+    <p>Продажа и выкуп авто с пробегом. Быстро, честно, выгодно.</p>
+    <a href="#sell" class="btn-primary">Продать авто</a>
+  </section>
 
-    <section id="cars" class="cars">
-        <h2>Авто в наличии</h2>
-        <div class="car-list">
-            <div class="car-card">
-                <img src="https://via.placeholder.com/300x180" alt="BMW">
-                <h3>BMW 530i</h3>
-                <p>2008 год / 330 000₽</p>
-            </div>
-            <div class="car-card">
-                <img src="https://via.placeholder.com/300x180" alt="Camry">
-                <h3>Toyota Camry 3.5</h3>
-                <p>2013 год / 720 000₽</p>
-            </div>
-            <div class="car-card">
-                <img src="https://via.placeholder.com/300x180" alt="Priora">
-                <h3>Lada Priora</h3>
-                <p>2011 год / 170 000₽</p>
-            </div>
-        </div>
-    </section>
+  <section id="cars" class="car-list">
+    <h2>Автомобили в наличии</h2>
+    <div class="cards">
+      <div class="car-card">
+        <img src="car1.jpg" alt="BMW 3 series">
+        <h3>BMW 3 Series, 2017</h3>
+        <p>Цена: 1 250 000 ₽</p>
+        <span class="status">В наличии</span>
+      </div>
+      <div class="car-card">
+        <img src="car2.jpg" alt="Kia Rio">
+        <h3>Kia Rio, 2020</h3>
+        <p>Цена: 950 000 ₽</p>
+        <span class="status">Авто недели</span>
+      </div>
+    </div>
+  </section>
 
-    <section id="sell" class="sell">
-        <h2>Продай свою тачку за 1 час</h2>
-        <form>
-            <input type="text" placeholder="Марка и модель" required>
-            <input type="text" placeholder="Год выпуска" required>
-            <input type="text" placeholder="Пробег" required>
-            <input type="file" required>
-            <button type="submit">Отправить заявку</button>
-        </form>
-    </section>
+  <section id="sell" class="form-section">
+    <h2>Оценка вашего авто</h2>
+    <form>
+      <input type="text" placeholder="Марка и модель" required>
+      <input type="text" placeholder="Год выпуска" required>
+      <input type="text" placeholder="Пробег (км)" required>
+      <input type="tel" placeholder="Ваш телефон" required>
+      <button type="submit">Оценить авто</button>
+    </form>
+  </section>
 
-    <footer id="contact">
-        <div class="footer-content">
-            <p>Тел: +7 900 000-00-00 | WhatsApp | Telegram</p>
-            <p>© 2025 Тачка за Час</p>
-        </div>
-    </footer>
+  <section id="order" class="order-section">
+    <h2>Подбор авто под заказ</h2>
+    <p>Оставьте заявку, и мы найдём для вас авто мечты под ваш бюджет и требования.</p>
+    <a href="#contacts" class="btn-secondary">Оставить заявку</a>
+  </section>
+
+  <section id="contacts" class="contacts">
+    <h2>Контакты</h2>
+    <p>г. Москва, ул. Машиностроителей, д. 15</p>
+    <p>Тел: +7 (900) 123-45-67</p>
+    <a href="https://wa.me/79001234567" class="whatsapp-btn">Написать в WhatsApp</a>
+  </section>
+
+  <footer>
+    <p>© 2025 Чудо Авто. Все права защищены.</p>
+  </footer>
 </body>
 </html>

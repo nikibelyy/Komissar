@@ -14,11 +14,17 @@ header {
     justify-content: space-between;
     padding: 20px 40px;
     align-items: center;
+    flex-wrap: wrap;
 }
 .logo {
     font-size: 24px;
     font-weight: bold;
     color: #f33;
+}
+nav {
+    display: flex;
+    flex-wrap: wrap;
+    margin-top: 10px;
 }
 nav a {
     color: #ccc;
@@ -34,11 +40,11 @@ nav a:hover {
     padding: 100px 20px;
 }
 .hero h1 {
-    font-size: 48px;
+    font-size: 42px;
     margin-bottom: 20px;
 }
 .hero p {
-    font-size: 20px;
+    font-size: 18px;
     margin-bottom: 30px;
 }
 .hero-buttons .btn {
@@ -49,13 +55,14 @@ nav a:hover {
     color: #fff;
     background-color: #f33;
     border-radius: 5px;
+    display: inline-block;
 }
 .btn-outline {
     background: transparent;
     border: 2px solid #f33;
 }
 .cars {
-    padding: 60px 40px;
+    padding: 60px 20px;
     background-color: #1e1e1e;
 }
 .cars h2 {
@@ -80,7 +87,7 @@ nav a:hover {
     border-radius: 5px;
 }
 .sell {
-    padding: 60px 40px;
+    padding: 60px 20px;
     background-color: #121212;
     text-align: center;
 }
@@ -107,4 +114,44 @@ footer {
     text-align: center;
     padding: 20px;
     font-size: 14px;
+}
+
+/* ---------------- Адаптация под мобилки ---------------- */
+@media (max-width: 768px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    nav {
+        margin-top: 10px;
+        flex-direction: column;
+        gap: 10px;
+    }
+
+    .hero {
+        padding: 60px 15px;
+    }
+
+    .hero h1 {
+        font-size: 32px;
+    }
+
+    .hero p {
+        font-size: 16px;
+    }
+
+    .car-card {
+        width: 100%;
+    }
+
+    .sell form {
+        padding: 0 10px;
+    }
+
+    .hero-buttons .btn {
+        display: block;
+        width: 100%;
+        margin: 10px 0;
+    }
 }

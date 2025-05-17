@@ -1,72 +1,82 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Чудо Авто – Автоперекуп №1</title>
+  <title>Гуманитарная помощь СВО</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
   <header>
-    <div class="logo">Чудо Авто</div>
-    <nav>
-      <a href="#cars">Авто</a>
-      <a href="#sell">Продать авто</a>
-      <a href="#order">Подбор</a>
-      <a href="#contacts">Контакты</a>
-    </nav>
+    <h1>Гуманитарная помощь СВО</h1>
+    <p>Помогаем нашим бойцам и мирным жителям</p>
   </header>
 
-  <section class="hero">
-    <h1>Чудо Авто</h1>
-    <p>Продажа и выкуп авто с пробегом. Быстро, честно, выгодно.</p>
-    <a href="#sell" class="btn-primary">Продать авто</a>
+  <nav>
+    <a href="#about">О проекте</a>
+    <a href="#donate">Помочь</a>
+    <a href="#request">Нужна помощь</a>
+    <a href="#contact">Контакты</a>
+  </nav>
+
+  <section id="about">
+    <h2>О проекте</h2>
+    <p>Мы — добровольческая организация, которая занимается сбором и доставкой гуманитарной помощи в зону проведения СВО. Наша миссия — поддержать военнослужащих, раненых, а также семьи в прифронтовых зонах.</p>
   </section>
 
-  <section id="cars" class="car-list">
-    <h2>Автомобили в наличии</h2>
-    <div class="cards">
-      <div class="car-card">
-        <img src="car1.jpg" alt="BMW 3 series">
-        <h3>BMW 3 Series, 2017</h3>
-        <p>Цена: 1 250 000 ₽</p>
-        <span class="status">В наличии</span>
-      </div>
-      <div class="car-card">
-        <img src="car2.jpg" alt="Kia Rio">
-        <h3>Kia Rio, 2020</h3>
-        <p>Цена: 950 000 ₽</p>
-        <span class="status">Авто недели</span>
-      </div>
-    </div>
-  </section>
-
-  <section id="sell" class="form-section">
-    <h2>Оценка вашего авто</h2>
+  <section id="donate">
+    <h2>Хочу помочь</h2>
     <form>
-      <input type="text" placeholder="Марка и модель" required>
-      <input type="text" placeholder="Год выпуска" required>
-      <input type="text" placeholder="Пробег (км)" required>
-      <input type="tel" placeholder="Ваш телефон" required>
-      <button type="submit">Оценить авто</button>
+      <div class="form-field">
+        <label>Ваше имя</label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="form-field">
+        <label>Сумма пожертвования (₽)</label>
+        <input type="number" name="amount" required>
+      </div>
+      <div class="form-field">
+        <label>Комментарий (необязательно)</label>
+        <textarea name="comment"></textarea>
+      </div>
+      <button class="submit-btn" type="submit">Отправить пожертвование</button>
     </form>
   </section>
 
-  <section id="order" class="order-section">
-    <h2>Подбор авто под заказ</h2>
-    <p>Оставьте заявку, и мы найдём для вас авто мечты под ваш бюджет и требования.</p>
-    <a href="#contacts" class="btn-secondary">Оставить заявку</a>
+  <section id="request">
+    <h2>Нужна помощь</h2>
+    <form>
+      <div class="form-field">
+        <label>Ваше имя или позывной</label>
+        <input type="text" name="name" required>
+      </div>
+      <div class="form-field">
+        <label>Категория помощи</label>
+        <select name="category" required>
+          <option value="">Выберите</option>
+          <option value="продукты">Продукты</option>
+          <option value="медицина">Медикаменты</option>
+          <option value="экипировка">Экипировка</option>
+          <option value="другое">Другое</option>
+        </select>
+      </div>
+      <div class="form-field">
+        <label>Описание запроса</label>
+        <textarea name="details" required></textarea>
+      </div>
+      <button class="submit-btn" type="submit">Отправить заявку</button>
+    </form>
   </section>
 
-  <section id="contacts" class="contacts">
+  <section id="contact">
     <h2>Контакты</h2>
-    <p>г. Москва, ул. Машиностроителей, д. 15</p>
-    <p>Тел: +7 (900) 123-45-67</p>
-    <a href="https://wa.me/79001234567" class="whatsapp-btn">Написать в WhatsApp</a>
+    <p>Email: <a href="mailto:help@svo-aid.ru">help@svo-aid.ru</a></p>
+    <p>Телефон: +7 (900) 123-45-67</p>
+    <p>Адрес штаба: г. Москва, ул. Победы, д. 1</p>
   </section>
 
   <footer>
-    <p>© 2025 Чудо Авто. Все права защищены.</p>
+    &copy; 2025 Гуманитарная миссия СВО — Все права защищены
   </footer>
 </body>
 </html>

@@ -1,129 +1,62 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: 'Segoe UI', sans-serif;
-}
 
 body {
-  background: #f3f3f3;
-  color: #222;
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #f2f2f2;
+  background-image: url('https://www.transparenttextures.com/patterns/army-camouflage.png');
 }
-
 header {
-  background: #111;
-  color: #fff;
-  padding: 20px;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-header .logo {
-  font-size: 1.5em;
-  font-weight: bold;
-  color: #fcd000;
-}
-
-nav a {
-  color: #fff;
-  margin-left: 20px;
-  text-decoration: none;
-  font-weight: 500;
-}
-
-.hero {
-  background: url('hero-bg.jpg') no-repeat center/cover;
-  color: #fff;
+  background-color: #002d62;
+  color: white;
+  padding: 30px 20px;
   text-align: center;
-  padding: 100px 20px;
 }
-
-.btn-primary, .btn-secondary {
-  display: inline-block;
-  padding: 10px 20px;
-  margin-top: 20px;
-  background: #fcd000;
-  color: #000;
+nav {
+  background-color: #c8102e;
+  padding: 10px;
+  text-align: center;
+}
+nav a {
+  color: white;
+  margin: 0 15px;
   text-decoration: none;
   font-weight: bold;
+  font-size: 16px;
+}
+section {
+  padding: 30px 20px;
+  background-color: rgba(255, 255, 255, 0.9);
+  margin: 20px auto;
+  max-width: 800px;
+  border-radius: 10px;
+}
+h2 {
+  color: #002d62;
+}
+.form-field {
+  margin-bottom: 15px;
+}
+input, textarea, select {
+  width: 100%;
+  padding: 10px;
+  font-size: 14px;
+  margin-top: 5px;
+  border: 1px solid #ccc;
   border-radius: 5px;
 }
-
-.car-list {
-  padding: 50px 20px;
-  background: #fff;
+.submit-btn {
+  background-color: #c8102e;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 5px;
 }
-
-.car-list h2 {
-  text-align: center;
-  margin-bottom: 30px;
-}
-
-.cards {
-  display: flex;
-  gap: 20px;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.car-card {
-  background: #eee;
-  border-radius: 10px;
-  overflow: hidden;
-  max-width: 300px;
+footer {
+  background-color: #002d62;
+  color: white;
   text-align: center;
   padding: 15px;
-}
-
-.car-card img {
-  width: 100%;
-  height: 180px;
-  object-fit: cover;
-}
-
-.status {
-  display: inline-block;
-  background: #fcd000;
-  padding: 5px 10px;
-  margin-top: 10px;
-  border-radius: 4px;
-  font-weight: bold;
-}
-
-.form-section, .order-section, .contacts {
-  padding: 50px 20px;
-  text-align: center;
-}
-
-form input, form button {
-  display: block;
-  width: 90%;
-  max-width: 400px;
-  margin: 10px auto;
-  padding: 10px;
-}
-
-form button {
-  background: #000;
-  color: #fff;
-  border: none;
-  cursor: pointer;
-}
-
-.whatsapp-btn {
-  display: inline-block;
-  margin-top: 20px;
-  color: #fff;
-  background: #25d366;
-  padding: 10px 20px;
-  text-decoration: none;
-  border-radius: 5px;
-}
-
-footer {
-  text-align: center;
-  padding: 20px;
-  background: #111;
-  color: #ccc;
+  margin-top: 30px;
 }

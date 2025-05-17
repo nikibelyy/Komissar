@@ -60,3 +60,16 @@ footer {
   padding: 15px;
   margin-top: 30px;
 }
+
+
+.thank-you {
+  margin-top: 30px;
+  padding: 20px;
+  background-color: #e0ffe0;
+  border-left: 6px solid #28a745;
+  border-radius: 8px;
+  font-size: 18px;
+}
+.thank-you h3 {
+  color: #2e7d32;
+}

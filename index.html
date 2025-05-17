@@ -26,10 +26,14 @@
 
   <section id="donate">
     <h2>Хочу помочь</h2>
-    <form>
+    <form onsubmit="showThankYou(event)">
       <div class="form-field">
         <label>Ваше имя</label>
         <input type="text" name="name" required>
+      </div>
+      <div class="form-field">
+        <label>Позывной (необязательно)</label>
+        <input type="text" name="callsign">
       </div>
       <div class="form-field">
         <label>Сумма пожертвования (₽)</label>
@@ -41,6 +45,11 @@
       </div>
       <button class="submit-btn" type="submit">Отправить пожертвование</button>
     </form>
+    <div id="thank-you" class="thank-you" style="display:none;">
+      <h3>Спасибо за вашу поддержку!</h3>
+      <p>Ваше доброе сердце и готовность помочь — это сила, которая приближает победу. Мы благодарим вас от имени всех, кому вы помогаете!</p>
+      <p><strong>Слава России. Сила — в единстве!</strong></p>
+    </div>
   </section>
 
   <section id="request">
@@ -78,5 +87,12 @@
   <footer>
     &copy; 2025 Гуманитарная миссия СВО — Все права защищены
   </footer>
+
+  <script>
+    function showThankYou(event) {
+      event.preventDefault();
+      document.querySelector('#thank-you').style.display = 'block';
+    }
+  </script>
 </body>
 </html>

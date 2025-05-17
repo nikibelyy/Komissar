@@ -1,98 +1,76 @@
-
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Гуманитарная помощь СВО</title>
-  <link rel="stylesheet" href="style.css">
+    <meta charset="UTF-8">
+    <title>Пожертвование</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f9f9f9;
+            text-align: center;
+            padding: 50px;
+        }
+        .container {
+            background: white;
+            padding: 40px;
+            border-radius: 12px;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: inline-block;
+        }
+        input[type="text"], input[type="email"] {
+            padding: 10px;
+            width: 80%;
+            margin: 10px 0;
+            border: 1px solid #ccc;
+            border-radius: 8px;
+        }
+        .btn {
+            padding: 12px 24px;
+            background: #ffdd2d;
+            color: #000;
+            border: none;
+            border-radius: 8px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            margin-top: 20px;
+        }
+        .card {
+            margin-top: 40px;
+            padding: 20px;
+            background: #e0ffe0;
+            border-radius: 10px;
+            display: none;
+        }
+    </style>
 </head>
 <body>
-  <header>
-    <h1>Гуманитарная помощь СВО</h1>
-    <p>Помогаем нашим бойцам и мирным жителям</p>
-  </header>
 
-  <nav>
-    <a href="#about">О проекте</a>
-    <a href="#donate">Помочь</a>
-    <a href="#request">Нужна помощь</a>
-    <a href="#contact">Контакты</a>
-  </nav>
-
-  <section id="about">
-    <h2>О проекте</h2>
-    <p>Мы — добровольческая организация, которая занимается сбором и доставкой гуманитарной помощи в зону проведения СВО. Наша миссия — поддержать военнослужащих, раненых, а также семьи в прифронтовых зонах.</p>
-  </section>
-
-  <section id="donate">
-    <h2>Хочу помочь</h2>
-    <form onsubmit="showThankYou(event)">
-      <div class="form-field">
-        <label>Ваше имя</label>
-        <input type="text" name="name" required>
-      </div>
-      <div class="form-field">
-        <label>Позывной (необязательно)</label>
-        <input type="text" name="callsign">
-      </div>
-      <div class="form-field">
-        <label>Сумма пожертвования (₽)</label>
-        <input type="number" name="amount" required>
-      </div>
-      <div class="form-field">
-        <label>Комментарий (необязательно)</label>
-        <textarea name="comment"></textarea>
-      </div>
-      <button class="submit-btn" type="submit">Отправить пожертвование</button>
+<div class="container">
+    <h1>Помоги доброму делу</h1>
+    <p>Пожертвуй и получи благодарность!</p>
+    
+    <form id="donationForm">
+        <input type="text" name="name" placeholder="Ваше имя" required><br>
+        <input type="email" name="email" placeholder="Ваш Email"><br>
+        <a class="btn" href="https://www.tbank.ru/cf/5eUutFJKnjt" target="_blank" onclick="showCard()">Пожертвовать</a>
     </form>
-    <div id="thank-you" class="thank-you" style="display:none;">
-      <h3>Спасибо за вашу поддержку!</h3>
-      <p>Ваше доброе сердце и готовность помочь — это сила, которая приближает победу. Мы благодарим вас от имени всех, кому вы помогаете!</p>
-      <p><strong>Слава России. Сила — в единстве!</strong></p>
+
+    <div id="thankYouCard" class="card">
+        <h2>Спасибо!</h2>
+        <p>Вы помогли сделать мир лучше.</p>
+        <p>Теперь вы — добродетель!</p>
     </div>
-  </section>
+</div>
 
-  <section id="request">
-    <h2>Нужна помощь</h2>
-    <form>
-      <div class="form-field">
-        <label>Ваше имя или позывной</label>
-        <input type="text" name="name" required>
-      </div>
-      <div class="form-field">
-        <label>Категория помощи</label>
-        <select name="category" required>
-          <option value="">Выберите</option>
-          <option value="продукты">Продукты</option>
-          <option value="медицина">Медикаменты</option>
-          <option value="экипировка">Экипировка</option>
-          <option value="другое">Другое</option>
-        </select>
-      </div>
-      <div class="form-field">
-        <label>Описание запроса</label>
-        <textarea name="details" required></textarea>
-      </div>
-      <button class="submit-btn" type="submit">Отправить заявку</button>
-    </form>
-  </section>
-
-  <section id="contact">
-    <h2>Контакты</h2>
-    <p>Email: <a href="mailto:help@svo-aid.ru">help@svo-aid.ru</a></p>
-    <p>Телефон: +7 (900) 123-45-67</p>
-    <p>Адрес штаба: г. Москва, ул. Победы, д. 1</p>
-  </section>
-
-  <footer>
-    &copy; 2025 Гуманитарная миссия СВО — Все права защищены
-  </footer>
-
-  <script>
-    function showThankYou(event) {
-      event.preventDefault();
-      document.querySelector('#thank-you').style.display = 'block';
+<script>
+    function showCard() {
+        setTimeout(function() {
+            document.getElementById('thankYouCard').style.display = 'block';
+        }, 5000); // Показывает визитку через 5 секунд после нажатия
     }
-  </script>
+</script>
+
 </body>
 </html>

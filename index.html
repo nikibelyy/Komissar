@@ -4,6 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Памятка ГАИ — Административные правонарушения</title>
+  <link rel="manifest" href="manifest.json">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Памятка ГАИ">
+  <link rel="apple-touch-icon" href="icon-192.png">
+  <meta name="theme-color" content="#121212">
   <style>
     :root {
       --bg-color: #121212;
@@ -13,7 +18,6 @@
       --button-hover: #003f8a;
       --print-button: #28a745;
     }
-
     body {
       font-family: Arial, sans-serif;
       margin: 0;
@@ -21,12 +25,10 @@
       background-color: var(--bg-color);
       color: var(--text-color);
     }
-
     h1 {
       text-align: center;
       font-size: 24px;
     }
-
     .button-container {
       display: flex;
       flex-wrap: wrap;
@@ -34,7 +36,6 @@
       justify-content: center;
       margin: 20px 0;
     }
-
     button {
       padding: 12px 20px;
       font-size: 15px;
@@ -45,11 +46,9 @@
       color: white;
       transition: background-color 0.3s;
     }
-
     button:hover {
       background-color: var(--button-hover);
     }
-
     .info {
       margin-top: 25px;
       background-color: var(--card-bg);
@@ -60,12 +59,10 @@
       margin-left: auto;
       margin-right: auto;
     }
-
     .controls {
       text-align: center;
       margin-top: 30px;
     }
-
     .search-box {
       margin: 20px auto;
       max-width: 400px;
@@ -73,7 +70,6 @@
       gap: 10px;
       justify-content: center;
     }
-
     input[type="text"] {
       padding: 10px;
       font-size: 16px;
@@ -83,21 +79,14 @@
       background-color: #2a2a2a;
       color: #fff;
     }
-
     .print-btn {
       background-color: var(--print-button);
     }
-
     @media (max-width: 600px) {
-      h1 {
-        font-size: 20px;
-      }
-
       .button-container {
         flex-direction: column;
         align-items: center;
       }
-
       input[type="text"] {
         width: 100%;
       }
@@ -114,10 +103,17 @@
   <button onclick="showInfo('12.6')">Ремень безопасности</button>
   <button onclick="showInfo('12.36.1')">Телефон за рулём</button>
   <button onclick="showInfo('12.16')">Игнорирование знаков</button>
+  <button onclick="showInfo('12.10')">Статья 12.10</button>
+  <button onclick="showInfo('12.13')">Статья 12.13</button>
+  <button onclick="showInfo('12.15')">Статья 12.15</button>
+  <button onclick="showInfo('12.18')">Статья 12.18</button>
+  <button onclick="showInfo('12.23')">Статья 12.23</button>
+  <button onclick="showInfo('12.24')">Статья 12.24</button>
+  <button onclick="showInfo('12.27')">Статья 12.27</button>
 </div>
 
 <div class="search-box">
-  <input type="text" id="searchInput" placeholder="Введите номер статьи, например: 12.9">
+  <input type="text" id="searchInput" placeholder="Введите номер статьи, например: 12.24">
   <button onclick="searchArticle()">Поиск</button>
 </div>
 
@@ -129,37 +125,18 @@
 
 <script>
   const articles = {
-    "12.9": `
-      <h2>Статья 12.9 — Превышение скорости</h2>
-      <p>Нарушение ПДД в виде превышения установленной скорости:</p>
-      <ul>
-        <li>До 20 км/ч — без наказания</li>
-        <li>20–40 км/ч — штраф 500 руб</li>
-        <li>40–60 км/ч — штраф 1000–1500 руб</li>
-        <li>Более 60 км/ч — лишение прав</li>
-      </ul>
-    `,
-    "12.8": `
-      <h2>Статья 12.8 — Нетрезвое вождение</h2>
-      <p>Управление ТС в состоянии опьянения:</p>
-      <ul>
-        <li>Штраф: 30 000 руб</li>
-        <li>Лишение прав: 1.5–2 года</li>
-        <li>Повтор — уголовная ответственность</li>
-      </ul>
-    `,
-    "12.6": `
-      <h2>Статья 12.6 — Ремень безопасности</h2>
-      <p>Управление ТС без пристёгнутого ремня — штраф 1000 руб.</p>
-    `,
-    "12.36.1": `
-      <h2>Статья 12.36.1 — Телефон за рулём</h2>
-      <p>Разговор по телефону без гарнитуры — штраф 1500 руб.</p>
-    `,
-    "12.16": `
-      <h2>Статья 12.16 — Нарушение требований знаков</h2>
-      <p>Штраф от 500 до 5000 руб, возможное лишение прав в зависимости от ситуации.</p>
-    `
+    "12.9": `<h2>Статья 12.9 — Превышение скорости</h2><ul><li>До 20 км/ч — без наказания</li><li>20–40 км/ч — штраф 500 руб</li><li>40–60 км/ч — штраф 1000–1500 руб</li><li>Более 60 км/ч — лишение прав</li></ul>`,
+    "12.8": `<h2>Статья 12.8 — Нетрезвое вождение</h2><ul><li>Штраф: 30 000 руб</li><li>Лишение прав: 1.5–2 года</li><li>Повтор — уголовная ответственность</li></ul>`,
+    "12.6": `<h2>Статья 12.6 — Ремень безопасности</h2><p>Штраф: 1000 руб</p>`,
+    "12.36.1": `<h2>Статья 12.36.1 — Телефон за рулём</h2><p>Штраф: 1500 руб</p>`,
+    "12.16": `<h2>Статья 12.16 — Нарушение требований знаков</h2><p>Штраф от 500 до 5000 руб, возможное лишение прав</p>`,
+    "12.10": `<h2>Статья 12.10 — Проезд на красный</h2><p>Штраф: 1000 руб. Повтор — 5000 руб или лишение прав</p>`,
+    "12.13": `<h2>Статья 12.13 — Нарушение правил перекрёстка</h2><p>Штраф: 1000 руб</p>`,
+    "12.15": `<h2>Статья 12.15 — Выезд на встречную</h2><p>Штраф 5000 руб или лишение прав на 4-6 месяцев</p>`,
+    "12.18": `<h2>Статья 12.18 — Пешеход</h2><p>Штраф: 1500–2500 руб за непредоставление преимущества</p>`,
+    "12.23": `<h2>Статья 12.23 — Детские кресла</h2><p>Штраф: 3000 руб</p>`,
+    "12.24": `<h2>Статья 12.24 — Вред здоровью</h2><p>Штраф до 25000 руб или лишение прав, при тяжком — до 1.5 лет</p>`,
+    "12.27": `<h2>Статья 12.27 — Оставление места ДТП</h2><p>Лишение прав на 1–1.5 года или арест до 15 суток</p>`
   };
 
   function showInfo(article) {

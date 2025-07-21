@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Памятка ГАИ — Административные правонарушения и полезная информация</title>
+  <title>Памятка ГАИ — Защищённый доступ</title>
   <meta name="theme-color" content="#121212" />
   <style>
     :root {
@@ -17,9 +17,53 @@
     }
     body {
       font-family: Arial, sans-serif;
-      margin: 0; padding: 20px;
+      margin: 0;
+      padding: 0;
       background: var(--bg-color);
       color: var(--text-color);
+    }
+    .login-container {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      background: var(--bg-color);
+    }
+    .login-box {
+      background: var(--card-bg);
+      padding: 30px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px #000;
+      text-align: center;
+    }
+    input[type="password"] {
+      padding: 10px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      width: 100%;
+      margin-bottom: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 6px;
+      background-color: var(--btn-bg);
+      color: #fff;
+      cursor: pointer;
+    }
+    button:hover {
+      background-color: var(--btn-hover);
+    }
+    .error {
+      color: #ff6b6b;
+      margin-top: 10px;
+    }
+    .main-content {
+      display: none;
+      padding: 20px;
     }
     h1 {
       text-align: center;
@@ -32,139 +76,106 @@
       justify-content: center;
       margin: 20px 0;
     }
-    button {
-      flex: 1 1 30%;
-      min-width: 200px;
-      padding: 10px;
-      font-size: 14px;
-      cursor: pointer;
-      border: none;
-      border-radius: 6px;
-      background: var(--btn-bg);
-      color: #fff;
-      transition: background 0.2s;
+    .info {
+      margin-top: 20px;
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 8px;
+      max-width: 800px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.5;
     }
-    button:hover {
-      background: var(--btn-hover);
-    }
-    /* Красная кнопка */
     button.red-btn {
       background: var(--btn-red);
     }
     button.red-btn:hover {
       background: var(--btn-red-hover);
     }
-    .info {
-      margin-top: 20px;
-      background: var(--card-bg);
-      padding: 20px;
-      border-radius: 8px;
-      display: none;
-      max-width: 800px;
-      margin: auto;
-      line-height: 1.5;
-    }
-    ul {
-      padding-left: 20px;
-    }
   </style>
 </head>
 <body>
 
-<h1>Памятка сотрудникам ГАИ — Административные правонарушения и полезная информация</h1>
-
-<div class="button-container">
-  <button onclick="showInfo('12.3')">Управление без прав</button>
-  <button onclick="showInfo('12.3_osago')">Без ОСАГО</button>
-  <button onclick="showInfo('12.5')">Неисправности ТС</button>
-  <button onclick="showInfo('12.6')">Не пристегнут ремень</button>
-  <button onclick="showInfo('12.12')">Проезд на запрещающий сигнал</button>
-  <button onclick="showInfo('12.13')">Нарушение на перекрёстке</button>
-  <button onclick="showInfo('12.14')">Поворот/разворот неверно</button>
-  <button onclick="showInfo('12.15')">Выезд на встречную/неправильный обгон</button>
-  <button onclick="showInfo('12.16')">Нарушение разметки/знаков</button>
-  <button onclick="showInfo('12.18')">Не уступил дорогу</button>
-  <button onclick="showInfo('12.23')">Перевозка детей без кресла</button>
-  <button onclick="showInfo('12.24')">ДТП с вредом здоровью</button>
-  <button onclick="showInfo('12.26')">Отказ от освидетельствования</button>
-  <button onclick="showInfo('12.27')">Оставление места ДТП</button>
-  <button onclick="showInfo('12.8')">Нетрезвое вождение</button>
-  <button onclick="showInfo('12.9')">Превышение скорости</button>
-  <button class="red-btn" onclick="showInfo('disputes')">Разбор спорных ситуаций</button>
-  <button class="red-btn" onclick="showInfo('emergency')">Телефоны экстренных служб</button>
-</div>
+<div class="login-container" id="loginSection">
+  <div class="login-box">
+    <h2>Вход в памятку ГАИ</h2>
+    <input type="password" id="password" placeholder="Введите пароль" />
+    <button onclick="checkPassword()">Войти</button>
+    <div class="error" id="error"></div>
+  </div>
 </div>
 
-<div id="infoBox" class="info"></div>
+<div class="main-content" id="mainContent">
+  <h1>Памятка сотрудникам ГАИ — Административные правонарушения</h1>
+
+  <div class="button-container">
+    <button onclick="showInfo('12.3')">Управление без прав</button>
+    <button onclick="showInfo('12.3_osago')">Без ОСАГО</button>
+    <button onclick="showInfo('12.5')">Неисправности ТС</button>
+    <button onclick="showInfo('12.6')">Не пристегнут ремень</button>
+    <button onclick="showInfo('12.12')">Проезд на запрещающий сигнал</button>
+    <button onclick="showInfo('12.13')">Нарушение на перекрёстке</button>
+    <button onclick="showInfo('12.14')">Поворот/разворот неверно</button>
+    <button onclick="showInfo('12.15')">Выезд на встречную/неправильный обгон</button>
+    <button onclick="showInfo('12.16')">Нарушение разметки/знаков</button>
+    <button onclick="showInfo('12.18')">Не уступил дорогу</button>
+    <button onclick="showInfo('12.23')">Перевозка детей без кресла</button>
+    <button onclick="showInfo('12.24')">ДТП с вредом здоровью</button>
+    <button onclick="showInfo('12.26')">Отказ от освидетельствования</button>
+    <button onclick="showInfo('12.27')">Оставление места ДТП</button>
+    <button onclick="showInfo('12.8')">Нетрезвое вождение</button>
+    <button onclick="showInfo('12.9')">Превышение скорости</button>
+    <button class="red-btn" onclick="showInfo('disputes')">Разбор спорных ситуаций</button>
+    <button class="red-btn" onclick="showInfo('emergency')">Телефоны экстренных служб</button>
+  </div>
+
+  <div id="infoBox" class="info"></div>
+</div>
 
 <script>
+  const PASSWORD = "gai2024";
+
+  function checkPassword() {
+    const input = document.getElementById('password').value;
+    const errorDiv = document.getElementById('error');
+    if (input === PASSWORD) {
+      document.getElementById('loginSection').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    } else {
+      errorDiv.textContent = "Неверный пароль.";
+    }
+  }
+
   const articles = {
-    "12.3": `<h2>Ст. 12.3 — Управление без водительских прав</h2>
-      <ul>
-        <li>Нет документов при себе — предупреждение или штраф 500 ₽</li>
-        <li>Управление после лишения — штраф 30 000 ₽ или арест</li>
-      </ul>`,
+    "12.3": `<h2>Ст. 12.3 — Управление без водительских прав</h2><ul><li>Нет документов — штраф 500 ₽</li><li>После лишения — штраф 30 000 ₽ или арест</li></ul>`,
     "12.3_osago": `<h2>Ст. 12.3 — Без полиса ОСАГО</h2><p>Штраф 800 ₽</p>`,
-    "12.5": `<h2>Ст. 12.5 — Неисправное транспортное средство</h2><p>Штраф 500 ₽, серьёзные неисправности — задержание ТС</p>`,
-    "12.6": `<h2>Ст. 12.6 — Не пристегнут ремень безопасности</h2><p>Штраф 1000 ₽</p>`,
-    "12.12": `<h2>Ст. 12.12 — Проезд на запрещающий сигнал светофора</h2>
-      <ul>
-        <li>1-е нарушение — 1000 ₽</li>
-        <li>Повтор — 5000 ₽ или лишение прав на 4–6 мес.</li>
-      </ul>`,
-    "12.13": `<h2>Ст. 12.13 — Нарушение правил проезда перекрёстка</h2><p>Штраф 1000 ₽</p>`,
-    "12.14": `<h2>Ст. 12.14 — Нарушение правил поворота или разворота</h2><p>Штраф 500 ₽</p>`,
-    "12.15": `<h2>Ст. 12.15 — Выезд на встречную полосу / Опасный обгон</h2>
-      <ul>
-        <li>Выезд на встречку или обгон в запрещённом месте — 5000 ₽ или лишение прав на 4–6 мес.</li>
-        <li>Повтор — лишение до 1 года</li>
-      </ul>`,
-    "12.16": `<h2>Ст. 12.16 — Нарушение требований разметки или дорожных знаков</h2><p>Штраф от 500 до 5000 ₽</p>`,
+    "12.5": `<h2>Ст. 12.5 — Неисправное ТС</h2><p>Штраф 500 ₽, серьёзные неисправности — задержание ТС</p>`,
+    "12.6": `<h2>Ст. 12.6 — Не пристегнут ремень</h2><p>Штраф 1000 ₽</p>`,
+    "12.12": `<h2>Ст. 12.12 — Проезд на красный</h2><ul><li>1-й раз — 1000 ₽</li><li>Повтор — 5000 ₽ или лишение прав</li></ul>`,
+    "12.13": `<h2>Ст. 12.13 — Нарушение проезда перекрёстков</h2><p>Штраф 1000 ₽</p>`,
+    "12.14": `<h2>Ст. 12.14 — Неправильный поворот/разворот</h2><p>Штраф 500 ₽</p>`,
+    "12.15": `<h2>Ст. 12.15 — Выезд на встречку</h2><ul><li>Штраф 5000 ₽ или лишение прав</li><li>Повтор — лишение до 1 года</li></ul>`,
+    "12.16": `<h2>Ст. 12.16 — Нарушение разметки/знаков</h2><p>Штраф от 500 до 5000 ₽</p>`,
     "12.18": `<h2>Ст. 12.18 — Не уступил дорогу</h2><p>Штраф 1500–2500 ₽</p>`,
-    "12.23": `<h2>Ст. 12.23 — Перевозка детей без детского кресла</h2><p>Штраф 3000 ₽</p>`,
-    "12.24": `<h2>Ст. 12.24 — ДТП с причинением вреда здоровью</h2>
-      <ul>
-        <li>Лёгкий вред — штраф до 25 000 ₽ или лишение прав до 2 лет</li>
-        <li>Средний или тяжкий вред — уголовная ответственность (ст. 264 УК РФ)</li>
-      </ul>`,
-    "12.26": `<h2>Ст. 12.26 — Отказ от медицинского освидетельствования</h2><p>Штраф 30 000 ₽ + лишение прав на 1.5–2 года</p>`,
-    "12.27": `<h2>Ст. 12.27 — Оставление места ДТП</h2><p>Лишение прав на 1–1.5 года или административный арест до 15 суток</p>`,
-    "12.8": `<h2>Ст. 12.8 — Управление в нетрезвом состоянии</h2><p>Штраф 30 000 ₽ + лишение прав на 1.5–2 года. Повторное нарушение — уголовная ответственность</p>`,
-    "12.9": `<h2>Ст. 12.9 — Превышение скорости</h2>
-      <ul>
-        <li>20–40 км/ч — 500 ₽</li>
-        <li>40–60 км/ч — 1000–1500 ₽</li>
-        <li>60–80 км/ч — 2000–2500 ₽ или лишение прав</li>
-        <li>Более 80 км/ч — лишение прав на 6 мес.</li>
-      </ul>`,
-    "disputes": `<h2>Разбор спорных ситуаций</h2>
-      <ul>
-        <li><strong>Ситуация 1:</strong> Водитель утверждает, что не нарушал скорость, но при этом GPS-фиксатор показывает превышение. Что делать? <br>Ответ: Проверить корректность показаний, возможно, требуется проверка прибора и подтверждение другими доказательствами.</li>
-        <li><strong>Ситуация 2:</strong> ДТП без очевидных повреждений, участники утверждают, что не виноваты. Как оформить? <br>Ответ: Оформить схему, зафиксировать показания свидетелей, составить протокол с описанием обстоятельств.</li>
-        <li><strong>Ситуация 3:</strong> Водитель отказался проходить медосвидетельствование, но внешне был трезв. Что дальше? <br>Ответ: Применять штраф и лишение прав согласно ст. 12.26, отказ является самостоятельным нарушением.</li>
-      </ul>`,
-    "emergency": `<h2>Телефоны экстренных служб</h2>
-      <ul>
-        <li><strong>Полиция:</strong> 102</li>
-        <li><strong>Скорая помощь:</strong> 103</li>
-        <li><strong>Пожарная служба:</strong> 101</li>
-        <li><strong>Единый номер экстренных служб:</strong> 112</li>
-      </ul>`
+    "12.23": `<h2>Ст. 12.23 — Без детского кресла</h2><p>Штраф 3000 ₽</p>`,
+    "12.24": `<h2>Ст. 12.24 — ДТП с вредом здоровью</h2><ul><li>Лёгкий вред — до 25 000 ₽ или лишение</li><li>Тяжкий — уголовная ответственность</li></ul>`,
+    "12.26": `<h2>Ст. 12.26 — Отказ от медосвидетельствования</h2><p>Штраф 30 000 ₽ + лишение на 1.5–2 года</p>`,
+    "12.27": `<h2>Ст. 12.27 — Оставление места ДТП</h2><p>Лишение на 1–1.5 года или арест</p>`,
+    "12.8": `<h2>Ст. 12.8 — Вождение в нетрезвом виде</h2><p>Штраф 30 000 ₽ + лишение прав. Повтор — уголовное дело</p>`,
+    "12.9": `<h2>Ст. 12.9 — Превышение скорости</h2><ul><li>20–40 км/ч — 500 ₽</li><li>40–60 — 1000–1500 ₽</li><li>60–80 — 2000–2500 ₽ или лишение</li><li>80+ — лишение на 6 мес</li></ul>`,
+    "disputes": `<h2>Разбор спорных ситуаций</h2><ul><li>GPS-фиксатор — перепроверить, запросить доп. данные</li><li>ДТП без повреждений — схема, свидетели, протокол</li><li>Отказ от освидетельствования — применять 12.26</li></ul>`,
+    "emergency": `<h2>Телефоны экстренных служб</h2><ul><li><b>Полиция:</b> 102</li><li><b>Скорая помощь:</b> 103</li><li><b>Пожарные:</b> 101</li><li><b>Единый номер:</b> 112</li></ul>`
   };
 
   function showInfo(key) {
-    const infoBox = document.getElementById('infoBox');
+    const box = document.getElementById('infoBox');
     if (articles[key]) {
-      infoBox.innerHTML = articles[key];
-      infoBox.style.display = 'block';
-      // Скроллим к инфо для удобства
-      infoBox.scrollIntoView({ behavior: 'smooth' });
+      box.innerHTML = articles[key];
     } else {
-      infoBox.innerHTML = '<p>Информация отсутствует.</p>';
-      infoBox.style.display = 'block';
+      box.innerHTML = "<p>Информация недоступна.</p>";
     }
+    box.scrollIntoView({ behavior: 'smooth' });
   }
 </script>
-
 </body>
 </html>

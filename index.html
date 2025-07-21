@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Памятка сотруднику ГАИ</title>
   <style>
     * {
@@ -65,11 +65,43 @@
       padding: 20px 10px;
     }
 
-    @media (hover: hover) {
-      .card:hover {
-        transform: scale(1.01);
-        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-      }
+    .accordion-btn {
+      display: block;
+      width: 100%;
+      background-color: #007aff;
+      color: white;
+      padding: 15px 20px;
+      border: none;
+      border-radius: 12px;
+      font-size: 17px;
+      font-weight: bold;
+      text-align: center;
+      cursor: pointer;
+      margin: 10px 0 15px;
+    }
+
+    .accordion-content {
+      display: none;
+      background-color: white;
+      padding: 15px 16px;
+      border-radius: 14px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+    }
+
+    .accordion-content h3 {
+      margin-top: 0;
+      color: #007aff;
+      font-size: 17px;
+    }
+
+    .accordion-content ul {
+      padding-left: 20px;
+      margin: 0;
+    }
+
+    .accordion-content ul li {
+      margin-bottom: 10px;
+      font-size: 16px;
     }
   </style>
 </head>
@@ -124,11 +156,37 @@
       </ul>
     </div>
 
+    <!-- Кнопка -->
+    <button class="accordion-btn" onclick="toggleAccordion()">📚 Административные правонарушения</button>
+
+    <!-- Контент -->
+    <div class="accordion-content" id="admin-law">
+      <h3>Статьи КоАП РФ</h3>
+      <ul>
+        <li><b>12.1</b> — Управление без регистрации ТС</li>
+        <li><b>12.3</b> — Отсутствие ВУ, СТС, страховки</li>
+        <li><b>12.5</b> — Управление с неисправностями</li>
+        <li><b>12.7</b> — Управление без прав</li>
+        <li><b>12.8</b> — Вождение в состоянии опьянения</li>
+        <li><b>12.9</b> — Превышение скорости</li>
+        <li><b>12.15</b> — Нарушение разметки, выезд на встречку</li>
+        <li><b>12.26</b> — Отказ от медосвидетельствования</li>
+        <li><b>12.27</b> — Оставление места ДТП</li>
+      </ul>
+    </div>
+
   </div>
 
   <footer>
     &copy; 2025 Памятка ГАИ.
   </footer>
+
+  <script>
+    function toggleAccordion() {
+      const content = document.getElementById("admin-law");
+      content.style.display = content.style.display === "block" ? "none" : "block";
+    }
+  </script>
 
 </body>
 </html>

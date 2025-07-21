@@ -1,24 +1,22 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Памятка ГАИ — ДТП и административные правонарушения</title>
-  <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="theme-color" content="#121212">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Памятка ГАИ — Административные правонарушения</title>
+  <meta name="theme-color" content="#121212" />
   <style>
     :root {
       --bg-color: #121212;
       --text-color: #f0f0f0;
       --card-bg: #1e1e1e;
-      --button-bg: #0057b7;
-      --button-hover: #003f8a;
+      --btn-bg: #0057b7;
+      --btn-hover: #003f8a;
     }
     body {
       font-family: Arial, sans-serif;
-      margin: 0;
-      padding: 20px;
-      background-color: var(--bg-color);
+      margin: 0; padding: 20px;
+      background: var(--bg-color);
       color: var(--text-color);
     }
     h1 {
@@ -28,122 +26,107 @@
     .button-container {
       display: flex;
       flex-wrap: wrap;
-      gap: 15px;
+      gap: 10px;
       justify-content: center;
       margin: 20px 0;
     }
     button {
-      padding: 12px 20px;
-      font-size: 15px;
+      flex: 1 1 30%;
+      min-width: 200px;
+      padding: 10px;
+      font-size: 14px;
       cursor: pointer;
       border: none;
-      border-radius: 8px;
-      background-color: var(--button-bg);
-      color: white;
-      transition: background-color 0.3s;
+      border-radius: 6px;
+      background: var(--btn-bg);
+      color: #fff;
+      transition: background 0.2s;
     }
     button:hover {
-      background-color: var(--button-hover);
+      background: var(--btn-hover);
     }
     .info {
-      margin-top: 25px;
-      background-color: var(--card-bg);
+      margin-top: 20px;
+      background: var(--card-bg);
       padding: 20px;
-      border-radius: 10px;
+      border-radius: 8px;
       display: none;
       max-width: 800px;
-      margin-left: auto;
-      margin-right: auto;
+      margin: auto;
     }
   </style>
 </head>
 <body>
 
-<h1>Памятка сотрудникам ГАИ — ДТП и нарушения</h1>
+<h1>Памятка сотрудникам ГАИ — Административные правонарушения</h1>
 
 <div class="button-container">
-  <button onclick="showInfo('leaveScene')">Оставление места ДТП</button>
-  <button onclick="showInfo('alcohol')">Нетрезвое состояние</button>
-  <button onclick="showInfo('refusal')">Отказ от освидетельствования</button>
-  <button onclick="showInfo('injury')">Причинение вреда здоровью</button>
-  <button onclick="showInfo('noDoc')">Отсутствие документов</button>
-  <button onclick="showInfo('wrongUturn')">Нарушение разворота/поворота</button>
-  <button onclick="showInfo('priority')">Непредоставление преимущества</button>
-  <button onclick="showInfo('redLight')">Проезд на красный</button>
-  <button onclick="showInfo('intersection')">Нарушение на перекрестке</button>
-  <button onclick="showInfo('wrongLane')">Выезд на встречную</button>
+  <button onclick="showInfo('12.3')">Управление без прав</button>
+  <button onclick="showInfo('12.3_osago')">Без ОСАГО</button>
+  <button onclick="showInfo('12.5')">Неисправности ТС</button>
+  <button onclick="showInfo('12.6')">Не пристегнут ремень</button>
+  <button onclick="showInfo('12.12')">Проезд на запрещающий сигнал</button>
+  <button onclick="showInfo('12.13')">Нарушение на перекрёстке</button>
+  <button onclick="showInfo('12.14')">Поворот/разворот неверно</button>
+  <button onclick="showInfo('12.15')">Выезд на встречную/неправ. обгон</button>
+  <button onclick="showInfo('12.16')">Нарушение разметки/знаков</button>
+  <button onclick="showInfo('12.18')">Не уступил дорогу</button>
+  <button onclick="showInfo('12.23')">Перевозка детей без кресла</button>
+  <button onclick="showInfo('12.24')">ДТП с вредом здоровью</button>
+  <button onclick="showInfo('12.26')">Отказ от освидетельствования</button>
+  <button onclick="showInfo('12.27')">Оставление места ДТП</button>
+  <button onclick="showInfo('12.8')">Нетрезвое вождение</button>
+  <button onclick="showInfo('12.9')">Превышение скорости</button>
 </div>
 
 <div id="infoBox" class="info"></div>
 
 <script>
   const articles = {
-    leaveScene: `
-      <h2>Оставление места ДТП — ст. 12.27 ч.2 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> лишение прав на 1-1.5 года или административный арест до 15 суток.</p>
-      <p>Применяется в случае, если водитель покидает место ДТП без уважительной причины.</p>
-    `,
-    alcohol: `
-      <h2>Управление в состоянии опьянения — ст. 12.8 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> штраф 30 000 руб + лишение прав на 1.5–2 года.</p>
-      <p>Повторное нарушение — уголовная ответственность (ст. 264.1 УК РФ).</p>
-    `,
-    refusal: `
-      <h2>Отказ от медицинского освидетельствования — ст. 12.26 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> штраф 30 000 руб + лишение прав на 1.5–2 года.</p>
-      <p>Приравнивается к состоянию опьянения.</p>
-    `,
-    injury: `
-      <h2>ДТП с причинением вреда — ст. 12.24 КоАП РФ</h2>
+    "12.3": `<h2>Ст. 12.3 — Управление без водительских прав</h2>
       <ul>
-        <li>Легкий вред — штраф до 25 000 руб или лишение прав до 2 лет.</li>
-        <li>Средний и тяжкий вред — уголовная ответственность (ст. 264 УК РФ).</li>
-      </ul>
-    `,
-    noDoc: `
-      <h2>Управление без документов — ст. 12.3 КоАП РФ</h2>
+        <li>Нет документов при себе — предупреждение или штраф 500 ₽</li>
+        <li>Управление после лишения — штраф 30 000 ₽ или арест</li>
+      </ul>`,
+    "12.3_osago": `<h2>Ст. 12.3 — Без полиса ОСАГО</h2><p>Штраф 800 ₽</p>`,
+    "12.5": `<h2>Ст. 12.5 — Неисправное ТС</h2><p>Штраф 500 ₽, серьёзные неисправности — задержание ТС</p>`,
+    "12.6": `<h2>Ст. 12.6 — Не пристегнут ремень</h2><p>Штраф 1000 ₽</p>`,
+    "12.12": `<h2>Ст. 12.12 — Проезд на запрещающий сигнал</h2>
       <ul>
-        <li>Нет прав при себе — предупреждение или штраф 500 руб.</li>
-        <li>Нет полиса ОСАГО — штраф 800 руб.</li>
-        <li>Лишён прав — штраф 30 000 руб или арест.</li>
-      </ul>
-    `,
-    wrongUturn: `
-      <h2>Нарушение при повороте/развороте — ст. 12.14 КоАП РФ</h2>
-      <p>Штраф: 500 руб.</p>
-      <p>Если поворот/разворот через сплошную — ст. 12.15, штраф 5000 руб или лишение прав.</p>
-    `,
-    priority: `
-      <h2>Непредоставление преимущества — ст. 12.18 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> штраф 1500–2500 руб.</p>
-      <p>Применяется при отказе уступить дорогу пешеходам, ТС с приоритетом и др.</p>
-    `,
-    redLight: `
-      <h2>Проезд на красный — ст. 12.12 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> штраф 1000 руб.</p>
-      <p>Повторное нарушение — штраф 5000 руб или лишение прав на 4–6 месяцев.</p>
-    `,
-    intersection: `
-      <h2>Нарушение правил проезда перекрёстков — ст. 12.13 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> штраф 1000 руб.</p>
-      <p>Распространяется на несоблюдение очередности, выезд на загруженное перекрёсток и др.</p>
-    `,
-    wrongLane: `
-      <h2>Выезд на встречную полосу — ст. 12.15 ч.4 КоАП РФ</h2>
-      <p><strong>Наказание:</strong> штраф 5000 руб или лишение прав на 4–6 месяцев.</p>
-      <p>При повторе — лишение прав до 1 года.</p>
-    `
+        <li>1-е нарушение — 1000 ₽</li>
+        <li>Повтор — 5000 ₽ или лишение прав на 4–6 мес.</li>
+      </ul>`,
+    "12.13": `<h2>Ст. 12.13 — Нарушение на перекрёстке</h2><p>Штраф 1000 ₽</p>`,
+    "12.14": `<h2>Ст. 12.14 — Неправильный поворот/разворот</h2><p>Штраф 500 ₽</p>`,
+    "12.15": `<h2>Ст. 12.15 — Выезд на встречную / Опасный обгон</h2>
+      <ul>
+        <li>Выезд на встречку или обгон в неположенном месте — 5000 ₽ или лишение прав на 4–6 мес.</li>
+        <li>Повтор — лишение до 1 года</li>
+      </ul>`,
+    "12.16": `<h2>Ст. 12.16 — Нарушение разметки или знаков</h2><p>Штраф от 500 до 5000 ₽</p>`,
+    "12.18": `<h2>Ст. 12.18 — Не уступил дорогу</h2><p>Штраф 1500–2500 ₽</p>`,
+    "12.23": `<h2>Ст. 12.23 — Перевозка детей без кресла</h2><p>Штраф 3000 ₽</p>`,
+    "12.24": `<h2>Ст. 12.24 — ДТП с вредом здоровью</h2>
+      <ul>
+        <li>Лёгкий вред — штраф до 25 000 ₽ или лишение до 2 лет</li>
+        <li>Средний/тяжкий вред — уголовка (ст. 264 УК РФ)</li>
+      </ul>`,
+    "12.26": `<h2>Ст. 12.26 — Отказ от освидетельствования</h2><p>Штраф 30 000 ₽ + лишение прав на 1.5–2 года</p>`,
+    "12.27": `<h2>Ст. 12.27 — Оставление места ДТП</h2><p>Лишение прав на 1–1.5 года или арест до 15 сут.</p>`,
+    "12.8": `<h2>Ст. 12.8 — Нетрезвое вождение</h2><p>Штраф 30 000 ₽ + лишение прав на 1.5–2 года. Повтор — уголовка</p>`,
+    "12.9": `<h2>Ст. 12.9 — Превышение скорости</h2>
+      <ul>
+        <li>20–40 км/ч — 500 ₽</li>
+        <li>40–60 км/ч — 1000–1500 ₽</li>
+        <li>60–80 км/ч — 2000–2500 ₽ или лишение прав</li>
+        <li>Более 80 км/ч — лишение прав на 6 мес.</li>
+      </ul>`
   };
 
-  function showInfo(article) {
-    const infoBox = document.getElementById("infoBox");
-    if (articles[article]) {
-      infoBox.innerHTML = articles[article];
-      infoBox.style.display = "block";
-    } else {
-      infoBox.innerHTML = `<p>Информация по статье не найдена.</p>`;
-      infoBox.style.display = "block";
-    }
+  function showInfo(id) {
+    const box = document.getElementById("infoBox");
+    box.innerHTML = articles[id] || "<p>Информация не найдена.</p>";
+    box.style.display = "block";
   }
 </script>
 

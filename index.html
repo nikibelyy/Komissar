@@ -2,9 +2,10 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Памятка ГАИ — Защищённый доступ</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="theme-color" content="#121212" />
+  <title>Памятка ГАИ</title>
   <style>
     :root {
       --bg-color: #121212;
@@ -16,7 +17,7 @@
       --btn-red-hover: #a7261b;
     }
     body {
-      font-family: Arial, sans-serif;
+      font-family: -apple-system, BlinkMacSystemFont, Arial, sans-serif;
       margin: 0;
       padding: 0;
       background: var(--bg-color);
@@ -63,11 +64,11 @@
     }
     .main-content {
       display: none;
-      padding: 20px;
+      padding: 15px;
     }
     h1 {
       text-align: center;
-      font-size: 24px;
+      font-size: 22px;
     }
     .button-container {
       display: flex;
@@ -109,24 +110,22 @@
   <h1>Памятка сотрудникам ГАИ — Административные правонарушения</h1>
 
   <div class="button-container">
-    <button onclick="showInfo('12.3')">Управление без прав</button>
-    <button onclick="showInfo('12.3_osago')">Без ОСАГО</button>
-    <button onclick="showInfo('12.5')">Неисправности ТС</button>
-    <button onclick="showInfo('12.6')">Не пристегнут ремень</button>
-    <button onclick="showInfo('12.12')">Проезд на запрещающий сигнал</button>
-    <button onclick="showInfo('12.13')">Нарушение на перекрёстке</button>
-    <button onclick="showInfo('12.14')">Поворот/разворот неверно</button>
-    <button onclick="showInfo('12.15')">Выезд на встречную/неправильный обгон</button>
-    <button onclick="showInfo('12.16')">Нарушение разметки/знаков</button>
-    <button onclick="showInfo('12.18')">Не уступил дорогу</button>
-    <button onclick="showInfo('12.23')">Перевозка детей без кресла</button>
-    <button onclick="showInfo('12.24')">ДТП с вредом здоровью</button>
-    <button onclick="showInfo('12.26')">Отказ от освидетельствования</button>
-    <button onclick="showInfo('12.27')">Оставление места ДТП</button>
-    <button onclick="showInfo('12.8')">Нетрезвое вождение</button>
-    <button onclick="showInfo('12.9')">Превышение скорости</button>
-    <button class="red-btn" onclick="showInfo('disputes')">Разбор спорных ситуаций</button>
-    <button class="red-btn" onclick="showInfo('emergency')">Телефоны экстренных служб</button>
+    <button onclick="showInfo('12.3')">12.3 — Нет прав</button>
+    <button onclick="showInfo('12.5')">12.5 — Неисправности</button>
+    <button onclick="showInfo('12.6')">12.6 — Ремень</button>
+    <button onclick="showInfo('12.8')">12.8 — Нетрезвое</button>
+    <button onclick="showInfo('12.9')">12.9 — Скорость</button>
+    <button onclick="showInfo('12.12')">12.12 — Красный</button>
+    <button onclick="showInfo('12.13')">12.13 — Перекрёсток</button>
+    <button onclick="showInfo('12.14')">12.14 — Разворот</button>
+    <button onclick="showInfo('12.15')">12.15 — Встречка</button>
+    <button onclick="showInfo('12.16')">12.16 — Разметка</button>
+    <button onclick="showInfo('12.18')">12.18 — Не уступил</button>
+    <button onclick="showInfo('12.23')">12.23 — Детское кресло</button>
+    <button onclick="showInfo('12.24')">12.24 — Вред здоровью</button>
+    <button onclick="showInfo('12.26')">12.26 — Отказ мед</button>
+    <button onclick="showInfo('12.27')">12.27 — Покинул ДТП</button>
+    <button class="red-btn" onclick="showInfo('emergency')">Экстренные службы</button>
   </div>
 
   <div id="infoBox" class="info"></div>
@@ -137,45 +136,39 @@
 
   function checkPassword() {
     const input = document.getElementById('password').value;
-    const errorDiv = document.getElementById('error');
     if (input === PASSWORD) {
       document.getElementById('loginSection').style.display = 'none';
       document.getElementById('mainContent').style.display = 'block';
     } else {
-      errorDiv.textContent = "Неверный пароль.";
+      document.getElementById('error').textContent = "Неверный пароль.";
     }
   }
 
   const articles = {
-    "12.3": `<h2>Ст. 12.3 — Управление без водительских прав</h2><ul><li>Нет документов — штраф 500 ₽</li><li>После лишения — штраф 30 000 ₽ или арест</li></ul>`,
-    "12.3_osago": `<h2>Ст. 12.3 — Без полиса ОСАГО</h2><p>Штраф 800 ₽</p>`,
-    "12.5": `<h2>Ст. 12.5 — Неисправное ТС</h2><p>Штраф 500 ₽, серьёзные неисправности — задержание ТС</p>`,
-    "12.6": `<h2>Ст. 12.6 — Не пристегнут ремень</h2><p>Штраф 1000 ₽</p>`,
-    "12.12": `<h2>Ст. 12.12 — Проезд на красный</h2><ul><li>1-й раз — 1000 ₽</li><li>Повтор — 5000 ₽ или лишение прав</li></ul>`,
-    "12.13": `<h2>Ст. 12.13 — Нарушение проезда перекрёстков</h2><p>Штраф 1000 ₽</p>`,
-    "12.14": `<h2>Ст. 12.14 — Неправильный поворот/разворот</h2><p>Штраф 500 ₽</p>`,
-    "12.15": `<h2>Ст. 12.15 — Выезд на встречку</h2><ul><li>Штраф 5000 ₽ или лишение прав</li><li>Повтор — лишение до 1 года</li></ul>`,
-    "12.16": `<h2>Ст. 12.16 — Нарушение разметки/знаков</h2><p>Штраф от 500 до 5000 ₽</p>`,
-    "12.18": `<h2>Ст. 12.18 — Не уступил дорогу</h2><p>Штраф 1500–2500 ₽</p>`,
-    "12.23": `<h2>Ст. 12.23 — Без детского кресла</h2><p>Штраф 3000 ₽</p>`,
-    "12.24": `<h2>Ст. 12.24 — ДТП с вредом здоровью</h2><ul><li>Лёгкий вред — до 25 000 ₽ или лишение</li><li>Тяжкий — уголовная ответственность</li></ul>`,
-    "12.26": `<h2>Ст. 12.26 — Отказ от медосвидетельствования</h2><p>Штраф 30 000 ₽ + лишение на 1.5–2 года</p>`,
-    "12.27": `<h2>Ст. 12.27 — Оставление места ДТП</h2><p>Лишение на 1–1.5 года или арест</p>`,
-    "12.8": `<h2>Ст. 12.8 — Вождение в нетрезвом виде</h2><p>Штраф 30 000 ₽ + лишение прав. Повтор — уголовное дело</p>`,
-    "12.9": `<h2>Ст. 12.9 — Превышение скорости</h2><ul><li>20–40 км/ч — 500 ₽</li><li>40–60 — 1000–1500 ₽</li><li>60–80 — 2000–2500 ₽ или лишение</li><li>80+ — лишение на 6 мес</li></ul>`,
-    "disputes": `<h2>Разбор спорных ситуаций</h2><ul><li>GPS-фиксатор — перепроверить, запросить доп. данные</li><li>ДТП без повреждений — схема, свидетели, протокол</li><li>Отказ от освидетельствования — применять 12.26</li></ul>`,
-    "emergency": `<h2>Телефоны экстренных служб</h2><ul><li><b>Полиция:</b> 102</li><li><b>Скорая помощь:</b> 103</li><li><b>Пожарные:</b> 101</li><li><b>Единый номер:</b> 112</li></ul>`
+    "12.3": "<h2>Статья 12.3</h2><p>Управление ТС без права управления — штраф до 30 000 ₽.</p>",
+    "12.5": "<h2>Статья 12.5</h2><p>Управление неисправным ТС или с нарушениями — штраф, возможна эвакуация.</p>",
+    "12.6": "<h2>Статья 12.6</h2><p>Неиспользование ремня безопасности — 1000 ₽.</p>",
+    "12.8": "<h2>Статья 12.8</h2><p>Нетрезвое вождение — штраф 30 000 ₽ и лишение прав.</p>",
+    "12.9": "<h2>Статья 12.9</h2><p>Превышение скорости: от 500 ₽ до лишения прав.</p>",
+    "12.12": "<h2>Статья 12.12</h2><p>Проезд на запрещающий сигнал — до 5000 ₽.</p>",
+    "12.13": "<h2>Статья 12.13</h2><p>Нарушения при проезде перекрёстков — 1000 ₽.</p>",
+    "12.14": "<h2>Статья 12.14</h2><p>Нарушения при повороте, развороте — 500 ₽.</p>",
+    "12.15": "<h2>Статья 12.15</h2><p>Выезд на встречку — до 5000 ₽ или лишение.</p>",
+    "12.16": "<h2>Статья 12.16</h2><p>Несоблюдение знаков и разметки — штраф до 5000 ₽.</p>",
+    "12.18": "<h2>Статья 12.18</h2><p>Не уступил дорогу пешеходу — до 2500 ₽.</p>",
+    "12.23": "<h2>Статья 12.23</h2><p>Перевозка детей без удерживающих устройств — 3000 ₽.</p>",
+    "12.24": "<h2>Статья 12.24</h2><p>Нарушения, повлекшие вред здоровью — лишение или штраф до 25 000 ₽.</p>",
+    "12.26": "<h2>Статья 12.26</h2><p>Отказ от освидетельствования — 30 000 ₽ и лишение.</p>",
+    "12.27": "<h2>Статья 12.27</h2><p>Оставление места ДТП — лишение или арест.</p>",
+    "emergency": "<h2>Экстренные службы</h2><ul><li><strong>Полиция:</strong> 102</li><li><strong>Скорая:</strong> 103</li><li><strong>Пожарные:</strong> 101</li><li><strong>Общий номер:</strong> 112</li></ul>"
   };
 
   function showInfo(key) {
     const box = document.getElementById('infoBox');
-    if (articles[key]) {
-      box.innerHTML = articles[key];
-    } else {
-      box.innerHTML = "<p>Информация недоступна.</p>";
-    }
+    box.innerHTML = articles[key] || "<p>Информация отсутствует.</p>";
     box.scrollIntoView({ behavior: 'smooth' });
   }
 </script>
+
 </body>
 </html>

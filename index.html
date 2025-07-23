@@ -2,146 +2,140 @@
 <html lang="ru">
 <head>
   <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ГИБДД Онлайн</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Аварийный комиссар Воронеж – помощь при ДТП 24/7</title>
+  <meta name="description" content="Аварийный комиссар в Воронеже – выезд на ДТП, оформление аварий, помощь со страховой. Работаем круглосуточно. Звоните +7 (910) 040-11-16.">
   <style>
     body {
       font-family: Arial, sans-serif;
-      background: #f6f6f6;
       margin: 0;
-      padding: 0;
+      background: #f8f8f8;
+      color: #222;
     }
     header {
-      background: #1a73e8;
+      background: #c62828;
       color: white;
+      padding: 20px;
       text-align: center;
-      padding: 20px;
     }
-    main {
-      padding: 20px;
+    header h1 {
+      margin: 0;
+      font-size: 32px;
     }
-    .intro {
-      margin-bottom: 20px;
-      font-size: 16px;
-    }
-    .button {
-      display: block;
+    .cta {
+      background: #ffc107;
+      color: black;
       padding: 15px;
-      margin: 10px 0;
-      border: none;
-      color: white;
-      font-size: 16px;
       text-align: center;
-      cursor: pointer;
-      border-radius: 5px;
+      font-size: 20px;
+    }
+    .cta a {
       text-decoration: none;
-    }
-    .blue { background-color: #2196F3; }
-    .darkblue { background-color: #3F51B5; }
-    .green { background-color: #4CAF50; }
-    .brown { background-color: #795548; }
-    .gray { background-color: #9E9E9E; }
-    .orange { background-color: #FF9800; }
-    .purple { background-color: #673AB7; }
-    .block {
-      background: white;
-      padding: 15px;
-      margin: 20px 0;
-      border-radius: 8px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-bottom: 10px;
+      color: black;
       font-weight: bold;
     }
-    input[type="file"], input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border-radius: 5px;
-      border: 1px solid #ccc;
+    .content {
+      padding: 20px;
     }
-    .template-link {
-      display: inline-block;
-      margin: 5px 10px 10px 0;
-      padding: 10px 15px;
-      background-color: #eeeeee;
+    .features {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 15px;
+    }
+    .feature {
+      background: white;
+      padding: 15px;
+      border: 1px solid #ddd;
       border-radius: 5px;
+    }
+    .phone-banner {
+      background: #43a047;
+      color: white;
+      text-align: center;
+      padding: 25px;
+      font-size: 24px;
+    }
+    .phone-banner a {
+      color: white;
       text-decoration: none;
-      color: #333;
+      font-weight: bold;
+    }
+    .seo-text {
+      background: #fff;
+      padding: 20px;
+      margin-top: 20px;
+      border-top: 1px solid #ddd;
     }
     footer {
+      background: #333;
+      color: #ccc;
       text-align: center;
-      padding: 20px;
-      color: #777;
-      font-size: 14px;
+      padding: 15px;
+    }
+    @media (max-width: 768px) {
+      .features {
+        grid-template-columns: 1fr;
+      }
     }
   </style>
 </head>
 <body>
 
 <header>
-  <h1>ГИБДД Онлайн</h1>
+  <h1>Аварийный комиссар Воронеж</h1>
+  <p>Профессиональная помощь при ДТП 24/7</p>
 </header>
 
-<main>
-  <div class="intro">
-    <p>Приложение поможет совершить любое регистрационное действие в ГИБДД. Содержит перечень необходимых документов, комментарии, шаблоны заявлений и проверку данных по авто.</p>
+<div class="cta">
+  📞 Срочно нужна помощь? Звоните <a href="tel:+79100401116">+7 (910) 040-11-16</a> прямо сейчас!
+</div>
+
+<div class="content">
+  <h2>Наши услуги:</h2>
+  <div class="features">
+    <div class="feature">
+      <h3>Выезд на место ДТП</h3>
+      <p>Приедем за 15–30 минут по городу Воронеж и области. Работаем быстро и без задержек.</p>
+    </div>
+    <div class="feature">
+      <h3>Оформление документов</h3>
+      <p>Профессиональное оформление аварии без вызова ГИБДД. Избежите штрафов и ошибок.</p>
+    </div>
+    <div class="feature">
+      <h3>Круглосуточная помощь</h3>
+      <p>Работаем 24/7 без выходных. Звоните в любое время – день и ночь.</p>
+    </div>
+    <div class="feature">
+      <h3>Консультации и страховая</h3>
+      <p>Помогаем с оформлением в страховую компанию, расскажем, как получить выплаты.</p>
+    </div>
   </div>
 
-  <!-- Основные действия -->
-  <a href="#" class="button blue">Зарегистрировать</a>
-  <a href="#" class="button darkblue">Внести изменения</a>
-  <a href="#" class="button blue">Прекратить регистрацию</a>
-  <a href="#" class="button green">Ситуации</a>
-  <a href="#check" class="button brown">Проверки</a>
-  <a href="#support" class="button gray">Поддержка</a>
+  <div class="seo-text">
+    <h2>Аварийный комиссар в Воронеже – круглосуточно, быстро, надёжно</h2>
+    <p>Если вы попали в ДТП в Воронеже, не тратьте время – вызывайте аварийного комиссара по номеру <strong>+7 (910) 040-11-16</strong>. Мы выезжаем на место аварии в течение 15–30 минут, оформляем все необходимые документы, консультируем по дальнейшим действиям и помогаем со страховой выплатой.</p>
 
-  <!-- Загрузка документов -->
-  <div class="block">
-    <h3>📤 Загрузка документов</h3>
-    <form>
-      <label for="docUpload">Прикрепите сканы документов:</label>
-      <input type="file" id="docUpload" name="documents" multiple>
-    </form>
-  </div>
+    <p>Наша команда работает по всей территории города Воронеж и ближайших районов. Мы предоставляем профессиональные услуги оформления ДТП без вызова ГИБДД, что позволяет сэкономить время и нервы.</p>
 
-  <!-- Шаблоны -->
-  <div class="block">
-    <h3>📎 Шаблоны документов</h3>
-    <a class="template-link" href="blank_zayavlenie.pdf" download>Бланк заявления</a>
-    <a class="template-link" href="doverennost.docx" download>Доверенность</a>
-    <a class="template-link" href="dogovor_kuply_prodazhi.pdf" download>Договор купли-продажи</a>
-  </div>
+    <h3>Почему выбирают нас?</h3>
+    <ul>
+      <li>✅ Мгновенный выезд на ДТП</li>
+      <li>✅ Помощь при аварии любой сложности</li>
+      <li>✅ Работаем 24 часа, без выходных</li>
+      <li>✅ Опыт более 7 лет</li>
+      <li>✅ Прозрачные цены</li>
+    </ul>
 
-  <!-- Проверки -->
-  <div class="block" id="check">
-    <h3>🔍 Проверка данных</h3>
-    <form onsubmit="alert('Это пример! Здесь могла быть реальная проверка через API.'); return false;">
-      <label for="carNumber">Госномер автомобиля:</label>
-      <input type="text" id="carNumber" placeholder="например, А123АА77">
-      <input type="submit" class="button green" value="Проверить штрафы / ОСАГО / ТО">
-    </form>
+    <p>Нужен <strong>аварийный комиссар Воронеж</strong>? Мы всегда на связи! Позвоните по телефону <a href="tel:+79100401116">+7 (910) 040-11-16</a> – и мы поможем прямо сейчас.</p>
   </div>
+</div>
 
-  <!-- Ссылки -->
-  <div class="block">
-    <h3>🔗 Полезные ссылки</h3>
-    <a class="template-link" href="https://www.gosuslugi.ru" target="_blank">Госуслуги</a>
-    <a class="template-link" href="https://gibdd.ru" target="_blank">Официальный сайт ГИБДД</a>
-    <a class="template-link" href="https://autoins.ru" target="_blank">РСА (ОСАГО)</a>
-  </div>
-
-  <!-- Поддержка -->
-  <div class="block" id="support">
-    <h3>📞 Поддержка</h3>
-    <p>Если у вас возникли трудности, напишите нам на email: <a href="mailto:support@gibdd-app.ru">support@gibdd-app.ru</a></p>
-  </div>
-</main>
+<div class="phone-banner">
+  📱 Вызовите аварийного комиссара сейчас: <a href="tel:+79100401116">+7 (910) 040-11-16</a>
+</div>
 
 <footer>
-  &copy; 2025 ГИБДД Онлайн. Все права защищены.
+  &copy; 2025 Аварийный комиссар Воронеж | Все права защищены
 </footer>
 
 </body>

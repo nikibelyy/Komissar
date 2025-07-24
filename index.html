@@ -3,202 +3,109 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Аварийный Комиссар Никита | Воронеж</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+  <title>Аварийный Комиссар Никита — Воронеж</title>
   <style>
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
-
     body {
-      font-family: 'Inter', sans-serif;
-      background-color: #f9f9f9;
-      color: #222;
-      line-height: 1.6;
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background-color: #121212;
+      color: #ffffff;
     }
 
     header {
-      background: linear-gradient(135deg, #1e1e1e, #3a3a3a);
-      color: white;
-      padding: 40px 20px;
+      background-color: #1f1f1f;
+      padding: 20px;
       text-align: center;
+      border-bottom: 2px solid #e53935;
     }
 
     header h1 {
+      margin: 0;
       font-size: 28px;
-      margin-bottom: 10px;
-    }
-
-    header p {
-      font-size: 16px;
-      color: #ccc;
+      color: #e53935;
     }
 
     .container {
       max-width: 900px;
-      margin: auto;
+      margin: 30px auto;
       padding: 20px;
-    }
-
-    .section {
-      background-color: white;
-      padding: 25px;
-      margin: 20px 0;
-      border-radius: 12px;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.05);
-      transition: transform 0.2s;
-    }
-
-    .section:hover {
-      transform: translateY(-4px);
+      background-color: #1e1e1e;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(229, 57, 53, 0.3);
     }
 
     h2 {
-      font-size: 22px;
-      margin-bottom: 15px;
-      color: #ff6b00;
+      color: #e53935;
     }
 
-    .features {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 20px;
+    p {
+      line-height: 1.6;
     }
 
-    .feature {
-      flex: 1 1 250px;
-      background-color: #f4f4f4;
-      padding: 15px;
-      border-radius: 10px;
-      text-align: center;
-    }
-
-    .feature i {
-      font-size: 28px;
-      margin-bottom: 8px;
-      color: #ff6b00;
-    }
-
-    ul {
-      padding-left: 20px;
-      margin-top: 10px;
-    }
-
-    ul li {
-      margin-bottom: 10px;
-    }
-
-    .cta {
-      background-color: #fffaee;
-      text-align: center;
-      padding: 20px;
-      font-weight: 600;
-      font-size: 18px;
-      border-radius: 10px;
+    .contact {
       margin-top: 30px;
+      padding: 15px;
+      background-color: #2c2c2c;
+      border-left: 5px solid #e53935;
     }
 
-    .whatsapp-btn {
-      display: block;
-      text-align: center;
-      margin: 25px auto;
-      background-color: #25d366;
-      color: white;
-      padding: 15px 30px;
-      border-radius: 50px;
-      text-decoration: none;
+    .phone {
+      font-size: 22px;
       font-weight: bold;
-      font-size: 18px;
-      max-width: 300px;
-      transition: background 0.3s;
+      color: #fff;
     }
 
-    .whatsapp-btn:hover {
-      background-color: #1ebe5d;
-    }
-
-    footer {
+    .footer {
       text-align: center;
-      font-size: 14px;
-      color: #777;
       padding: 20px;
+      color: #888;
+      border-top: 1px solid #333;
+      margin-top: 40px;
     }
 
-    @media (max-width: 600px) {
-      .features {
-        flex-direction: column;
-      }
+    a {
+      color: #e53935;
+      text-decoration: none;
+    }
 
-      header h1 {
-        font-size: 22px;
-      }
-
-      .whatsapp-btn {
-        font-size: 16px;
-        padding: 12px 24px;
-      }
+    a:hover {
+      text-decoration: underline;
     }
   </style>
-  <script src="https://kit.fontawesome.com/a076d05399.js" crossorigin="anonymous"></script>
 </head>
 <body>
 
   <header>
-    <h1>🚗 Аварийный Комиссар Никита</h1>
-    <p>Воронеж и область — помощь при ДТП без ГАИ</p>
-    <p><strong>📞 +7 (910) 040-11-16</strong></p>
+    <h1>Аварийный Комиссар Никита</h1>
+    <p>Город Воронеж</p>
   </header>
 
   <div class="container">
+    <h2>Обо мне</h2>
+    <p>
+      Я — Никита, опытный аварийный комиссар в городе Воронеж. Работаю быстро, грамотно и всегда на вашей стороне. 
+      Помогаю разобраться в сложных ситуациях после ДТП, сопровождаю оформление документов, взаимодействие со страховыми компаниями.
+    </p>
 
-    <div class="section">
-      <h2>Почему выбирают меня</h2>
-      <div class="features">
-        <div class="feature">
-          <i class="fas fa-car-crash"></i>
-          <div>Оформление без ГАИ</div>
-        </div>
-        <div class="feature">
-          <i class="fas fa-file-signature"></i>
-          <div>Европротокол до 400 000 ₽</div>
-        </div>
-        <div class="feature">
-          <i class="fas fa-clock"></i>
-          <div>Быстрый выезд 24/7</div>
-        </div>
-        <div class="feature">
-          <i class="fas fa-check-circle"></i>
-          <div>Законно и по ПДД</div>
-        </div>
-      </div>
+    <h2>Услуги</h2>
+    <ul>
+      <li>Выезд на место ДТП</li>
+      <li>Фото- и видеофиксация происшествия</li>
+      <li>Оформление Европротокола</li>
+      <li>Консультации по страховым выплатам</li>
+      <li>Помощь при спорных ситуациях</li>
+    </ul>
+
+    <div class="contact">
+      <p>Связаться со мной:</p>
+      <p class="phone">📞 +7 (910) 040-11-16</p>
+      <p>Звонки принимаются круглосуточно.</p>
     </div>
-
-    <div class="section">
-      <h2>Мои услуги</h2>
-      <ul>
-        <li>Оформление ДТП на месте без вызова полиции</li>
-        <li>Составление схемы аварии</li>
-        <li>Фото- и видеофиксация повреждений</li>
-        <li>Заполнение европротокола и других документов</li>
-        <li>Консультация по компенсации от страховой</li>
-      </ul>
-    </div>
-
-    <div class="section cta">
-      📢 Бесплатная консультация 24/7 — звоните или пишите в WhatsApp
-    </div>
-
-    <a href="https://wa.me/79100401116" class="whatsapp-btn" target="_blank">
-      💬 Написать в WhatsApp
-    </a>
-
   </div>
 
-  <footer>
-    © 2025 Никита – Аварийный Комиссар в Воронеже
-  </footer>
+  <div class="footer">
+    &copy; 2025 Аварийный Комиссар | Воронеж
+  </div>
 
 </body>
 </html>

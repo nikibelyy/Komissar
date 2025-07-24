@@ -1,273 +1,149 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ДТП-Помощь Воронеж — помощь при ДТП 24/7</title>
-  <meta name="description" content="Круглосуточный аварийный комиссар в Воронеже. Выезд на место ДТП, оформление документов, помощь при аварии. Звоните +7 (910) 040-11-16.">
-
-  <!-- Google Fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Rubik:wght@400;600;800&display=swap" rel="stylesheet">
-
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Аварийный Комиссар Никита — Воронеж</title>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
   <style>
     * {
-      margin: 0;
-      padding: 0;
       box-sizing: border-box;
     }
-
     body {
-      font-family: 'Rubik', sans-serif;
-      background-color: #121212;
-      color: #f5f5f5;
-      line-height: 1.6;
+      margin: 0;
+      font-family: 'Roboto', sans-serif;
+      background-color: #f0f2f5;
+      color: #333;
     }
-
     header {
-      background: url('https://images.unsplash.com/photo-1606248897732-bb9e8fd8e8d4?auto=format&fit=crop&w=1500&q=80') center/cover no-repeat;
-      padding: 100px 20px 80px;
+      background-color: #ff6b00;
+      color: white;
       text-align: center;
-      position: relative;
+      padding: 30px 20px;
     }
-
-    header::after {
-      content: "";
-      position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background-color: rgba(0, 0, 0, 0.6);
-      z-index: 0;
-    }
-
-    header h1, header p {
-      position: relative;
-      z-index: 1;
-    }
-
     header h1 {
-      font-size: 42px;
-      font-weight: 800;
-      color: #ff3b3f;
-      margin-bottom: 10px;
+      margin: 0;
+      font-size: 26px;
     }
-
     header p {
-      font-size: 20px;
-      color: #fff;
-    }
-
-    .cta-button {
-      display: inline-block;
-      margin-top: 25px;
-      padding: 15px 30px;
       font-size: 18px;
-      font-weight: bold;
-      background-color: #ff3b3f;
-      color: #fff;
-      border-radius: 8px;
-      text-decoration: none;
-      transition: background 0.3s;
+      margin-top: 5px;
     }
 
-    .cta-button:hover {
-      background-color: #d32f2f;
-    }
-
-    section {
-      padding: 40px 20px;
-      max-width: 1100px;
-      margin: 0 auto;
+    .section {
+      background: white;
+      margin: 15px auto;
+      padding: 20px;
+      max-width: 700px;
+      border-radius: 10px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.1);
     }
 
     h2 {
-      font-size: 28px;
-      color: #ff3b3f;
-      margin-bottom: 20px;
-      text-align: center;
-    }
-
-    .services {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-      gap: 25px;
-    }
-
-    .service-box {
-      background-color: #1e1e1e;
-      border: 1px solid #333;
-      padding: 20px;
-      border-radius: 10px;
-      transition: transform 0.3s;
-    }
-
-    .service-box:hover {
-      transform: scale(1.03);
-    }
-
-    .service-box h3 {
-      color: #ffffff;
-      margin-bottom: 10px;
+      color: #ff6b00;
       font-size: 20px;
-    }
-
-    .service-box p {
-      color: #ccc;
-    }
-
-    .phone-banner {
-      background-color: #2e7d32;
-      color: white;
-      padding: 30px 20px;
-      text-align: center;
-      font-size: 24px;
-      font-weight: bold;
-      margin-top: 30px;
-      border-radius: 10px;
-    }
-
-    .phone-banner a {
-      color: #fff;
-      text-decoration: underline;
-    }
-
-    .seo-text {
-      margin-top: 40px;
-      background-color: #1a1a1a;
-      padding: 30px;
-      border-radius: 10px;
-    }
-
-    .seo-text h3 {
-      color: #ff3b3f;
       margin-bottom: 10px;
+    }
+
+    ul {
+      padding-left: 20px;
+    }
+
+    ul li {
+      margin-bottom: 8px;
+    }
+
+    .contact {
+      text-align: center;
+      margin: 25px 0;
+    }
+
+    .contact a {
+      text-decoration: none;
+      background: #25d366;
+      color: white;
+      padding: 14px 24px;
+      border-radius: 50px;
+      font-weight: bold;
+      display: inline-block;
+      transition: background 0.3s ease;
+    }
+
+    .contact a:hover {
+      background: #1ebc59;
+    }
+
+    .consultation {
+      background-color: #ffe9d6;
+      color: #333;
+      padding: 15px;
+      text-align: center;
+      border-radius: 8px;
+      font-weight: bold;
+      margin-top: 15px;
     }
 
     footer {
-      background-color: #000;
       text-align: center;
-      color: #666;
-      padding: 20px;
-      margin-top: 40px;
+      font-size: 13px;
+      color: #777;
+      margin: 20px 0;
     }
 
-    @media (max-width: 600px) {
+    @media screen and (max-width: 600px) {
       header h1 {
-        font-size: 30px;
+        font-size: 22px;
       }
-      .cta-button {
+      header p {
         font-size: 16px;
-        padding: 12px 20px;
       }
-      .phone-banner {
-        font-size: 20px;
+      .contact a {
+        padding: 12px 20px;
+        font-size: 16px;
       }
     }
   </style>
 </head>
 <body>
 
-<header>
-  <h1>ДТП-Помощь Воронеж</h1>
-  <p>Профессиональная помощь при ДТП круглосуточно</p>
-</header>
+  <header>
+    <h1>🚗 Аварийный Комиссар Воронеж</h1>
+    <p>Никита — помощь при ДТП без ГАИ</p>
+    <p><strong>📞 +7 (910) 040-11-16</strong></p>
+  </header>
 
-  <a href="https://wa.me/79100401116" style="
-  position: fixed;
-  bottom: 150px;
-  right: 20px;
-  background-color: #25D366;
-  color: white;
-  font-size: 22px;
-  padding: 14px 18px;
-  border-radius: 50%;
-  z-index: 999;
-  text-decoration: none;
-">
-  💬
-</a>
-
-<section>
-  <h2>Наши услуги</h2>
-  <div class="services">
-    <div class="service-box">
-      <h3>📍 Выезд на место ДТП</h3>
-      <p>Оперативный выезд на место аварии по Воронежу и области. Приедем в течение 20–30 минут.</p>
-    </div>
-    <div class="service-box">
-      <h3>📝 Оформление ДТП</h3>
-      <p>Заполним извещение, составим схему и фотофиксацию. Без ошибок и задержек.</p>
-    </div>
-    <div class="service-box">
-      <h3>📞 Консультации 24/7</h3>
-      <p>Звоните в любое время — поможем с алгоритмом действий при ДТП и контактами страховой.</p>
-    </div>
-    <div class="service-box">
-      <h3>💼 Работа со страховыми</h3>
-      <p>Подготовим документы для страховой выплаты и подскажем, как защитить ваши интересы.</p>
-    </div>
+  <div class="section">
+    <h2>Почему выбирают меня</h2>
+    <ul>
+      <li>Без вызова сотрудников ГАИ</li>
+      <li>Европротокол до 100 000 ₽ и до 400 000 ₽</li>
+      <li>Быстро, грамотно и законно</li>
+      <li>Выезд по Воронежу и области</li>
+    </ul>
   </div>
 
-  <div class="seo-text">
-    <h3>Аварийный комиссар в Воронеже — ваш помощник при ДТП</h3>
-    <p>Если вы попали в ДТП на дорогах Воронежа — не паникуйте. Наш аварийный комиссар приедет на место аварии в кратчайшие сроки, поможет оформить документы, подскажет, что говорить полиции и как действовать по закону. Мы экономим ваше время, деньги и нервы.</p>
-
-    <p>Работаем по всей Воронежской области, включая пригород. В любое время суток — звоните по номеру <strong><a 7 (910) 040-11-16</a></strong> и получите квалифицированную помощь на дороге.</p>
+  <div class="section">
+    <h2>Услуги</h2>
+    <ul>
+      <li>Оформление ДТП на месте</li>
+      <li>Консультация по Европротоколу</li>
+      <li>Составление схемы происшествия</li>
+      <li>Фотофиксация повреждений</li>
+      <li>Подача документов в страховую</li>
+    </ul>
   </div>
-</section>
 
-<footer>
-  &copy; 2025 ДТП-Помощь Воронеж. Все права защищены.
-</footer>
-<!-- Toast Notification -->
-<div id="toast" style="
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background-color: rgba(40, 40, 40, 0.95);
-  color: white;
-  padding: 15px 20px;
-  border-radius: 12px;
-  box-shadow: 0 8px 20px rgba(0,0,0,0.5);
-  font-family: -apple-system, BlinkMacSystemFont, 'Rubik', sans-serif;
-  font-size: 16px;
-  display: none;
-  z-index: 9999;
-  max-width: 90%;
-  text-align: center;
-  animation: fadeIn 0.5s ease-out;
-">
-  🚗 Попали в ДТП?<br>
-  <a href="tel:+79100401116" style="
-    display: inline-block;
-    margin-top: 10px;
-    padding: 8px 16px;
-    background-color: #ff3b3f;
-    color: #fff;
-    text-decoration: none;
-    border-radius: 8px;
-    font-weight: bold;
-  ">📞 Позвонить</a>
-</div>
+  <div class="section consultation">
+    📢 Бесплатная консультация 24/7 — просто напишите мне в WhatsApp
+  </div>
 
-<script>
-  window.addEventListener('load', () => {
-    setTimeout(() => {
-      const toast = document.getElementById('toast');
-      toast.style.display = 'block';
+  <div class="contact">
+    <a href="https://wa.me/79100401116" target="_blank">💬 Написать в WhatsApp</a>
+  </div>
 
-      setTimeout(() => {
-        toast.style.display = 'none';
-      }, 15000000); // скрыть через 15 секунд
-    }, 0); // показать через 5 секунд
-  });
-</script>
-
-<style>
-@keyframes fadeIn {
-  from { opacity: 0; transform: translateX(-50%) translateY(20px); }
-  to { opacity: 1; transform: translateX(-50%) translateY(0); }
-}
-</style>
+  <footer>
+    © 2025 Никита – Аварийный Комиссар в Воронеже
+  </footer>
 
 </body>
 </html>

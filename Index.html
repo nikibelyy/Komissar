@@ -1,0 +1,320 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>BLACKTRACE — Макет панели OSINT</title>
+  <meta name="description" content="Визуальный прототип в эстетике 'пробива' — без реального функционала." />
+  <style>
+    /* ========= THEME ========= */
+    :root{
+      --bg-0:#0b0d10;
+      --bg-1:#0f1318;
+      --bg-2:#121720;
+      --fg:#d7fbe8;
+      --muted:#89a7a7;
+      --accent:#23ff7b;
+      --accent-2:#00e0ff;
+      --danger:#ff4d6d;
+      --card:#0e141b;
+      --glow:0 0 .6rem rgba(35,255,123,.35), 0 0 1.4rem rgba(35,255,123,.15);
+      --radius:14px;
+      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+      --sans: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Apple Color Emoji","Segoe UI Emoji";
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background: radial-gradient(1200px 600px at 75% -20%, rgba(0,224,255,.06), transparent 60%) , var(--bg-0);
+      color:var(--fg); font-family:var(--sans); line-height:1.45;
+    }
+
+    /* ========= MATRIX BACKDROP ========= */
+    .matrix{
+      position:fixed; inset:0; z-index:-1; pointer-events:none; mask-image: radial-gradient(80% 80% at 50% 20%, #000 40%, transparent 100%);
+      opacity:.35;
+    }
+    .rain{
+      position:absolute; top:-100%; width:1px; height:300%; background:linear-gradient(to bottom, transparent, rgba(35,255,123,.8) 40%, transparent 70%);
+      filter: drop-shadow(0 0 6px rgba(35,255,123,.6));
+      animation: fall linear infinite;
+    }
+    @keyframes fall{to{transform: translateY(100%)}}
+
+    /* ========= LAYOUT ========= */
+    header{
+      position:sticky; top:0; z-index:10; backdrop-filter: blur(8px);
+      background: linear-gradient(to bottom, rgba(18,23,32,.85), rgba(18,23,32,.35));
+      border-bottom:1px solid rgba(255,255,255,.06);
+    }
+    .container{max-width:1200px; margin:0 auto; padding: 20px;}
+    .brand{display:flex; align-items:center; gap:12px}
+    .logo{
+      width:36px; height:36px; border-radius:8px;
+      background: conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
+      filter: drop-shadow(0 0 10px rgba(35,255,123,.4));
+    }
+    .brand h1{margin:0; font-size:1.05rem; letter-spacing:.08em; font-family:var(--mono)}
+    nav{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
+    .row{display:flex; flex-wrap:wrap; gap:20px}
+    .grow{flex:1 1 520px}
+    .shrink{flex:1 1 320px}
+
+    /* ========= CARDS ========= */
+    .card{
+      background: linear-gradient(180deg, var(--card), #0b1016);
+      border:1px solid rgba(255,255,255,.06);
+      border-radius: var(--radius);
+      box-shadow: 0 8px 32px rgba(0,0,0,.35), var(--glow);
+      overflow: hidden;
+    }
+    .card h3{margin:0 0 8px 0; font-size:1rem; color:var(--accent); font-family:var(--mono)}
+    .card .body{padding:18px}
+    .muted{color:var(--muted); font-size:.95rem}
+
+    /* ========= SEARCH PANEL ========= */
+    .search-grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
+    .input{
+      display:flex; align-items:center; gap:10px; padding:12px 12px;
+      background:#0a0f14; border:1px solid rgba(255,255,255,.08); border-radius:10px;
+      font-family:var(--mono); color:var(--fg)
+    }
+    .input input, .input select{
+      color:inherit; background:transparent; border:none; outline:none; width:100%; font:inherit;
+    }
+    .btn{
+      appearance:none; border:none; padding:12px 16px; border-radius:10px; font-family:var(--mono);
+      color:#06110b; background:linear-gradient(180deg, var(--accent), #12d96c); cursor:pointer;
+      box-shadow: var(--glow);
+    }
+    .btn[disabled]{opacity:.6; cursor:not-allowed; filter:grayscale(.3)}
+    .toolbar{display:flex; gap:10px; flex-wrap:wrap}
+    .tag{padding:6px 10px; border:1px dashed rgba(35,255,123,.4); border-radius:999px; font-family:var(--mono); font-size:.8rem; color:var(--accent)}
+
+    /* ========= TERMINAL ========= */
+    .terminal{
+      background:#05080c; border-top:1px solid rgba(255,255,255,.08); font-family:var(--mono);
+      padding:14px; height:220px; overflow:auto; color:#a9ffcf; font-size:.92rem;
+    }
+    .terminal .prompt{color:#00e0ff}
+    .cursor{display:inline-block; width:.52em; height:1.1em; background:#23ff7b; vertical-align:-0.15em; animation: blink 1s steps(1) infinite}
+    @keyframes blink{50%{opacity:0}}
+
+    /* ========= RESULTS ========= */
+    .results{display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:12px}
+    .result{
+      background: #0b1016; border:1px solid rgba(255,255,255,.06);
+      border-radius:12px; padding:14px; font-family:var(--mono); color:#bff5d7
+    }
+    .result h4{margin:0 0 8px 0; color:var(--accent); font-size:.95rem}
+    .redacted{background:linear-gradient(90deg, #0d151d 30%, #12202a 60%); border-radius:6px; padding:4px 6px; display:inline-block; filter: blur(1px)}
+    .status{
+      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-family:var(--mono); font-size:.8rem;
+      background:#0a1216; border:1px solid rgba(255,255,255,.06)
+    }
+    .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent)}
+    .progress{height:8px; width:100%; background:#0a0f14; border:1px solid rgba(255,255,255,.06); border-radius:999px; overflow:hidden}
+    .bar{height:100%; width:0%}
+
+    /* ========= FOOTER ========= */
+    footer{
+      padding:30px 0 50px; color:var(--muted); font-size:.9rem; text-align:center
+    }
+    a{color:var(--accent-2); text-decoration:none}
+    a:hover{text-decoration:underline}
+
+    /* ========= ACCESSIBILITY & REDUCED MOTION ========= */
+    @media (prefers-reduced-motion: reduce){
+      .rain{animation-duration:0s}
+      .cursor{animation:none}
+    }
+    @media (max-width:780px){
+      .search-grid{grid-template-columns:1fr}
+      nav{margin-top:8px}
+    }
+  </style>
+</head>
+<body>
+  <!-- Декоративный «дождь» -->
+  <div class="matrix" aria-hidden="true" id="matrix"></div>
+
+  <header>
+    <div class="container row" role="banner" aria-label="BLACKTRACE Header">
+      <div class="brand grow">
+        <div class="logo" aria-hidden="true"></div>
+        <h1>BLACKTRACE<span class="muted"> · макет OSINT-панели</span></h1>
+      </div>
+      <nav class="shrink" aria-label="Главная навигация">
+        <span class="tag">D̷E̷M̷O̷ ̷M̷O̷D̷E̷</span>
+        <span class="tag">no real data</span>
+        <span class="tag">UI prototype</span>
+      </nav>
+    </div>
+  </header>
+
+  <main class="container" role="main">
+    <!-- HERO / SEARCH -->
+    <div class="card" aria-labelledby="search-title">
+      <div class="body">
+        <h3 id="search-title">Поисковая панель (псевдо)</h3>
+        <p class="muted">Интерфейс имитирует «панель пробива»: поля, фильтры и статус. Реального поиска нет — только демонстрация UI.</p>
+
+        <div class="search-grid" style="margin-top:12px">
+          <label class="input">
+            <span>🔎</span>
+            <input id="q" placeholder="Введите запрос (например: 'user:id_5f2c…')" inputmode="latin" aria-label="Строка запроса (вымышленная)">
+          </label>
+          <label class="input">
+            <span>⚙️</span>
+            <select id="scope" aria-label="Выбор модуля">
+              <option value="all">Модуль: Авто</option>
+              <option value="profile">Модуль: Профиль</option>
+              <option value="tel">Модуль: Тел.</option>
+              <option value="ip">Модуль: IP</option>
+            </select>
+          </label>
+          <label class="input">
+            <span>⏱</span>
+            <select id="depth" aria-label="Глубина анализа">
+              <option>Глубина: Низкая</option>
+              <option selected>Глубина: Средняя</option>
+              <option>Глубина: Высокая</option>
+            </select>
+          </label>
+          <div class="toolbar">
+            <button class="btn" id="btn-run" aria-label="Запустить псевдопоиск">RUN ▷</button>
+            <button class="btn" disabled title="Только визуальная демо">EXPORT</button>
+            <button class="btn" disabled title="Только визуальная демо">SAVE</button>
+          </div>
+        </div>
+
+        <div style="margin-top:14px" class="progress" aria-label="Индикатор прогресса">
+          <div class="bar" id="bar" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: var(--glow)"></div>
+        </div>
+
+        <div class="terminal" id="term" role="region" aria-label="Фальшивый терминал лога">
+          <div><span class="prompt">[00:00:00] bootstrap</span> loaded modules: core, net, graph, redact</div>
+          <div><span class="prompt">[00:00:01] policy</span> <span style="color:var(--danger)">live data access disabled</span> — demo mode</div>
+          <div><span class="prompt">[00:00:02] sandbox</span> seeded fixtures… <span class="redacted">████-████</span></div>
+          <div id="type"></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODULE CARDS -->
+    <section style="margin-top:22px" aria-label="Модули">
+      <div class="results">
+        <article class="result" aria-label="Карточка профиля">
+          <h4>Профиль · DEMO</h4>
+          <div>UID: <span class="redacted">usr_3f9a…</span></div>
+          <div>Handle: <span>@ghost.trace</span></div>
+          <div>Связи: <span class="redacted">████████</span></div>
+          <div class="muted">Статус обновления: offline cache</div>
+        </article>
+        <article class="result" aria-label="Карточка телефон">
+          <h4>Телефон · DEMO</h4>
+          <div>Номер: <span class="redacted">+7 •• •••-••-••</span></div>
+          <div>Оператор: <span>—</span></div>
+          <div>Регионы: <span class="redacted">████</span></div>
+          <div class="muted">Доступ: только макет</div>
+        </article>
+        <article class="result" aria-label="Карточка IP">
+          <h4>IP · DEMO</h4>
+          <div>Адрес: <span class="redacted">10.••.••.••</span></div>
+          <div>AS: <span>—</span></div>
+          <div>Гео: <span class="redacted">██, ██</span></div>
+          <div class="muted">Логи: синтетические</div>
+        </article>
+        <article class="result" aria-label="Карточка авто">
+          <h4>Авто · DEMO</h4>
+          <div>VIN: <span class="redacted">XTA•••••••••••••</span></div>
+          <div>Модель: <span>—</span></div>
+          <div>История: <span class="redacted">█████ ████</span></div>
+          <div class="muted">Имитация карточки</div>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <footer role="contentinfo">
+    ⚠️ Это визуальный прототип. Любые «данные» — случайные заглушки.
+    Дизайн создан для легальных задач (OSINT/UX/кинодеко). <br/>
+    Нужна кастомизация по вашему бренду? Заменим цвета, логотип и блоки.
+  </footer>
+
+  <script>
+    // ===== Matrix rain (lightweight) =====
+    const matrix = document.getElementById('matrix');
+    const drops = 90;
+    for(let i=0;i<drops;i++){
+      const d=document.createElement('div');
+      d.className='rain';
+      d.style.left = (Math.random()*100)+'%';
+      d.style.animationDuration = (8+Math.random()*8)+'s';
+      d.style.animationDelay = (-Math.random()*16)+'s';
+      matrix.appendChild(d);
+    }
+
+    // ===== Fake typing in terminal =====
+    const typeTarget = document.getElementById('type');
+    const lines = [
+      "[00:00:03] net     probing sandboxes… ok",
+      "[00:00:04] graph   compiling linkmap… 12 nodes, 24 edges",
+      "[00:00:05] redact  masking PII… done",
+      "[00:00:06] engine  ready. enter query to simulate lookup."
+    ];
+    let li = 0, ci = 0, typing = true;
+
+    function tick(){
+      if(li >= lines.length){ typing = false; return; }
+      const line = lines[li];
+      const span = typeTarget.lastElementChild?.dataset?.typing === "1"
+        ? typeTarget.lastElementChild
+        : Object.assign(document.createElement('div'), {dataset:{typing:"1"}});
+      if(!span.isConnected){ typeTarget.appendChild(span); }
+      span.innerHTML = '<span class="prompt">' + line.slice(0,9) + '</span> ' + line.slice(10, 10+ci) + '<span class="cursor"></span>';
+      ci++;
+      if(10+ci > line.length){ li++; ci=0; span.dataset.typing="0"; }
+      if(typing) requestAnimationFrame(()=>setTimeout(tick, 20));
+    }
+    tick();
+
+    // ===== Fake progress & mock results on RUN =====
+    const btn = document.getElementById('btn-run');
+    const bar = document.getElementById('bar');
+    const term = document.getElementById('term');
+    function log(msg){
+      const row=document.createElement('div');
+      row.innerHTML = '<span class="prompt">['+new Date().toLocaleTimeString()+']</span> ' + msg;
+      term.appendChild(row);
+      term.scrollTop = term.scrollHeight;
+    }
+    btn.addEventListener('click', ()=>{
+      bar.style.width='0%';
+      let p=0;
+      const id = setInterval(()=>{
+        p += Math.random()*18;
+        if(p>100) p=100;
+        bar.style.width = p+'%';
+        if(p >= 100){
+          clearInterval(id);
+          log('demo-run: <span style="color:#23ff7b">completed</span> (sandboxed)');
+          // inject a couple of synthetic result updates
+          document.querySelectorAll('.result .muted').forEach((el,i)=>{
+            el.textContent = i%2 ? 'Обновлено: '+ new Date().toLocaleTimeString() : 'Кэш синхронизирован';
+          });
+        }
+      }, 180);
+      const q = document.getElementById('q').value || 'user:id_5f2c…';
+      const scope = document.getElementById('scope').value;
+      log('query "'+q+'" in scope "'+scope+'" → <span style="color:#00e0ff">simulate</span>');
+    });
+
+    // Keep focus styles keyboard-only
+    (function(){
+      function addClass(){ document.body.classList.add('kb'); window.removeEventListener('keydown', addClass); }
+      window.addEventListener('keydown', addClass);
+    })();
+  </script>
+</body>
+</html>

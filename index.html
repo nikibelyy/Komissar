@@ -2,319 +2,703 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>BLACKTRACE — Макет панели OSINT</title>
-  <meta name="description" content="Визуальный прототип в эстетике 'пробива' — без реального функционала." />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>Осмотр после ДТП — Админ</title>
+  <meta name="color-scheme" content="light dark">
   <style>
-    /* ========= THEME ========= */
+    /* ===== iOS-like base ===== */
     :root{
-      --bg-0:#0b0d10;
-      --bg-1:#0f1318;
-      --bg-2:#121720;
-      --fg:#d7fbe8;
-      --muted:#89a7a7;
-      --accent:#23ff7b;
-      --accent-2:#00e0ff;
-      --danger:#ff4d6d;
-      --card:#0e141b;
-      --glow:0 0 .6rem rgba(35,255,123,.35), 0 0 1.4rem rgba(35,255,123,.15);
-      --radius:14px;
-      --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
-      --sans: system-ui, -apple-system, Segoe UI, Roboto, Ubuntu, Cantarell, "Noto Sans", Arial, "Apple Color Emoji","Segoe UI Emoji";
+      --bg: rgba(250,250,252,1);
+      --card: rgba(255,255,255,.72);
+      --border: rgba(0,0,0,.08);
+      --text: #111;
+      --subtext: #555;
+      --tint: #0A84FF;           /* iOS blue */
+      --tint-2: #34C759;         /* iOS green */
+      --destructive: #FF3B30;    /* iOS red */
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius-xl: 18px;
+      --radius-lg: 14px;
+      --radius-md: 12px;
+      --blur: saturate(180%) blur(16px);
+      --chip-bg: rgba(0,0,0,.06);
+      --chip-border: rgba(0,0,0,.10);
+      --field-bg: rgba(0,0,0,.04);
+      --field-border: rgba(0,0,0,.08);
+      --table-stripe: rgba(0,0,0,.03);
+      --ok: #34C759;
+      --warn: #FF9F0A;
+      --muted: #8E8E93;
+      --focus: 0 0 0 3px rgba(10,132,255,.25);
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #000;
+        --card: rgba(28,28,30,.72);
+        --border: rgba(255,255,255,.08);
+        --text: #f5f5f7;
+        --subtext: #b8b8be;
+        --chip-bg: rgba(255,255,255,.08);
+        --chip-border: rgba(255,255,255,.12);
+        --field-bg: rgba(255,255,255,.08);
+        --field-border: rgba(255,255,255,.15);
+        --table-stripe: rgba(255,255,255,.04);
+        --shadow: 0 10px 30px rgba(0,0,0,.6);
+      }
     }
     *{box-sizing:border-box}
     html,body{height:100%}
     body{
-      margin:0; background: radial-gradient(1200px 600px at 75% -20%, rgba(0,224,255,.06), transparent 60%) , var(--bg-0);
-      color:var(--fg); font-family:var(--sans); line-height:1.45;
+      margin:0;
+      font: 16px/1.45 -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, system-ui, sans-serif;
+      background: linear-gradient(180deg,var(--bg),color-mix(in oklab, var(--bg), #9cc7ff 6%));
+      color:var(--text);
     }
-
-    /* ========= MATRIX BACKDROP ========= */
-    .matrix{
-      position:fixed; inset:0; z-index:-1; pointer-events:none; mask-image: radial-gradient(80% 80% at 50% 20%, #000 40%, transparent 100%);
-      opacity:.35;
-    }
-    .rain{
-      position:absolute; top:-100%; width:1px; height:300%; background:linear-gradient(to bottom, transparent, rgba(35,255,123,.8) 40%, transparent 70%);
-      filter: drop-shadow(0 0 6px rgba(35,255,123,.6));
-      animation: fall linear infinite;
-    }
-    @keyframes fall{to{transform: translateY(100%)}}
-
-    /* ========= LAYOUT ========= */
+    /* ===== Top Nav (iOS large title) ===== */
     header{
-      position:sticky; top:0; z-index:10; backdrop-filter: blur(8px);
-      background: linear-gradient(to bottom, rgba(18,23,32,.85), rgba(18,23,32,.35));
-      border-bottom:1px solid rgba(255,255,255,.06);
+      position: sticky; top: 0; z-index: 10;
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
     }
-    .container{max-width:1200px; margin:0 auto; padding: 20px;}
-    .brand{display:flex; align-items:center; gap:12px}
-    .logo{
-      width:36px; height:36px; border-radius:8px;
-      background: conic-gradient(from 180deg at 50% 50%, var(--accent), var(--accent-2), var(--accent));
-      filter: drop-shadow(0 0 10px rgba(35,255,123,.4));
+    .nav{
+      max-width: 1200px; margin: 0 auto; padding: env(safe-area-inset-top) 16px 8px 16px;
     }
-    .brand h1{margin:0; font-size:1.05rem; letter-spacing:.08em; font-family:var(--mono)}
-    nav{display:flex; gap:14px; align-items:center; flex-wrap:wrap}
-    .row{display:flex; flex-wrap:wrap; gap:20px}
-    .grow{flex:1 1 520px}
-    .shrink{flex:1 1 320px}
-
-    /* ========= CARDS ========= */
-    .card{
-      background: linear-gradient(180deg, var(--card), #0b1016);
-      border:1px solid rgba(255,255,255,.06);
-      border-radius: var(--radius);
-      box-shadow: 0 8px 32px rgba(0,0,0,.35), var(--glow);
-      overflow: hidden;
+    .title{
+      font-size: 28px; font-weight: 700; letter-spacing:.2px;
+      display:flex; align-items:center; gap:12px; margin:6px 0 4px;
     }
-    .card h3{margin:0 0 8px 0; font-size:1rem; color:var(--accent); font-family:var(--mono)}
-    .card .body{padding:18px}
-    .muted{color:var(--muted); font-size:.95rem}
-
-    /* ========= SEARCH PANEL ========= */
-    .search-grid{display:grid; grid-template-columns: 1fr 1fr; gap:12px}
-    .input{
-      display:flex; align-items:center; gap:10px; padding:12px 12px;
-      background:#0a0f14; border:1px solid rgba(255,255,255,.08); border-radius:10px;
-      font-family:var(--mono); color:var(--fg)
-    }
-    .input input, .input select{
-      color:inherit; background:transparent; border:none; outline:none; width:100%; font:inherit;
-    }
+    .subtitle{color:var(--subtext); font-size:14px; margin-bottom:8px}
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; align-items:center; padding:8px 0 12px}
     .btn{
-      appearance:none; border:none; padding:12px 16px; border-radius:10px; font-family:var(--mono);
-      color:#06110b; background:linear-gradient(180deg, var(--accent), #12d96c); cursor:pointer;
-      box-shadow: var(--glow);
+      display:inline-flex; align-items:center; gap:8px;
+      padding:10px 14px; border-radius:12px; border:1px solid var(--border);
+      background:linear-gradient(180deg, color-mix(in oklab, var(--card), #fff 10%), color-mix(in oklab, var(--card), #000 5%));
+      box-shadow: var(--shadow);
+      cursor:pointer; user-select:none;
     }
-    .btn[disabled]{opacity:.6; cursor:not-allowed; filter:grayscale(.3)}
-    .toolbar{display:flex; gap:10px; flex-wrap:wrap}
-    .tag{padding:6px 10px; border:1px dashed rgba(35,255,123,.4); border-radius:999px; font-family:var(--mono); font-size:.8rem; color:var(--accent)}
-
-    /* ========= TERMINAL ========= */
-    .terminal{
-      background:#05080c; border-top:1px solid rgba(255,255,255,.08); font-family:var(--mono);
-      padding:14px; height:220px; overflow:auto; color:#a9ffcf; font-size:.92rem;
+    .btn.primary{ background: linear-gradient(180deg, color-mix(in oklab, var(--tint), #fff 20%), var(--tint)); color:#fff; border-color:transparent}
+    .btn.ghost{ background: transparent; border:1px solid var(--border)}
+    .btn.danger{ background: linear-gradient(180deg, color-mix(in oklab, var(--destructive), #fff 20%), var(--destructive)); color:#fff; border-color:transparent}
+    .btn:focus-visible{outline:none; box-shadow: var(--focus)}
+    .icon{width:18px; height:18px; display:inline-block}
+    /* ===== Layout ===== */
+    main{max-width:1200px; margin: 18px auto; padding: 0 16px 30px}
+    .grid{
+      display:grid; grid-template-columns: 1.1fr .9fr; gap:18px;
     }
-    .terminal .prompt{color:#00e0ff}
-    .cursor{display:inline-block; width:.52em; height:1.1em; background:#23ff7b; vertical-align:-0.15em; animation: blink 1s steps(1) infinite}
-    @keyframes blink{50%{opacity:0}}
-
-    /* ========= RESULTS ========= */
-    .results{display:grid; grid-template-columns: repeat(auto-fit, minmax(260px,1fr)); gap:12px}
-    .result{
-      background: #0b1016; border:1px solid rgba(255,255,255,.06);
-      border-radius:12px; padding:14px; font-family:var(--mono); color:#bff5d7
+    @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+    .card{
+      background: var(--card);
+      backdrop-filter: var(--blur);
+      -webkit-backdrop-filter: var(--blur);
+      border:1px solid var(--border);
+      border-radius: var(--radius-xl);
+      box-shadow: var(--shadow);
+      overflow:hidden;
     }
-    .result h4{margin:0 0 8px 0; color:var(--accent); font-size:.95rem}
-    .redacted{background:linear-gradient(90deg, #0d151d 30%, #12202a 60%); border-radius:6px; padding:4px 6px; display:inline-block; filter: blur(1px)}
-    .status{
-      display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; font-family:var(--mono); font-size:.8rem;
-      background:#0a1216; border:1px solid rgba(255,255,255,.06)
+    .card h2{
+      font-size:18px; margin:0; padding:14px 16px;
+      border-bottom:1px solid var(--border);
     }
-    .dot{width:8px; height:8px; border-radius:50%; background:var(--accent); box-shadow:0 0 8px var(--accent)}
-    .progress{height:8px; width:100%; background:#0a0f14; border:1px solid rgba(255,255,255,.06); border-radius:999px; overflow:hidden}
-    .bar{height:100%; width:0%}
-
-    /* ========= FOOTER ========= */
-    footer{
-      padding:30px 0 50px; color:var(--muted); font-size:.9rem; text-align:center
+    .card .content{ padding:14px 16px }
+    /* ===== Segmented control ===== */
+    .segments{ display:inline-flex; background:var(--chip-bg); padding:4px; border-radius:12px; border:1px solid var(--chip-border) }
+    .segments button{
+      border:0; background:transparent; padding:8px 12px; border-radius:10px; cursor:pointer;
+      color:var(--subtext)
     }
-    a{color:var(--accent-2); text-decoration:none}
-    a:hover{text-decoration:underline}
-
-    /* ========= ACCESSIBILITY & REDUCED MOTION ========= */
-    @media (prefers-reduced-motion: reduce){
-      .rain{animation-duration:0s}
-      .cursor{animation:none}
+    .segments button.active{ background: #fff2; color:var(--text); box-shadow: inset 0 0 0 1px var(--chip-border) }
+    /* ===== Fields ===== */
+    .form-grid{ display:grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap:12px }
+    @media (max-width: 640px){ .form-grid{ grid-template-columns: 1fr } }
+    label{ font-size:13px; color:var(--subtext); display:block; margin:4px 0 6px }
+    input[type="text"], input[type="tel"], input[type="email"], input[type="datetime-local"],
+    input[type="date"], input[type="time"], input[type="file"], textarea, select{
+      width:100%; padding:12px 12px; border-radius:12px; border:1px solid var(--field-border);
+      background:var(--field-bg); color:var(--text); outline:none;
     }
-    @media (max-width:780px){
-      .search-grid{grid-template-columns:1fr}
-      nav{margin-top:8px}
+    textarea{ min-height:96px; resize: vertical }
+    input:focus, textarea:focus, select:focus{ box-shadow: var(--focus) }
+    .field-row{ display:flex; gap:12px }
+    .help{ font-size:12px; color:var(--muted); margin-top:4px }
+    /* iOS switch */
+    .switch{ position:relative; width:52px; height:32px }
+    .switch input{ display:none }
+    .switch .track{
+      position:absolute; inset:0; background:#e9e9eb; border-radius:999px; transition:.25s;
+      border:1px solid var(--border)
     }
+    .switch .thumb{
+      position:absolute; width:28px; height:28px; left:2px; top:2px; border-radius:50%; background:#fff;
+      box-shadow:0 1px 3px rgba(0,0,0,.2); transition:.25s
+    }
+    .switch input:checked + .track{ background: var(--tint) }
+    .switch input:checked + .track .thumb{ transform: translateX(20px) }
+    /* ===== Table ===== */
+    .table-wrap{ max-height: 60vh; overflow:auto; border-top:1px solid var(--border) }
+    table{ width:100%; border-collapse:collapse }
+    thead th{
+      position: sticky; top: 0; z-index: 1; background: var(--card);
+      border-bottom:1px solid var(--border); text-align:left; font-weight:600; padding:12px
+    }
+    tbody td{ padding:10px 12px; border-bottom:1px solid var(--border); vertical-align:top }
+    tbody tr:nth-child(odd){ background: var(--table-stripe) }
+    .status{ display:inline-flex; align-items:center; gap:8px; padding:6px 10px; border-radius:999px; border:1px solid var(--chip-border); background:var(--chip-bg); font-size:12px }
+    .status[data-s="новая"]{ color:var(--tint) }
+    .status[data-s="назначена"]{ color:var(--ok) }
+    .status[data-s="отменена"]{ color:var(--destructive) }
+    .status[data-s="завершена"]{ color:var(--muted) }
+    .chips{ display:flex; gap:8px; flex-wrap:wrap }
+    .chip{ padding:6px 10px; border-radius:999px; border:1px solid var(--chip-border); background:var(--chip-bg); font-size:12px }
+    .row-actions{ display:flex; gap:6px }
+    /* ===== Modal ===== */
+    dialog{
+      border:0; padding:0; border-radius:20px; background:var(--card);
+      max-width:720px; width:min(96vw, 720px); box-shadow: var(--shadow);
+    }
+    dialog::backdrop{ background: rgba(0,0,0,.3) }
+    .modal-head{ display:flex; justify-content:space-between; align-items:center; border-bottom:1px solid var(--border); padding:12px 16px }
+    .modal-body{ padding:14px 16px }
+    .modal-actions{ display:flex; justify-content:flex-end; gap:8px; padding:12px 16px; border-top:1px solid var(--border) }
+    /* ===== Misc ===== */
+    .sr-only{ position:absolute!important; height:1px;width:1px; overflow:hidden; clip:rect(1px,1px,1px,1px) }
+    .search{ flex:1; min-width: 220px }
+    .empty{ padding:20px; color:var(--muted) }
+    .link{ color:var(--tint); text-decoration:underline; cursor:pointer }
+    footer{ text-align:center; color:var(--muted); font-size:12px; padding:24px 0 }
   </style>
 </head>
 <body>
-  <!-- Декоративный «дождь» -->
-  <div class="matrix" aria-hidden="true" id="matrix"></div>
-
   <header>
-    <div class="container row" role="banner" aria-label="BLACKTRACE Header">
-      <div class="brand grow">
-        <div class="logo" aria-hidden="true"></div>
-        <h1>BLACKTRACE<span class="muted"> · макет OSINT-панели</span></h1>
+    <div class="nav">
+      <div class="title">
+        <!-- Simple inline icon -->
+        <svg class="icon" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M19 7l-7-5-7 5v10l7 5 7-5V7zm-7 8a3 3 0 110-6 3 3 0 010 6z"/></svg>
+        Осмотр после ДТП — Админ
       </div>
-      <nav class="shrink" aria-label="Главная навигация">
-        <span class="tag">D̷E̷M̷O̷ ̷M̷O̷D̷E̷</span>
-        <span class="tag">no real data</span>
-        <span class="tag">UI prototype</span>
-      </nav>
+      <div class="subtitle">Запись клиента, планирование инспекции, назначение эксперта</div>
+      <div class="toolbar" role="toolbar" aria-label="Панель инструментов">
+        <button class="btn primary" id="newBtn" type="button">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M11 11V5h2v6h6v2h-6v6h-2v-6H5v-2z"/></svg>
+          Новая запись
+        </button>
+        <div class="segments" role="tablist" aria-label="Статусы">
+          <button class="active" data-filter="все" role="tab">Все</button>
+          <button data-filter="новая" role="tab">Новые</button>
+          <button data-filter="назначена" role="tab">Назначены</button>
+          <button data-filter="завершена" role="tab">Завершены</button>
+        </div>
+        <input class="search" id="search" type="text" placeholder="Поиск: имя, авто, VIN, телефон…" aria-label="Поиск" />
+        <button class="btn ghost" id="exportBtn" type="button" title="Экспорт JSON">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M5 20h14v-2H5v2zM12 2l5 5h-3v6h-4V7H7l5-5z"/></svg>
+          Экспорт
+        </button>
+        <button class="btn ghost" id="importBtn" type="button" title="Импорт JSON">
+          <svg class="icon" viewBox="0 0 24 24" fill="currentColor"><path d="M19 9h-4V3H9v6H5l7 7 7-7zM5 18v2h14v-2H5z"/></svg>
+          Импорт
+        </button>
+        <input id="importFile" type="file" accept="application/json" class="sr-only" />
+        <button class="btn danger" id="wipeBtn" type="button" title="Очистить всё">Сброс</button>
+      </div>
     </div>
   </header>
 
-  <main class="container" role="main">
-    <!-- HERO / SEARCH -->
-    <div class="card" aria-labelledby="search-title">
-      <div class="body">
-        <h3 id="search-title">Поисковая панель (псевдо)</h3>
-        <p class="muted">Интерфейс имитирует «панель пробива»: поля, фильтры и статус. Реального поиска нет — только демонстрация UI.</p>
-
-        <div class="search-grid" style="margin-top:12px">
-          <label class="input">
-            <span>🔎</span>
-            <input id="q" placeholder="Введите запрос (например: 'user:id_5f2c…')" inputmode="latin" aria-label="Строка запроса (вымышленная)">
-          </label>
-          <label class="input">
-            <span>⚙️</span>
-            <select id="scope" aria-label="Выбор модуля">
-              <option value="all">Модуль: Авто</option>
-              <option value="profile">Модуль: Профиль</option>
-              <option value="tel">Модуль: Тел.</option>
-              <option value="ip">Модуль: IP</option>
-            </select>
-          </label>
-          <label class="input">
-            <span>⏱</span>
-            <select id="depth" aria-label="Глубина анализа">
-              <option>Глубина: Низкая</option>
-              <option selected>Глубина: Средняя</option>
-              <option>Глубина: Высокая</option>
-            </select>
-          </label>
-          <div class="toolbar">
-            <button class="btn" id="btn-run" aria-label="Запустить псевдопоиск">RUN ▷</button>
-            <button class="btn" disabled title="Только визуальная демо">EXPORT</button>
-            <button class="btn" disabled title="Только визуальная демо">SAVE</button>
+  <main>
+    <div class="grid">
+      <!-- Список записей -->
+      <section class="card" aria-labelledby="listTitle">
+        <h2 id="listTitle">Записи</h2>
+        <div class="content">
+          <div class="chips" id="quickFilters" aria-label="Быстрые фильтры">
+            <span class="chip link" data-q="@сегодня">Сегодня</span>
+            <span class="chip link" data-q="@завтра">Завтра</span>
+            <span class="chip link" data-q="@неделя">7 дней</span>
+            <span class="chip link" data-q="@бездаты">Без даты</span>
           </div>
         </div>
-
-        <div style="margin-top:14px" class="progress" aria-label="Индикатор прогресса">
-          <div class="bar" id="bar" style="background: linear-gradient(90deg, var(--accent), var(--accent-2)); box-shadow: var(--glow)"></div>
+        <div class="table-wrap" role="region" aria-label="Таблица записей">
+          <table id="appointments">
+            <thead>
+              <tr>
+                <th>Клиент</th>
+                <th>Контакты</th>
+                <th>Авто</th>
+                <th>VIN</th>
+                <th>Метод</th>
+                <th>Статус</th>
+                <th>Инспектор</th>
+                <th>Дата/Время</th>
+                <th>Действия</th>
+              </tr>
+            </thead>
+            <tbody id="rows">
+              <tr><td colspan="9" class="empty">Записей пока нет. Нажмите «Новая запись».</td></tr>
+            </tbody>
+          </table>
         </div>
+      </section>
 
-        <div class="terminal" id="term" role="region" aria-label="Фальшивый терминал лога">
-          <div><span class="prompt">[00:00:00] bootstrap</span> loaded modules: core, net, graph, redact</div>
-          <div><span class="prompt">[00:00:01] policy</span> <span style="color:var(--danger)">live data access disabled</span> — demo mode</div>
-          <div><span class="prompt">[00:00:02] sandbox</span> seeded fixtures… <span class="redacted">████-████</span></div>
-          <div id="type"></div>
+      <!-- Форма -->
+      <section class="card" aria-labelledby="formTitle">
+        <h2 id="formTitle">Новая запись</h2>
+        <div class="content">
+          <form id="form" novalidate>
+            <input type="hidden" name="id" id="id" />
+            <div class="form-grid">
+              <div>
+                <label for="client">Клиент *</label>
+                <input id="client" name="client" type="text" placeholder="ФИО" required />
+              </div>
+              <div>
+                <label for="phone">Телефон *</label>
+                <input id="phone" name="phone" type="tel" inputmode="tel" placeholder="+7 999 123-45-67" required pattern="^\\+?\\d[\\d\\s\\-\\(\\)]{7,}$" />
+              </div>
+              <div>
+                <label for="email">Email</label>
+                <input id="email" name="email" type="email" placeholder="client@example.com" />
+              </div>
+              <div>
+                <label for="vin">VIN</label>
+                <input id="vin" name="vin" type="text" maxlength="17" placeholder="например, XTA210990..." />
+              </div>
+              <div>
+                <label for="make">Марка</label>
+                <input id="make" name="make" type="text" placeholder="Марка" />
+              </div>
+              <div>
+                <label for="model">Модель</label>
+                <input id="model" name="model" type="text" placeholder="Модель" />
+              </div>
+              <div>
+                <label for="year">Год</label>
+                <input id="year" name="year" type="text" inputmode="numeric" placeholder="2020" pattern="^\\d{4}$"/>
+              </div>
+              <div>
+                <label for="accidentDate">Дата ДТП</label>
+                <input id="accidentDate" name="accidentDate" type="date" />
+              </div>
+              <div>
+                <label for="method">Метод осмотра</label>
+                <select id="method" name="method">
+                  <option value="очно">Очно</option>
+                  <option value="выезд">Выезд</option>
+                  <option value="онлайн">Онлайн (видеосвязь)</option>
+                </select>
+              </div>
+              <div>
+                <label for="status">Статус</label>
+                <select id="status" name="status">
+                  <option>новая</option>
+                  <option>назначена</option>
+                  <option>завершена</option>
+                  <option>отменена</option>
+                </select>
+              </div>
+              <div>
+                <label for="inspector">Инспектор</label>
+                <input id="inspector" name="inspector" type="text" placeholder="ФИО эксперта" />
+              </div>
+              <div>
+                <label for="schedule">Дата и время осмотра</label>
+                <input id="schedule" name="schedule" type="datetime-local" />
+              </div>
+              <div class="field-row" style="align-items:center">
+                <label class="sr-only" for="priority">Срочно?</label>
+                <div>
+                  <div>Срочность</div>
+                  <div class="help">Отметьте, если требуется приоритет</div>
+                </div>
+                <div class="switch" style="margin-left:auto">
+                  <input id="priority" name="priority" type="checkbox" />
+                  <div class="track" aria-hidden="true"><div class="thumb"></div></div>
+                </div>
+              </div>
+              <div style="grid-column: 1 / -1">
+                <label for="location">Место осмотра</label>
+                <input id="location" name="location" type="text" placeholder="Адрес / площадка / геолокация" />
+              </div>
+              <div style="grid-column: 1 / -1">
+                <label for="damage">Описание повреждений</label>
+                <textarea id="damage" name="damage" placeholder="Кратко опишите характер повреждений"></textarea>
+              </div>
+              <div>
+                <label for="photos">Фото (не загружаются на сервер)</label>
+                <input id="photos" name="photos" type="file" accept="image/*" multiple />
+                <div class="help">Файлы остаются локально в браузере (превью ниже)</div>
+              </div>
+              <div id="previews" class="chips" aria-live="polite"></div>
+              <div style="grid-column: 1 / -1">
+                <label for="notes">Примечания</label>
+                <textarea id="notes" name="notes" placeholder="Внутренние комментарии"></textarea>
+              </div>
+            </div>
+
+            <div class="modal-actions" style="padding-left:0">
+              <button type="button" class="btn ghost" id="resetForm">Очистить</button>
+              <button type="submit" class="btn primary" id="saveBtn">Сохранить</button>
+            </div>
+            <div id="formErrors" class="help" role="alert" aria-live="polite"></div>
+          </form>
         </div>
-      </div>
+      </section>
     </div>
 
-    <!-- MODULE CARDS -->
-    <section style="margin-top:22px" aria-label="Модули">
-      <div class="results">
-        <article class="result" aria-label="Карточка профиля">
-          <h4>Профиль · DEMO</h4>
-          <div>UID: <span class="redacted">usr_3f9a…</span></div>
-          <div>Handle: <span>@ghost.trace</span></div>
-          <div>Связи: <span class="redacted">████████</span></div>
-          <div class="muted">Статус обновления: offline cache</div>
-        </article>
-        <article class="result" aria-label="Карточка телефон">
-          <h4>Телефон · DEMO</h4>
-          <div>Номер: <span class="redacted">+7 •• •••-••-••</span></div>
-          <div>Оператор: <span>—</span></div>
-          <div>Регионы: <span class="redacted">████</span></div>
-          <div class="muted">Доступ: только макет</div>
-        </article>
-        <article class="result" aria-label="Карточка IP">
-          <h4>IP · DEMO</h4>
-          <div>Адрес: <span class="redacted">10.••.••.••</span></div>
-          <div>AS: <span>—</span></div>
-          <div>Гео: <span class="redacted">██, ██</span></div>
-          <div class="muted">Логи: синтетические</div>
-        </article>
-        <article class="result" aria-label="Карточка авто">
-          <h4>Авто · DEMO</h4>
-          <div>VIN: <span class="redacted">XTA•••••••••••••</span></div>
-          <div>Модель: <span>—</span></div>
-          <div>История: <span class="redacted">█████ ████</span></div>
-          <div class="muted">Имитация карточки</div>
-        </article>
+    <!-- Диалог редактирования (модалка подтверждения удаления и т.п.) -->
+    <dialog id="confirmDlg" aria-labelledby="confirmTitle">
+      <div class="modal-head">
+        <div id="confirmTitle">Подтверждение</div>
+        <button class="btn ghost" type="button" onclick="closeConfirm()">Закрыть</button>
       </div>
-    </section>
+      <div class="modal-body" id="confirmBody">Вы уверены?</div>
+      <div class="modal-actions">
+        <button class="btn ghost" type="button" onclick="closeConfirm()">Отмена</button>
+        <button class="btn danger" id="confirmYes" type="button">Удалить</button>
+      </div>
+    </dialog>
   </main>
 
-  <footer role="contentinfo">
-    ⚠️ Это визуальный прототип. Любые «данные» — случайные заглушки.
-    Дизайн создан для легальных задач (OSINT/UX/кинодеко). <br/>
-    Нужна кастомизация по вашему бренду? Заменим цвета, логотип и блоки.
-  </footer>
+  <footer>© Осмотр после ДТП • iOS-стиль UI • Локальное хранение</footer>
 
   <script>
-    // ===== Matrix rain (lightweight) =====
-    const matrix = document.getElementById('matrix');
-    const drops = 90;
-    for(let i=0;i<drops;i++){
-      const d=document.createElement('div');
-      d.className='rain';
-      d.style.left = (Math.random()*100)+'%';
-      d.style.animationDuration = (8+Math.random()*8)+'s';
-      d.style.animationDelay = (-Math.random()*16)+'s';
-      matrix.appendChild(d);
+    // ===== Utilities =====
+    const $ = (sel, root=document) => root.querySelector(sel);
+    const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
+    const storageKey = 'dtp_appointments_v1';
+
+    const fmtDateTime = (iso) => {
+      if(!iso) return '—';
+      const d = new Date(iso);
+      if(Number.isNaN(d.getTime())) return '—';
+      return d.toLocaleString('ru-RU', { dateStyle:'medium', timeStyle:'short' });
+    };
+
+    const todayRange = () => {
+      const d1 = new Date(); d1.setHours(0,0,0,0);
+      const d2 = new Date(); d2.setHours(23,59,59,999);
+      return [d1.getTime(), d2.getTime()];
+    };
+    const tomorrowRange = () => {
+      const t = new Date(); t.setDate(t.getDate()+1);
+      t.setHours(0,0,0,0);
+      const t2 = new Date(t); t2.setHours(23,59,59,999);
+      return [t.getTime(), t2.getTime()];
+    };
+    const weekAheadRange = () => {
+      const d1 = new Date(); d1.setHours(0,0,0,0);
+      const d2 = new Date(); d2.setDate(d2.getDate()+7); d2.setHours(23,59,59,999);
+      return [d1.getTime(), d2.getTime()];
+    };
+
+    // ===== State =====
+    let state = {
+      items: [],
+      filterStatus: 'все',
+      query: ''
+    };
+
+    // ===== Persistence =====
+    function load(){
+      try{
+        const raw = localStorage.getItem(storageKey);
+        state.items = raw ? JSON.parse(raw) : [];
+      }catch(e){
+        console.warn('Storage parse error', e);
+        state.items = [];
+      }
+    }
+    function save(){
+      localStorage.setItem(storageKey, JSON.stringify(state.items));
     }
 
-    // ===== Fake typing in terminal =====
-    const typeTarget = document.getElementById('type');
-    const lines = [
-      "[00:00:03] net     probing sandboxes… ok",
-      "[00:00:04] graph   compiling linkmap… 12 nodes, 24 edges",
-      "[00:00:05] redact  masking PII… done",
-      "[00:00:06] engine  ready. enter query to simulate lookup."
-    ];
-    let li = 0, ci = 0, typing = true;
+    // ===== Rendering =====
+    function render(){
+      const tbody = $('#rows');
+      tbody.innerHTML = '';
+      const q = state.query.trim().toLowerCase();
+      const nowItems = state.items
+        .filter(x => state.filterStatus==='все' ? true : x.status===state.filterStatus)
+        .filter(x => {
+          if(!q) return true;
+          // Special quick queries
+          if(q==='@бездаты') return !x.schedule;
+          if(q==='@сегодня'){ const [a,b]=todayRange(); const t = Date.parse(x.schedule); return t>=a && t<=b; }
+          if(q==='@завтра'){ const [a,b]=tomorrowRange(); const t = Date.parse(x.schedule); return t>=a && t<=b; }
+          if(q==='@неделя'){ const [a,b]=weekAheadRange(); const t = Date.parse(x.schedule); return t>=a && t<=b; }
+          const hay = [x.client,x.phone,x.email,x.vin,x.make,x.model,x.inspector,x.location,x.damage,x.notes].join(' ').toLowerCase();
+          return hay.includes(q);
+        })
+        .sort((a,b)=> (a.schedule||'') > (b.schedule||'') ? 1 : -1);
 
-    function tick(){
-      if(li >= lines.length){ typing = false; return; }
-      const line = lines[li];
-      const span = typeTarget.lastElementChild?.dataset?.typing === "1"
-        ? typeTarget.lastElementChild
-        : Object.assign(document.createElement('div'), {dataset:{typing:"1"}});
-      if(!span.isConnected){ typeTarget.appendChild(span); }
-      span.innerHTML = '<span class="prompt">' + line.slice(0,9) + '</span> ' + line.slice(10, 10+ci) + '<span class="cursor"></span>';
-      ci++;
-      if(10+ci > line.length){ li++; ci=0; span.dataset.typing="0"; }
-      if(typing) requestAnimationFrame(()=>setTimeout(tick, 20));
-    }
-    tick();
+      if(nowItems.length===0){
+        const tr = document.createElement('tr');
+        tr.innerHTML = `<td colspan="9" class="empty">Ничего не найдено.</td>`;
+        tbody.appendChild(tr);
+        return;
+      }
 
-    // ===== Fake progress & mock results on RUN =====
-    const btn = document.getElementById('btn-run');
-    const bar = document.getElementById('bar');
-    const term = document.getElementById('term');
-    function log(msg){
-      const row=document.createElement('div');
-      row.innerHTML = '<span class="prompt">['+new Date().toLocaleTimeString()+']</span> ' + msg;
-      term.appendChild(row);
-      term.scrollTop = term.scrollHeight;
+      nowItems.forEach(item=>{
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+          <td><strong>${escapeHtml(item.client||'—')}</strong><div class="help">${escapeHtml(item.notes||'')}</div></td>
+          <td>
+            <div>${escapeHtml(item.phone||'—')}</div>
+            <div class="help">${escapeHtml(item.email||'')}</div>
+          </td>
+          <td>${escapeHtml([item.make,item.model,item.year].filter(Boolean).join(' ')||'—')}</td>
+          <td>${escapeHtml(item.vin||'—')}</td>
+          <td>${escapeHtml(item.method||'—')}</td>
+          <td><span class="status" data-s="${item.status}">${escapeHtml(item.status)}</span></td>
+          <td>${escapeHtml(item.inspector||'—')}</td>
+          <td>${fmtDateTime(item.schedule)}</td>
+          <td class="row-actions">
+            <button class="btn ghost" data-act="edit" data-id="${item.id}">Ред.</button>
+            <button class="btn danger" data-act="del" data-id="${item.id}">Удалить</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
     }
-    btn.addEventListener('click', ()=>{
-      bar.style.width='0%';
-      let p=0;
-      const id = setInterval(()=>{
-        p += Math.random()*18;
-        if(p>100) p=100;
-        bar.style.width = p+'%';
-        if(p >= 100){
-          clearInterval(id);
-          log('demo-run: <span style="color:#23ff7b">completed</span> (sandboxed)');
-          // inject a couple of synthetic result updates
-          document.querySelectorAll('.result .muted').forEach((el,i)=>{
-            el.textContent = i%2 ? 'Обновлено: '+ new Date().toLocaleTimeString() : 'Кэш синхронизирован';
-          });
-        }
-      }, 180);
-      const q = document.getElementById('q').value || 'user:id_5f2c…';
-      const scope = document.getElementById('scope').value;
-      log('query "'+q+'" in scope "'+scope+'" → <span style="color:#00e0ff">simulate</span>');
+
+    function escapeHtml(s){
+      return String(s).replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m]));
+    }
+
+    // ===== Form handling =====
+    function clearForm(){
+      $('#form').reset();
+      $('#id').value = '';
+      $('#previews').innerHTML = '';
+      $('#formErrors').textContent = '';
+      $('#formTitle').textContent = 'Новая запись';
+      $('#saveBtn').textContent = 'Сохранить';
+    }
+
+    function readForm(){
+      const data = {
+        id: $('#id').value || crypto.randomUUID(),
+        client: $('#client').value.trim(),
+        phone: $('#phone').value.trim(),
+        email: $('#email').value.trim(),
+        vin: $('#vin').value.trim().toUpperCase(),
+        make: $('#make').value.trim(),
+        model: $('#model').value.trim(),
+        year: $('#year').value.trim(),
+        accidentDate: $('#accidentDate').value || null,
+        method: $('#method').value,
+        status: $('#status').value,
+        inspector: $('#inspector').value.trim(),
+        schedule: $('#schedule').value || null,
+        priority: $('#priority').checked,
+        location: $('#location').value.trim(),
+        damage: $('#damage').value.trim(),
+        photos: previewFiles.map(p=>({name:p.name, type:p.type, size:p.size})), // we don't persist actual blobs
+        notes: $('#notes').value.trim(),
+        createdAt: new Date().toISOString(),
+      };
+      return data;
+    }
+
+    function validateForm(){
+      const errs = [];
+      if(!$('#client').value.trim()) errs.push('Укажите имя клиента.');
+      const tel = $('#phone');
+      if(!tel.value.trim() || !tel.checkValidity()) errs.push('Укажите корректный телефон.');
+      const year = $('#year').value.trim();
+      if(year && !/^\d{4}$/.test(year)) errs.push('Год должен быть в формате ГГГГ.');
+      const schedule = $('#schedule').value;
+      if(schedule){
+        const t = Date.parse(schedule);
+        if(Number.isNaN(t)) errs.push('Некорректная дата/время осмотра.');
+      }
+      $('#formErrors').textContent = errs.join(' ');
+      return errs.length===0;
+    }
+
+    function upsertItem(data){
+      const idx = state.items.findIndex(x=>x.id===data.id);
+      if(idx>=0) state.items[idx] = data; else state.items.push(data);
+      save(); render(); flashRow(data.id);
+    }
+
+    function flashRow(id){
+      const row = $(`[data-id="${id}"]`)?.closest('tr');
+      if(!row) return;
+      row.style.transition='background-color .6s';
+      const prev = row.style.backgroundColor;
+      row.style.backgroundColor = 'rgba(52,199,89,.25)';
+      setTimeout(()=> row.style.backgroundColor = prev, 600);
+    }
+
+    // ===== Photos preview (local only) =====
+    let previewFiles = [];
+    $('#photos').addEventListener('change', (e)=>{
+      const files = Array.from(e.target.files||[]);
+      previewFiles = files;
+      const box = $('#previews');
+      box.innerHTML='';
+      if(files.length===0) return;
+      files.slice(0,6).forEach(f=>{
+        const url = URL.createObjectURL(f);
+        const a = document.createElement('a');
+        a.href = url; a.target='_blank'; a.className='chip';
+        a.textContent = f.name.length>20 ? f.name.slice(0,17)+'…' : f.name;
+        a.title = `${f.name} (${Math.round(f.size/1024)} КБ)`;
+        box.appendChild(a);
+      });
     });
 
-    // Keep focus styles keyboard-only
-    (function(){
-      function addClass(){ document.body.classList.add('kb'); window.removeEventListener('keydown', addClass); }
-      window.addEventListener('keydown', addClass);
-    })();
+    // ===== Events =====
+    $('#form').addEventListener('submit', (e)=>{
+      e.preventDefault();
+      if(!validateForm()) return;
+      const data = readForm();
+      upsertItem(data);
+      clearForm();
+    });
+    $('#resetForm').addEventListener('click', clearForm);
+
+    $('#newBtn').addEventListener('click', clearForm);
+
+    // filter by status via segments
+    $$('.segments button').forEach(btn=>{
+      btn.addEventListener('click', ()=>{
+        $$('.segments button').forEach(b=>b.classList.remove('active'));
+        btn.classList.add('active');
+        state.filterStatus = btn.dataset.filter;
+        render();
+      });
+    });
+
+    // quick filter chips
+    $('#quickFilters').addEventListener('click', (e)=>{
+      const chip = e.target.closest('[data-q]');
+      if(!chip) return;
+      $('#search').value = chip.dataset.q;
+      state.query = chip.dataset.q.toLowerCase();
+      render();
+    });
+
+    // search input
+    $('#search').addEventListener('input', (e)=>{
+      state.query = e.target.value.toLowerCase();
+      render();
+    });
+
+    // table actions (edit/delete)
+    $('#rows').addEventListener('click', (e)=>{
+      const btn = e.target.closest('button[data-act]');
+      if(!btn) return;
+      const id = btn.dataset.id;
+      const item = state.items.find(x=>x.id===id);
+      if(!item) return;
+
+      if(btn.dataset.act==='edit'){
+        // populate form
+        $('#formTitle').textContent = 'Редактирование записи';
+        $('#saveBtn').textContent = 'Сохранить изменения';
+        $('#id').value = item.id;
+        $('#client').value = item.client || '';
+        $('#phone').value = item.phone || '';
+        $('#email').value = item.email || '';
+        $('#vin').value = item.vin || '';
+        $('#make').value = item.make || '';
+        $('#model').value = item.model || '';
+        $('#year').value = item.year || '';
+        $('#accidentDate').value = item.accidentDate || '';
+        $('#method').value = item.method || 'очно';
+        $('#status').value = item.status || 'новая';
+        $('#inspector').value = item.inspector || '';
+        $('#schedule').value = item.schedule || '';
+        $('#priority').checked = !!item.priority;
+        $('#location').value = item.location || '';
+        $('#damage').value = item.damage || '';
+        $('#notes').value = item.notes || '';
+        $('#previews').innerHTML = (item.photos||[]).map(p=>`<span class="chip">${escapeHtml(p.name)}</span>`).join('');
+        window.scrollTo({top:0, behavior:'smooth'});
+      }else if(btn.dataset.act==='del'){
+        openConfirm(`Удалить запись клиента <strong>${escapeHtml(item.client)}</strong>?`, ()=>{
+          state.items = state.items.filter(x=>x.id!==id);
+          save(); render();
+        });
+      }
+    });
+
+    // export / import / wipe
+    $('#exportBtn').addEventListener('click', ()=>{
+      const blob = new Blob([JSON.stringify(state.items, null, 2)], {type:'application/json'});
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a');
+      a.href = url; a.download = 'appointments.json';
+      document.body.appendChild(a); a.click(); a.remove();
+      setTimeout(()=>URL.revokeObjectURL(url), 500);
+    });
+
+    $('#importBtn').addEventListener('click', ()=> $('#importFile').click());
+    $('#importFile').addEventListener('change', (e)=>{
+      const file = e.target.files?.[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = () => {
+        try{
+          const data = JSON.parse(reader.result);
+          if(!Array.isArray(data)) throw new Error('Ожидается массив объектов');
+          // basic shape validation
+          const ok = data.every(x=> typeof x==='object' && x.id && x.client && x.phone);
+          if(!ok) throw new Error('Некорректная структура данных');
+          state.items = data;
+          save(); render();
+        }catch(err){
+          alert('Ошибка импорта: ' + err.message);
+        }
+      };
+      reader.readAsText(file, 'utf-8');
+      e.target.value = '';
+    });
+
+    $('#wipeBtn').addEventListener('click', ()=>{
+      openConfirm('Очистить все записи? Это действие нельзя отменить.', ()=>{
+        state.items = []; save(); render();
+      });
+    });
+
+    // ===== Confirm dialog helpers =====
+    const dlg = $('#confirmDlg');
+    function openConfirm(html, onYes){
+      $('#confirmBody').innerHTML = html;
+      $('#confirmYes').onclick = ()=>{ onYes?.(); closeConfirm(); };
+      dlg.showModal();
+    }
+    function closeConfirm(){ dlg.close(); }
+    window.closeConfirm = closeConfirm; // for inline handler
+
+    // ===== Boot =====
+    load(); render();
+
+    // Demo seed (first run)
+    if(state.items.length===0){
+      const seed = {
+        id: crypto.randomUUID(),
+        client: 'Иван Петров',
+        phone: '+7 999 123-45-67',
+        email: 'ivan@example.com',
+        vin: 'XTA210990K0001234',
+        make: 'KIA', model: 'Rio', year: '2019',
+        accidentDate: new Date(Date.now()-86400000).toISOString().split('T')[0],
+        method: 'очно',
+        status: 'назначена',
+        inspector: 'Соколова А.А.',
+        schedule: new Date(Date.now()+36e5*6).toISOString().slice(0,16),
+        priority: true,
+        location: 'Москва, ул. Пример, 10',
+        damage: 'Повреждения бампера и правого крыла',
+        photos: [],
+        notes: 'Клиент просил до 18:00',
+        createdAt: new Date().toISOString(),
+      };
+      state.items.push(seed); save(); render();
+    }
   </script>
 </body>
 </html>

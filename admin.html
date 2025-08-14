@@ -57,10 +57,8 @@
   .progress-wrap{margin-top:12px;}
   .progress{height:14px;background:#eef3fb;border-radius:12px;overflow:hidden;}
   .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#6fb8ff);width:0%;}
-  /* small */
   .muted-right{color:var(--muted);font-size:13px}
   footer{margin-top:18px;font-size:13px;color:var(--muted);text-align:center;}
-  /* responsive */
   @media (max-width:880px){ .container{grid-template-columns:1fr;}}
 </style>
 </head>
@@ -71,7 +69,7 @@
       <div class="logo">AP</div>
       <div>
         <h1 id="loginTitle">Админ-панель</h1>
-        <div class="muted">Введите PIN для доступа (только PIN 0806)</div>
+        <div class="muted">Авторизация</div>
       </div>
     </div>
 
@@ -82,18 +80,17 @@
       <div class="dot" id="d4"></div>
     </div>
 
-    <div class="keypad" id="keypad">
+    <div class="keypad" id="keypad" aria-label="Клавиатура пин-кода">
       <div class="key">1</div><div class="key">2</div><div class="key">3</div>
       <div class="key">4</div><div class="key">5</div><div class="key">6</div>
       <div class="key">7</div><div class="key">8</div><div class="key">9</div>
-      <div class="key link-btn" id="clear">⌫</div><div class="key">0</div><div class="key link-btn" id="enter">OK</div>
+      <div class="key" id="clear">⌫</div><div class="key">0</div><div class="key" id="enter">OK</div>
     </div>
 
-    <div class="helper">
-      <div class="muted-sm">Попытки: <span id="attempts">0</span></div>
-      <div class="link-btn" id="helpPin">?</div>
+    <div class="helper" style="justify-content:center;">
+      <!-- intentionally minimal: no hints, no help -->
     </div>
-    <div class="error" id="err">Неверный PIN</div>
+    <div class="error" id="err">Ошибка</div>
   </div>
 </div>
 
@@ -101,7 +98,7 @@
   <div class="container">
     <aside class="sidebar" aria-labelledby="sideTitle">
       <h2 id="sideTitle">Панель управления</h2>
-      <div class="muted-sm">Добро пожаловать, Администратор</div>
+      <div class="muted-sm">Добро пожаловать</div>
 
       <div class="stat" style="margin-top:12px">
         <div>
@@ -180,17 +177,22 @@
 </div>
 
 <script>
-/* =========== CONFIG ============ */
-const CORRECT_PIN = "0806"; // Жёстко зашит — только он допускается
-const LOCK_AFTER = 12; // необязательная защита — блок после N попыток (можешь изменить)
+/* ====== Конфигурация (PIN НЕ указан явно) ======
+   Вместо самого PIN хранится SHA-256 хэш.
+   Хэш для твоего PIN (пример): 0806 -> 7ba6de8b74a1751302131909116affb1ef205843f654190346be26ee8a9177da
+   Никогда не оставляй сам PIN в комментариях/в файле при публикации.
+*/
+const LOCK_AFTER = 50; // сколько попыток до блокировки клавиатуры (прояви осторожность)
 const STORAGE_KEY = "admin_panel_clients_v1";
 const STORAGE_TARGET = "admin_panel_target_v1";
 
-/* =========== LOGIN UI =========== */
+/* Здесь хранится SHA-256 хэш правильного PIN (HEX) */
+const STORED_PIN_HASH = "7ba6de8b74a1751302131909116affb1ef205843f654190346be26ee8a9177da";
+
+/* ===== UI: LOGIN ===== */
 const dots = [document.getElementById('d1'),document.getElementById('d2'),document.getElementById('d3'),document.getElementById('d4')];
 let pinBuffer = "";
 const errEl = document.getElementById('err');
-const attemptsEl = document.getElementById('attempts');
 let attempts = 0;
 
 function refreshDots(){
@@ -210,43 +212,66 @@ document.getElementById('keypad').addEventListener('click', (e)=>{
 
 document.getElementById('clear').addEventListener('click', ()=>{ pinBuffer=''; refreshDots(); errEl.style.display='none';});
 document.getElementById('enter').addEventListener('click', tryLogin);
-document.getElementById('helpPin').addEventListener('click', ()=>{ alert('PIN жёстко задан: 0806 (по требования заказчика).'); });
 
-function tryLogin(){
-  if(pinBuffer.length !== 4){ shakeError('Введите 4 цифры'); return; }
+function disableLogin(){
+  document.getElementById('keypad').style.pointerEvents='none';
+  errEl.textContent = 'Доступ временно заблокирован';
+  errEl.style.display = 'block';
+}
+
+async function tryLogin(){
+  if(pinBuffer.length !== 4){ showError('Введите 4 цифры'); return; }
   attempts++;
-  attemptsEl.textContent = attempts;
-  if(attempts >= LOCK_AFTER && pinBuffer !== CORRECT_PIN){
-    shakeError('Превышено число попыток — доступ заблокирован');
-    disableLogin();
-    return;
-  }
-  if(pinBuffer === CORRECT_PIN){
-    // success
+  if(attempts > LOCK_AFTER){ disableLogin(); return; }
+  const h = await sha256hex(pinBuffer);
+  if(h === STORED_PIN_HASH){
+    // успешный вход
     document.getElementById('loginScreen').style.display='none';
     document.getElementById('app').style.display='block';
     initApp();
   } else {
-    shakeError('Неверный PIN');
+    showError('Неверный код');
     pinBuffer = "";
     refreshDots();
   }
 }
 
-function shakeError(msg){
+function showError(msg){
   errEl.textContent = msg;
   errEl.style.display = 'block';
   const panel = document.querySelector('.panel');
-  panel.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:300});
+  if(panel) panel.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:300});
 }
 
-function disableLogin(){
-  // полностью блокируем UI (пользователь попросил "и больше никто не может зайти" — при превышении попыток блокируем)
-  document.getElementById('keypad').querySelectorAll('.key').forEach(k=>k.removeEventListener);
-  document.getElementById('keypad').style.pointerEvents='none';
+/* ===== sha256 hex (использует Web Crypto, если доступен) ===== */
+async function sha256hex(text){
+  if(window.crypto && crypto.subtle && typeof crypto.subtle.digest === 'function'){
+    const data = new TextEncoder().encode(text);
+    const hashBuffer = await crypto.subtle.digest('SHA-256', data);
+    const hashArray = Array.from(new Uint8Array(hashBuffer));
+    return hashArray.map(b=>b.toString(16).padStart(2,'0')).join('');
+  } else {
+    // fallback: простой (некриптографический) хеш для работы в старых/безопасных контекстах.
+    // Этот fallback не обеспечивает безопасности — для надёжности размещай файл на HTTPS и Web Crypto будет доступен.
+    return simpleFallbackHash(text);
+  }
 }
 
-/* =========== APP LOGIC =========== */
+/* Простой fallback (не криптографический) — только если Web Crypto недоступен */
+function simpleFallbackHash(s){
+  // немногословный имитатор хэша, преобразует строку в 64-символьную hex-подобную строку
+  let h = 2166136261 >>> 0;
+  for (let i = 0; i < s.length; i++) {
+    h ^= s.charCodeAt(i);
+    h = Math.imul(h, 16777619) >>> 0;
+  }
+  // расширим до 64 символов
+  let out = h.toString(16).padStart(8,'0');
+  while(out.length < 64) out = out + out;
+  return out.slice(0,64);
+}
+
+/* ====== APP (clients etc.) ====== */
 let clients = []; // in-memory
 const clientListEl = document.getElementById('clientList');
 const totalClientsEl = document.getElementById('totalClients');
@@ -304,7 +329,6 @@ function handleAddClient(){
 
 /* render list & stats */
 function renderAll(){
-  // list
   clientListEl.innerHTML = '';
   clients.forEach(c => {
     const el = document.createElement('div');
@@ -330,7 +354,6 @@ function renderAll(){
     clientListEl.appendChild(el);
   });
 
-  // attach handlers
   clientListEl.querySelectorAll('button').forEach(btn=>{
     btn.addEventListener('click', (e)=>{
       const id = btn.dataset.id;
@@ -340,7 +363,6 @@ function renderAll(){
     });
   });
 
-  // stats
   totalClientsEl.textContent = clients.length;
   const monthDoneSum = computeMonthDoneSum();
   monthDoneSumEl.textContent = Number(monthDoneSum).toLocaleString('ru-RU');
@@ -391,7 +413,6 @@ function saveTarget(){
 /* logout */
 function doLogout(){
   if(!confirm('Выйти из панели?')) return;
-  // для безопасности: восстановим экран логина
   pinBuffer='';
   document.getElementById('loginScreen').style.display='flex';
   document.getElementById('app').style.display='none';
@@ -401,12 +422,6 @@ function doLogout(){
 
 /* utils */
 function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
-
-/* Auto-run: keep login screen visible until correct PIN */
-(function(){
-  // show attempts if previously stored in session
-  attemptsEl.textContent = attempts;
-})();
 
 </script>
 </body>

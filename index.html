@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8"/>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Админ · Клиенты — Offline (расширенный)</title>
+<title>Админ · Клиенты — Offline (с приватным паролем)</title>
 <meta name="apple-mobile-web-app-capable" content="yes">
 <style>
 :root{
@@ -74,7 +74,7 @@ html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"SF Pro Text"
           <button class="btn" type="submit">Войти</button>
           <button id="btn-login-reset" type="button" class="btn ghost">Сброс данных</button>
         </div>
-        <div class="small" id="login-note">Пароль по умолчанию: <b>admin123</b> — смените после входа.</div>
+        <div class="small" id="login-note" style="display:none">Доступ защищён паролем.</div>
       </form>
     </section>
 
@@ -206,17 +206,20 @@ html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"SF Pro Text"
 
 <script>
 /* ============================
-   Расширенная автономная панель
-   Хранение: localStorage
+   Авторизация по паролю:
+   По умолчанию пароль установлен в переменной DEFAULT_PASSWORD ниже.
    ============================ */
 
+/* ---------------- Константы ---------------- */
 const KEYS = {
   CLIENTS: 'clients_offline_v2',
   ADMIN_SALT: 'admin_salt_v2',
   ADMIN_HASH: 'admin_hash_v2',
   SETTINGS: 'settings_v2'
 };
-const DEFAULT_PASSWORD = 'admin123';
+// <- ТЫ МЕНЯЛ ПАРОЛЬ: здесь установлен твой приватный пароль по умолчанию
+const DEFAULT_PASSWORD = 'nikitabelyy1337';
+
 const app = {
   clients: [],
   session: false,
@@ -242,12 +245,14 @@ function saveSettings(){ localStorage.setItem(KEYS.SETTINGS, JSON.stringify(app.
 
 /* ---------------- Admin init/check ---------------- */
 async function ensureAdmin(){
+  // Если в localStorage нет админ-хэша — создаём хэш от DEFAULT_PASSWORD
   let s = localStorage.getItem(KEYS.ADMIN_SALT), h = localStorage.getItem(KEYS.ADMIN_HASH);
   if(!s || !h){
     s = genSalt(16);
     const hh = await hashPassword(DEFAULT_PASSWORD, s);
     localStorage.setItem(KEYS.ADMIN_SALT, s);
     localStorage.setItem(KEYS.ADMIN_HASH, hh);
+    // NOTE: мы не показываем пароль в интерфейсе — предполагается, что только ты его знаешь
   }
 }
 async function checkPassword(pwd){
@@ -272,13 +277,10 @@ function hide(sel){ $(sel).classList.add('hidden'); }
 
 /* ---------------- Idle / Auto-logout ---------------- */
 let idleTimer = null;
-let lastActivity = Date.now();
 function resetIdleTimer(){
-  lastActivity = Date.now();
   if(idleTimer) clearTimeout(idleTimer);
   const ms = (app.settings.idleTimeoutMin || 5) * 60 * 1000;
-  idleTimer = setTimeout(()=>{ // auto logout
-    sessionStorage.removeItem('session_ok'); app.session = false; alert('Сессия истекла из-за простоя'); showLogin(); }, ms);
+  idleTimer = setTimeout(()=>{ sessionStorage.removeItem('session_ok'); app.session=false; alert('Сессия истекла из-за простоя'); showLogin(); }, ms);
 }
 ['mousemove','keydown','touchstart'].forEach(ev => window.addEventListener(ev, resetIdleTimer));
 
@@ -310,7 +312,7 @@ function attachEvents(){
     } else alert('Неверный пароль');
   });
   $('#btn-login-reset').addEventListener('click', ()=>{
-    if(confirm('Сбросить все локальные данные и пароль?')){ localStorage.clear(); sessionStorage.clear(); alert('Данные удалены. Перезагрузите страницу.'); location.reload(); }
+    if(confirm('Сбросить ВСЕ локальные данные и пароль? Это удалит клиентов и настройки.')){ localStorage.clear(); sessionStorage.clear(); alert('Данные удалены. Перезагрузите страницу.'); location.reload(); }
   });
   $('#btn-logout').addEventListener('click', ()=>{ sessionStorage.removeItem('session_ok'); app.session=false; showLogin(); });
 
@@ -350,7 +352,6 @@ function attachEvents(){
 
   // bulk
   $('#btn-bulk-apply').addEventListener('click', ()=> applyBulkAction());
-  $('#bulk-param').addEventListener('input', ()=>{}); // placeholder
 
   // settings modal
   $('#btn-settings').addEventListener('click', ()=> { show('#settings-modal'); $('#idle-timeout').value = app.settings.idleTimeoutMin || 5; });
@@ -374,9 +375,6 @@ function attachEvents(){
   $('#btn-clear-all').addEventListener('click', ()=>{
     if(confirm('Стереть все данные клиентов и настройки?')){ localStorage.removeItem(KEYS.CLIENTS); localStorage.removeItem(KEYS.ADMIN_SALT); localStorage.removeItem(KEYS.ADMIN_HASH); localStorage.removeItem(KEYS.SETTINGS); app.clients=[]; saveClients(); alert('Готово. Перезагрузите страницу.'); location.reload(); }
   });
-
-  // logout button in settings
-  $('#btn-logout').addEventListener('click', ()=> { sessionStorage.removeItem('session_ok'); app.session=false; showLogin(); });
 
   // selection checkboxes update selected count
   document.addEventListener('change', (e)=>{ if(e.target && e.target.classList && e.target.classList.contains('chk-select')) updateSelectedCount(); });
@@ -477,10 +475,8 @@ window.deleteClient = function(id){
 window.editClient = function(id){
   const c = app.clients.find(x=>x.id===id);
   if(!c){ alert('Клиент не найден'); return; }
-  // show modal-like edit: reuse add panel fields
   show('#panel-add');
   $('#name').value = c.name; $('#phone').value = c.phone||''; $('#note').value = c.note||''; $('#tags').value = (c.tags||[]).join(',');
-  // on save, update existing
   const handler = function(e){
     e.preventDefault();
     c.name = $('#name').value.trim() || c.name;
@@ -491,7 +487,6 @@ window.editClient = function(id){
     $('#add-form').removeEventListener('submit', handler);
     $('#add-form').reset(); hide('#panel-add');
   };
-  // remove existing submit handlers by re-creating form? We attach a one-time handler
   $('#add-form').addEventListener('submit', handler);
 };
 
@@ -523,7 +518,6 @@ async function handleFileImport(e){
       app.clients = arr;
       saveClients(); renderList(); alert('Импорт JSON выполнен');
     } else {
-      // try parse CSV (basic)
       const lines = text.split(/\r?\n/).filter(Boolean);
       const out = [];
       const headers = lines.shift().split(',').map(h=>h.replace(/^"|"$/g,'').trim());

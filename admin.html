@@ -1,0 +1,413 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>Админ-панель — iOS style</title>
+<style>
+  :root{
+    --bg:#f2f5f8;
+    --card:#ffffffcc;
+    --accent:#0a84ff;
+    --muted:#6b7280;
+    --glass: rgba(255,255,255,0.6);
+    --success:#34c759;
+    --danger:#ff3b30;
+    --radius:14px;
+    --shadow: 0 6px 20px rgba(15,23,42,0.08);
+  }
+  html,body{height:100%;margin:0;font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial; background: linear-gradient(180deg,#f7fbff 0%, #f2f5f8 100%); color:#111;}
+  .wrap{min-height:100vh;display:flex;align-items:center;justify-content:center;padding:28px;}
+  .container{width:980px;max-width:98%;display:grid;grid-template-columns:360px 1fr;gap:18px;align-items:start;}
+  /* login modal */
+  .login-screen{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:rgba(8,10,15,0.28);backdrop-filter:blur(6px);z-index:40;transition:opacity .25s;}
+  .panel{background:var(--card);border-radius:18px;padding:22px;box-shadow:var(--shadow);width:360px;max-width:92%;}
+  .brand{display:flex;gap:12px;align-items:center;margin-bottom:12px;}
+  .logo{width:52px;height:52px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#6fb8ff);display:flex;align-items:center;justify-content:center;color:white;font-weight:700;font-size:18px;box-shadow:0 6px 18px rgba(10,132,255,0.14);}
+  h1{font-size:20px;margin:0;}
+  .muted{color:var(--muted);font-size:13px;margin-top:6px;}
+  .pin-display{margin:14px 0;padding:12px;background:linear-gradient(180deg,rgba(255,255,255,0.5),rgba(255,255,255,0.35));border-radius:12px;display:flex;gap:8px;justify-content:center;align-items:center;backdrop-filter:blur(4px);}
+  .dot{width:14px;height:14px;border-radius:50%;background:#e6eefc;border:1px solid rgba(0,0,0,0.04);}
+  .dot.filled{background:var(--accent);}
+  .keypad{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:8px;}
+  .key{padding:14px;border-radius:12px;background:var(--glass);display:flex;align-items:center;justify-content:center;font-weight:600;cursor:pointer;user-select:none;box-shadow:inset 0 -2px 0 rgba(255,255,255,0.6);}
+  .key:active{transform:translateY(1px);}
+  .helper{display:flex;justify-content:space-between;align-items:center;margin-top:12px;}
+  .link-btn{font-size:13px;color:var(--accent);cursor:pointer;}
+  .error{color:var(--danger);font-weight:600;margin-top:10px;font-size:13px;display:none;}
+  /* admin UI */
+  .sidebar{background:linear-gradient(180deg,var(--glass),rgba(255,255,255,0.58));padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);height:fit-content;}
+  .sidebar h2{margin:0 0 6px 0;font-size:18px;}
+  .stat{background:linear-gradient(180deg,#fff,#fbfdff);padding:12px;border-radius:12px;margin-top:10px;display:flex;justify-content:space-between;align-items:center;box-shadow:0 6px 18px rgba(11,22,40,0.04);}
+  .stat .num{font-weight:700;font-size:20px;}
+  .muted-sm{font-size:13px;color:var(--muted);}
+  .main{background:linear-gradient(180deg,#ffffffcc,rgba(255,255,255,0.6));padding:18px;border-radius:var(--radius);box-shadow:var(--shadow);min-height:480px;}
+  .controls{display:flex;gap:12px;align-items:center;margin-bottom:12px;flex-wrap:wrap;}
+  .btn{padding:10px 14px;border-radius:12px;background:var(--accent);color:white;font-weight:700;border:none;cursor:pointer;box-shadow:0 8px 18px rgba(10,132,255,0.14);}
+  .btn.ghost{background:transparent;border:1px solid rgba(11,22,40,0.06);color:#111;font-weight:600;}
+  .form-row{display:flex;gap:8px;margin-bottom:8px;}
+  .input, .select{padding:10px;border-radius:12px;border:1px solid rgba(11,22,40,0.06);flex:1;background:transparent;}
+  .client-list{margin-top:12px;}
+  .client{display:flex;justify-content:space-between;align-items:center;padding:12px;border-radius:12px;background:linear-gradient(180deg,#fff,#fbfdff);margin-bottom:10px;box-shadow:0 6px 16px rgba(11,22,40,0.04);}
+  .client .meta{display:flex;flex-direction:column;}
+  .small{font-size:12px;color:var(--muted);}
+  .chip{padding:6px 8px;border-radius:999px;font-weight:700;font-size:12px;}
+  .chip.done{background:rgba(52,199,89,0.12);color:var(--success);}
+  .chip.wait{background:rgba(120,120,128,0.06);color:var(--muted);}
+  .progress-wrap{margin-top:12px;}
+  .progress{height:14px;background:#eef3fb;border-radius:12px;overflow:hidden;}
+  .progress > i{display:block;height:100%;background:linear-gradient(90deg,var(--accent),#6fb8ff);width:0%;}
+  /* small */
+  .muted-right{color:var(--muted);font-size:13px}
+  footer{margin-top:18px;font-size:13px;color:var(--muted);text-align:center;}
+  /* responsive */
+  @media (max-width:880px){ .container{grid-template-columns:1fr;}}
+</style>
+</head>
+<body>
+<div class="login-screen" id="loginScreen" aria-hidden="false">
+  <div class="panel" role="dialog" aria-labelledby="loginTitle">
+    <div class="brand">
+      <div class="logo">AP</div>
+      <div>
+        <h1 id="loginTitle">Админ-панель</h1>
+        <div class="muted">Введите PIN для доступа (только PIN 0806)</div>
+      </div>
+    </div>
+
+    <div class="pin-display" aria-hidden="false">
+      <div class="dot" id="d1"></div>
+      <div class="dot" id="d2"></div>
+      <div class="dot" id="d3"></div>
+      <div class="dot" id="d4"></div>
+    </div>
+
+    <div class="keypad" id="keypad">
+      <div class="key">1</div><div class="key">2</div><div class="key">3</div>
+      <div class="key">4</div><div class="key">5</div><div class="key">6</div>
+      <div class="key">7</div><div class="key">8</div><div class="key">9</div>
+      <div class="key link-btn" id="clear">⌫</div><div class="key">0</div><div class="key link-btn" id="enter">OK</div>
+    </div>
+
+    <div class="helper">
+      <div class="muted-sm">Попытки: <span id="attempts">0</span></div>
+      <div class="link-btn" id="helpPin">?</div>
+    </div>
+    <div class="error" id="err">Неверный PIN</div>
+  </div>
+</div>
+
+<div class="wrap" id="app" style="display:none;">
+  <div class="container">
+    <aside class="sidebar" aria-labelledby="sideTitle">
+      <h2 id="sideTitle">Панель управления</h2>
+      <div class="muted-sm">Добро пожаловать, Администратор</div>
+
+      <div class="stat" style="margin-top:12px">
+        <div>
+          <div class="muted-sm">Клиентов всего</div>
+          <div class="num" id="totalClients">0</div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted-sm">Выполнено в этом месяце</div>
+          <div class="num" id="monthDoneSum">0</div>
+        </div>
+      </div>
+
+      <div class="stat">
+        <div>
+          <div class="muted-sm">Месячная цель</div>
+          <div class="num" id="targetDisplay">0</div>
+        </div>
+        <div style="text-align:right">
+          <div class="muted-sm">Прогресс</div>
+          <div class="num" id="progressPercent">0%</div>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <label class="muted-sm">Установить цель (число)</label>
+        <div style="display:flex;gap:8px;margin-top:8px;">
+          <input id="targetInput" class="input" type="number" placeholder="например 100000" />
+          <button class="btn" id="saveTarget">Сохранить</button>
+        </div>
+      </div>
+
+      <div style="margin-top:14px">
+        <button class="btn ghost" id="logoutBtn">Выйти</button>
+      </div>
+
+    </aside>
+
+    <main class="main" aria-labelledby="mainTitle">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <div>
+          <h2 id="mainTitle" style="margin:0">Клиенты</h2>
+          <div class="muted-sm">Добавляй клиентов и отмечай выполненные операции</div>
+        </div>
+        <div class="muted-sm">Текущее: <strong id="currentMonthName"></strong></div>
+      </div>
+
+      <div class="controls">
+        <input id="clientName" class="input" placeholder="Название клиента" />
+        <input id="clientValue" type="number" class="input" placeholder="Сумма / баллы" />
+        <select id="clientStatus" class="select">
+          <option value="pending">Ожидает</option>
+          <option value="done">Выполнено</option>
+        </select>
+        <button class="btn" id="addClient">Добавить</button>
+      </div>
+
+      <div class="progress-wrap">
+        <div style="display:flex;justify-content:space-between;align-items:center;">
+          <div class="muted-sm">Прогресс месячной цели</div>
+          <div class="muted-sm" id="progressNumbers">0 / 0</div>
+        </div>
+        <div class="progress" style="margin-top:8px;">
+          <i id="progressBar"></i>
+        </div>
+      </div>
+
+      <div class="client-list" id="clientList" aria-live="polite" style="margin-top:16px;">
+        <!-- clients will appear here -->
+      </div>
+
+      <footer>
+        <div>Локальное сохранение (localStorage). Данные хранятся в браузере на этом устройстве.</div>
+      </footer>
+    </main>
+  </div>
+</div>
+
+<script>
+/* =========== CONFIG ============ */
+const CORRECT_PIN = "0806"; // Жёстко зашит — только он допускается
+const LOCK_AFTER = 12; // необязательная защита — блок после N попыток (можешь изменить)
+const STORAGE_KEY = "admin_panel_clients_v1";
+const STORAGE_TARGET = "admin_panel_target_v1";
+
+/* =========== LOGIN UI =========== */
+const dots = [document.getElementById('d1'),document.getElementById('d2'),document.getElementById('d3'),document.getElementById('d4')];
+let pinBuffer = "";
+const errEl = document.getElementById('err');
+const attemptsEl = document.getElementById('attempts');
+let attempts = 0;
+
+function refreshDots(){
+  for(let i=0;i<4;i++){
+    dots[i].classList.toggle('filled', i < pinBuffer.length);
+  }
+}
+
+document.getElementById('keypad').addEventListener('click', (e)=>{
+  if(!e.target.classList.contains('key')) return;
+  const v = e.target.textContent.trim();
+  if(v === '⌫'){ pinBuffer = pinBuffer.slice(0,-1); errEl.style.display='none'; }
+  else if(v === 'OK'){ tryLogin(); }
+  else { if(pinBuffer.length < 4) pinBuffer += v; }
+  refreshDots();
+});
+
+document.getElementById('clear').addEventListener('click', ()=>{ pinBuffer=''; refreshDots(); errEl.style.display='none';});
+document.getElementById('enter').addEventListener('click', tryLogin);
+document.getElementById('helpPin').addEventListener('click', ()=>{ alert('PIN жёстко задан: 0806 (по требования заказчика).'); });
+
+function tryLogin(){
+  if(pinBuffer.length !== 4){ shakeError('Введите 4 цифры'); return; }
+  attempts++;
+  attemptsEl.textContent = attempts;
+  if(attempts >= LOCK_AFTER && pinBuffer !== CORRECT_PIN){
+    shakeError('Превышено число попыток — доступ заблокирован');
+    disableLogin();
+    return;
+  }
+  if(pinBuffer === CORRECT_PIN){
+    // success
+    document.getElementById('loginScreen').style.display='none';
+    document.getElementById('app').style.display='block';
+    initApp();
+  } else {
+    shakeError('Неверный PIN');
+    pinBuffer = "";
+    refreshDots();
+  }
+}
+
+function shakeError(msg){
+  errEl.textContent = msg;
+  errEl.style.display = 'block';
+  const panel = document.querySelector('.panel');
+  panel.animate([{transform:'translateX(-6px)'},{transform:'translateX(6px)'},{transform:'translateX(0)'}],{duration:300});
+}
+
+function disableLogin(){
+  // полностью блокируем UI (пользователь попросил "и больше никто не может зайти" — при превышении попыток блокируем)
+  document.getElementById('keypad').querySelectorAll('.key').forEach(k=>k.removeEventListener);
+  document.getElementById('keypad').style.pointerEvents='none';
+}
+
+/* =========== APP LOGIC =========== */
+let clients = []; // in-memory
+const clientListEl = document.getElementById('clientList');
+const totalClientsEl = document.getElementById('totalClients');
+const monthDoneSumEl = document.getElementById('monthDoneSum');
+const targetDisplayEl = document.getElementById('targetDisplay');
+const progressPercentEl = document.getElementById('progressPercent');
+const progressBarEl = document.getElementById('progressBar');
+const progressNumbersEl = document.getElementById('progressNumbers');
+const currentMonthNameEl = document.getElementById('currentMonthName');
+
+function initApp(){
+  loadState();
+  renderMonthName();
+  renderAll();
+  document.getElementById('addClient').addEventListener('click', handleAddClient);
+  document.getElementById('saveTarget').addEventListener('click', saveTarget);
+  document.getElementById('logoutBtn').addEventListener('click', doLogout);
+}
+
+function renderMonthName(){
+  const now = new Date();
+  const m = now.toLocaleString('ru', { month: 'long', year:'numeric' });
+  currentMonthNameEl.textContent = m;
+}
+
+/* storage */
+function loadState(){
+  try{
+    const raw = localStorage.getItem(STORAGE_KEY);
+    clients = raw ? JSON.parse(raw) : [];
+  }catch(e){ clients = []; }
+  const t = localStorage.getItem(STORAGE_TARGET);
+  if(t) document.getElementById('targetInput').value = Number(t);
+}
+
+function saveState(){
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(clients));
+}
+
+/* add client */
+function handleAddClient(){
+  const name = document.getElementById('clientName').value.trim();
+  const value = Number(document.getElementById('clientValue').value || 0);
+  const status = document.getElementById('clientStatus').value;
+  if(!name){ alert('Введите название клиента'); return; }
+  const now = new Date();
+  const id = 'c'+Date.now();
+  clients.unshift({id,name,value,status,created: now.toISOString()});
+  saveState();
+  document.getElementById('clientName').value='';
+  document.getElementById('clientValue').value='';
+  document.getElementById('clientStatus').value='pending';
+  renderAll();
+}
+
+/* render list & stats */
+function renderAll(){
+  // list
+  clientListEl.innerHTML = '';
+  clients.forEach(c => {
+    const el = document.createElement('div');
+    el.className = 'client';
+    const created = new Date(c.created);
+    const createdStr = created.toLocaleString('ru', {day:'2-digit', month:'short', year:'numeric'});
+    el.innerHTML = `
+      <div class="meta">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <div style="font-weight:700">${escapeHtml(c.name)}</div>
+          <div class="small muted-sm">${createdStr}</div>
+        </div>
+        <div class="small" style="margin-top:6px;">Сумма: <strong>${Number(c.value).toLocaleString('ru-RU')}</strong></div>
+      </div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:8px;">
+        <div>
+          <button class="btn ghost" data-action="toggle" data-id="${c.id}">${c.status === 'done' ? 'Отметить как ожидает' : 'Отметить как выполнено'}</button>
+          <button class="btn" data-action="del" data-id="${c.id}" style="margin-left:8px;">Удалить</button>
+        </div>
+        <div class="chip ${c.status === 'done' ? 'done' : 'wait'}">${c.status === 'done' ? 'Выполнено' : 'Ожид.'}</div>
+      </div>
+    `;
+    clientListEl.appendChild(el);
+  });
+
+  // attach handlers
+  clientListEl.querySelectorAll('button').forEach(btn=>{
+    btn.addEventListener('click', (e)=>{
+      const id = btn.dataset.id;
+      const action = btn.dataset.action;
+      if(action === 'toggle'){ toggleStatus(id); }
+      if(action === 'del'){ if(confirm('Удалить клиента?')){ deleteClient(id); } }
+    });
+  });
+
+  // stats
+  totalClientsEl.textContent = clients.length;
+  const monthDoneSum = computeMonthDoneSum();
+  monthDoneSumEl.textContent = Number(monthDoneSum).toLocaleString('ru-RU');
+
+  const target = Number(document.getElementById('targetInput').value || 0);
+  targetDisplayEl.textContent = Number(target).toLocaleString('ru-RU');
+  const percent = target > 0 ? Math.min(100, Math.round((monthDoneSum / target) * 100)) : 0;
+  progressPercentEl.textContent = percent + '%';
+  progressBarEl.style.width = percent + '%';
+  progressNumbersEl.textContent = `${Number(monthDoneSum).toLocaleString('ru-RU')} / ${Number(target).toLocaleString('ru-RU')}`;
+}
+
+function computeMonthDoneSum(){
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  let sum = 0;
+  clients.forEach(c=>{
+    const d = new Date(c.created);
+    if(d.getFullYear() === year && d.getMonth() === month && c.status === 'done'){
+      sum += Number(c.value) || 0;
+    }
+  });
+  return sum;
+}
+
+function toggleStatus(id){
+  const idx = clients.findIndex(c=>c.id===id);
+  if(idx===-1) return;
+  clients[idx].status = clients[idx].status === 'done' ? 'pending' : 'done';
+  saveState();
+  renderAll();
+}
+function deleteClient(id){
+  clients = clients.filter(c=>c.id!==id);
+  saveState();
+  renderAll();
+}
+
+/* target */
+function saveTarget(){
+  const val = Number(document.getElementById('targetInput').value || 0);
+  if(val < 0){ alert('Нельзя устанавливать отрицательное значение'); return; }
+  localStorage.setItem(STORAGE_TARGET, String(val));
+  renderAll();
+}
+
+/* logout */
+function doLogout(){
+  if(!confirm('Выйти из панели?')) return;
+  // для безопасности: восстановим экран логина
+  pinBuffer='';
+  document.getElementById('loginScreen').style.display='flex';
+  document.getElementById('app').style.display='none';
+  document.getElementById('err').style.display='none';
+  refreshDots();
+}
+
+/* utils */
+function escapeHtml(s){ return String(s).replace(/[&<>"']/g, (m)=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])); }
+
+/* Auto-run: keep login screen visible until correct PIN */
+(function(){
+  // show attempts if previously stored in session
+  attemptsEl.textContent = attempts;
+})();
+
+</script>
+</body>
+</html>

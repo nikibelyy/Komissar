@@ -1,600 +1,819 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8"/>
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover"/>
-<title>Админ · Клиенты — Offline (с приватным паролем)</title>
-<meta name="apple-mobile-web-app-capable" content="yes">
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<title>Admin • Клиенты — План на месяц</title>
+
+<!-- iOS-like system font and safe area -->
 <style>
-:root{
-  --bg:#0b0b0c; --card:#151517; --elev:#1b1b1e; --text:#fff; --muted:#9a9aa0;
-  --tint:#0a84ff; --accent:#5ac8fa; --success:#30d158; --danger:#ff453a; --sep:rgba(255,255,255,.08);
-  --radius:14px;
-}
-@media (prefers-color-scheme: light){
-  :root{ --bg:#f6f7f9; --card:#fff; --elev:#f2f2f7; --text:#000; --muted:#6b6b70; --sep:rgba(0,0,0,.06); }
-}
-*{box-sizing:border-box}
-html,body{height:100%;margin:0;font-family:system-ui,-apple-system,"SF Pro Text","Segoe UI",Roboto,Arial;background:var(--bg);color:var(--text)}
-.safe{padding-top:env(safe-area-inset-top);padding-bottom:env(safe-area-inset-bottom)}
-.container{max-width:760px;margin:0 auto;min-height:100vh;display:flex;flex-direction:column}
-.header{position:sticky;top:0;z-index:20;display:flex;align-items:center;gap:10px;padding:12px 16px;background: color-mix(in oklab,var(--bg) 85%,transparent);border-bottom:1px solid var(--sep)}
-.title{font-weight:800;font-size:18px;flex:1}
-.btn{appearance:none;border:0;padding:9px 12px;border-radius:12px;background:var(--tint);color:#fff;font-weight:700;cursor:pointer}
-.btn.ghost{background:transparent;border:1px solid color-mix(in oklab,var(--tint) 30%,var(--sep));color:var(--tint)}
-.btn.small{padding:6px 8px;font-size:13px}
-.main{flex:1;padding:14px;display:flex;flex-direction:column;gap:12px}
-.card{background:var(--card);border:1px solid var(--sep);border-radius:var(--radius);box-shadow:0 8px 24px rgba(0,0,0,.35)}
-.pad{padding:14px}
-.row{display:flex;gap:8px;align-items:center}
-.label{font-size:13px;color:var(--muted)}
-.input, textarea, select{
-  width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--sep);background:var(--elev);color:var(--text);outline:none;font-size:15px;
-}
-.input:focus,textarea:focus{box-shadow:0 0 0 6px color-mix(in oklab,var(--tint) 10%, transparent)}
-.grid-3{display:grid;grid-template-columns:1fr 1fr auto;gap:8px;align-items:center}
-.grid-2{display:grid;grid-template-columns:1fr 1fr;gap:8px}
-.list{display:flex;flex-direction:column}
-.item{display:grid;grid-template-columns: auto 1fr auto;gap:12px;align-items:center;padding:10px 12px;border-top:1px solid var(--sep)}
-.item:first-child{border-top:none}
-.name{font-weight:700}
-.note{font-size:13px;color:var(--muted)}
-.pill{font-size:12px;padding:6px 10px;border-radius:999px;border:1px solid var(--sep);background:var(--elev)}
-.checkbox{width:18px;height:18px}
-.controls{display:flex;gap:8px;flex-wrap:wrap}
-.small{font-size:13px;color:var(--muted)}
-.hidden{display:none !important}
-.modal{position:fixed;left:0;top:0;width:100%;height:100%;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,.45);z-index:60}
-.modal .card{width:92%;max-width:600px}
-.footer{padding:10px 16px;border-top:1px solid var(--sep);display:flex;justify-content:space-between;align-items:center}
-.table-head{display:grid;grid-template-columns: auto 1fr 140px;gap:12px;padding:10px 12px;background: color-mix(in oklab,var(--bg) 94%,transparent);border-top-left-radius:12px;border-top-right-radius:12px}
-.tag{display:inline-block;padding:4px 8px;border-radius:999px;border:1px solid var(--sep);margin-right:6px;font-size:12px}
-@media (max-width:720px){ .grid-3{grid-template-columns:1fr 1fr; } .table-head{grid-template-columns: auto 1fr; } .item{grid-template-columns:auto 1fr} }
+  :root{
+    --bg:#F6F7F9;
+    --card:#FFFFFFE6;
+    --glass: rgba(255,255,255,0.6);
+    --muted:#8b92a6;
+    --accent:#007AFF;
+    --danger:#FF3B30;
+    --radius:14px;
+    --shadow: 0 6px 18px rgba(30,35,50,0.08);
+    --glass-shadow: 0 8px 30px rgba(12,13,20,0.06);
+    --maxw:460px;
+    --gap:14px;
+  }
+  /* mobile-first */
+  html,body{
+    height:100%;
+    margin:0;
+    background: linear-gradient(180deg,#f7f8fb 0%, #eef2f7 100%);
+    font-family: -apple-system, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Roboto, Arial, sans-serif;
+    color:#142334;
+    -webkit-font-smoothing:antialiased;
+    -moz-osx-font-smoothing:grayscale;
+  }
+
+  /* safe area */
+  .app {
+    padding: env(safe-area-inset-top) 18px env(safe-area-inset-bottom);
+    min-height:100vh;
+    box-sizing:border-box;
+    display:flex;
+    justify-content:center;
+    align-items:flex-start;
+  }
+
+  .frame {
+    width:100%;
+    max-width:var(--maxw);
+    margin:24px auto;
+  }
+
+  header.topbar{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    margin-bottom:var(--gap);
+  }
+  .topbar .title {
+    flex:1;
+  }
+  .topbar h1{
+    margin:0;
+    font-size:18px;
+    font-weight:600;
+    letter-spacing:-0.2px;
+  }
+  .topbar p {
+    margin:0;
+    color:var(--muted);
+    font-size:13px;
+  }
+
+  /* main panel */
+  .panel{
+    background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
+    border-radius:var(--radius);
+    box-shadow:var(--glass-shadow);
+    padding:14px;
+    backdrop-filter: blur(10px) saturate(110%);
+  }
+
+  .controls{
+    display:flex;
+    gap:10px;
+    margin-bottom:10px;
+  }
+
+  button.btn{
+    appearance:none;
+    border:0;
+    background:var(--accent);
+    color:white;
+    padding:10px 12px;
+    border-radius:12px;
+    font-weight:600;
+    box-shadow: 0 6px 14px rgba(0,122,255,0.18);
+    cursor:pointer;
+  }
+  button.btn.ghost{
+    background:transparent;
+    color:var(--accent);
+    border:1px solid rgba(0,122,255,0.12);
+    box-shadow:none;
+  }
+  button.btn.danger{
+    background:var(--danger);
+    box-shadow: 0 6px 14px rgba(255,59,48,0.18);
+  }
+
+  /* list */
+  .clients{
+    display:grid;
+    gap:12px;
+  }
+  .client-card{
+    background:var(--card);
+    border-radius:12px;
+    padding:12px;
+    box-shadow:var(--shadow);
+    display:flex;
+    flex-direction:column;
+    gap:8px;
+  }
+  .client-row{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:8px;
+  }
+  .client-info{
+    display:flex;
+    gap:10px;
+    align-items:center;
+  }
+  .avatar{
+    width:52px;
+    height:52px;
+    border-radius:12px;
+    background:linear-gradient(135deg,#e9eefc,#fff);
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    font-weight:700;
+    color:#2b3a67;
+    box-shadow: 0 5px 12px rgba(30,35,50,0.06) inset;
+  }
+  .meta h3{ margin:0; font-size:16px;}
+  .meta p{ margin:0; color:var(--muted); font-size:13px;}
+
+  .card-actions{
+    display:flex;
+    gap:8px;
+    align-items:center;
+  }
+
+  /* monthly plan */
+  .plan {
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:8px;
+  }
+  .week {
+    background:linear-gradient(180deg,#fff,#fbfbff);
+    border-radius:10px;
+    padding:8px;
+    font-size:13px;
+  }
+  .week h4 { margin:0 0 6px 0; font-size:13px; color:#243347; }
+  .task {
+    display:flex;
+    gap:8px;
+    align-items:flex-start;
+    margin-bottom:6px;
+  }
+  .task input[type="text"]{
+    flex:1;
+    border:1px solid #eef2f7;
+    padding:8px;
+    border-radius:8px;
+    outline:none;
+    font-size:13px;
+  }
+  .task button{ padding:6px 8px; border-radius:8px; background:transparent; border:none; color:var(--danger); cursor:pointer; }
+
+  /* modal */
+  .modal-backdrop{
+    position:fixed;
+    inset:0;
+    display:none;
+    align-items:center;
+    justify-content:center;
+    z-index:60;
+    padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);
+    backdrop-filter: blur(6px) saturate(110%);
+  }
+  .modal-backdrop.show{ display:flex; }
+  .modal {
+    width:100%;
+    max-width:420px;
+    border-radius:16px;
+    background:linear-gradient(180deg,#fff,#f8fbff);
+    box-shadow:0 20px 60px rgba(20,30,50,0.12);
+    padding:14px;
+  }
+  .modal h2{ margin:0 0 6px 0; font-size:16px; }
+  .field { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
+  .field label{ font-size:13px; color:var(--muted); }
+  .field input, .field textarea, .field select{
+    padding:10px;
+    border-radius:10px;
+    border:1px solid #e9eef6;
+    font-size:14px;
+    outline:none;
+    background:white;
+  }
+  .modal .row{ display:flex; gap:8px; }
+
+  /* responsive */
+  @media(min-width:760px){
+    .plan { grid-template-columns:repeat(4,1fr); }
+  }
+
+  /* small helpers */
+  .muted{ color:var(--muted); font-size:13px; }
+  .small{ font-size:12px; color:var(--muted); }
+  .segmented {
+    display:inline-flex;
+    background:rgba(10,10,10,0.03);
+    padding:4px;
+    border-radius:999px;
+    gap:4px;
+  }
+  .segmented button{
+    border:0;
+    padding:8px 10px;
+    border-radius:999px;
+    background:transparent;
+    cursor:pointer;
+    font-weight:600;
+    color:var(--muted);
+  }
+  .segmented button.active{
+    background:white;
+    box-shadow:0 6px 18px rgba(10,20,60,0.06);
+    color:var(--accent);
+  }
+
+  /* empty state */
+  .empty{
+    text-align:center;
+    padding:28px 8px;
+    color:var(--muted);
+  }
+
+  /* tiny UX */
+  .icon-btn{ background:transparent; border:0; padding:8px; border-radius:10px; cursor:pointer; }
 </style>
 </head>
-<body class="safe">
-<div class="container">
-  <div class="header">
-    <div class="title">Админ · Клиенты — Offline</div>
-    <button id="btn-settings" class="btn ghost small">Настройки</button>
-    <button id="btn-logout" class="btn ghost small hidden">Выйти</button>
-  </div>
-
-  <main class="main">
-    <!-- LOGIN -->
-    <section id="screen-login" class="card pad">
-      <div style="text-align:center;margin-bottom:8px">
-        <div style="font-size:20px;font-weight:800">Вход администратора</div>
-        <div class="small" style="margin-top:4px">Доступ только для администратора</div>
+<body>
+<div class="app">
+  <div class="frame">
+    <header class="topbar">
+      <div class="title">
+        <h1>Admin • Клиенты</h1>
+        <p>План на месяц • Адаптив для iPhone</p>
       </div>
-      <form id="login-form" style="display:flex;gap:8px;flex-direction:column">
-        <label class="label">Пароль</label>
-        <input id="password" class="input" type="password" placeholder="Введите пароль" autocomplete="current-password" required/>
-        <div style="display:flex;gap:8px">
-          <button class="btn" type="submit">Войти</button>
-          <button id="btn-login-reset" type="button" class="btn ghost">Сброс данных</button>
-        </div>
-        <div class="small" id="login-note" style="display:none">Доступ защищён паролем.</div>
-      </form>
-    </section>
-
-    <!-- APP -->
-    <section id="screen-app" class="hidden" style="display:flex;flex-direction:column;gap:12px">
-      <!-- Toolbar -->
-      <div class="card pad">
-        <div class="grid-3">
-          <div>
-            <div class="small">Всего</div>
-            <div style="font-weight:900;font-size:24px" id="total-count">0</div>
-          </div>
-          <div>
-            <div class="small">Этот месяц</div>
-            <div style="font-weight:900;font-size:24px" id="month-count">0</div>
-          </div>
-          <div style="display:flex;justify-content:flex-end;gap:8px">
-            <button id="btn-add" class="btn small">Добавить</button>
-            <button id="btn-export-json" class="btn ghost small">Экспорт JSON</button>
-            <button id="btn-export-csv" class="btn ghost small">Экспорт CSV</button>
-            <button id="btn-import" class="btn ghost small">Импорт</button>
-          </div>
-        </div>
-        <div style="height:8px"></div>
-        <div class="grid-2">
-          <input id="search" class="input" placeholder="Поиск по имени, телефону или заметке"/>
-          <div style="display:flex;gap:8px">
-            <select id="tag-filter" class="input">
-              <option value="">Все метки</option>
-            </select>
-            <select id="sort-by" class="input">
-              <option value="created_desc">Дата (новые)</option>
-              <option value="created_asc">Дата (старые)</option>
-              <option value="name_asc">Имя A→Z</option>
-              <option value="name_desc">Имя Z→A</option>
-            </select>
-          </div>
+      <div>
+        <div class="segmented" role="tablist" aria-label="View toggle">
+          <button id="viewList" class="active">Список</button>
+          <button id="viewGrid">Карточки</button>
         </div>
       </div>
+    </header>
 
-      <!-- Add / Edit Panel (toggle) -->
-      <div id="panel-add" class="card pad hidden">
-        <form id="add-form" style="display:flex;gap:8px;flex-direction:column">
-          <div class="grid-2">
-            <input id="name" class="input" placeholder="Имя клиента *" required/>
-            <input id="phone" class="input" placeholder="Телефон"/>
-          </div>
-          <div>
-            <textarea id="note" class="input" rows="3" placeholder="Заметка"></textarea>
-          </div>
-          <div>
-            <input id="tags" class="input" placeholder="Метки (через запятую): VIP,новый"/>
-          </div>
-          <div style="display:flex;gap:8px">
-            <button class="btn" type="submit">Сохранить</button>
-            <button id="btn-cancel-add" type="button" class="btn ghost">Отмена</button>
-          </div>
-        </form>
+    <main class="panel" role="main">
+      <div class="controls">
+        <button id="addClientBtn" class="btn">+ Добавить клиента</button>
+        <button id="exportBtn" class="btn ghost">Экспорт</button>
+        <button id="importBtn" class="btn ghost">Импорт</button>
+        <input id="importFile" type="file" accept="application/json" style="display:none" />
       </div>
 
-      <!-- List + Chart -->
-      <div class="card pad">
-        <div class="table-head">
-          <div style="display:flex;align-items:center;gap:8px">
-            <input id="select-all" type="checkbox" class="checkbox"/>
-          </div>
-          <div class="small">Клиенты</div>
-          <div class="small" style="text-align:right">Дата / Действия</div>
-        </div>
+      <section id="clientsContainer" class="clients" aria-live="polite">
+        <!-- client cards rendered here -->
+      </section>
 
-        <div id="list" class="list" style="max-height:360px;overflow:auto"></div>
-
-        <div style="display:flex;justify-content:space-between;align-items:center;padding:10px">
-          <div style="display:flex;gap:8px;align-items:center">
-            <select id="bulk-action" class="input" style="width:160px">
-              <option value="">Массовые действия</option>
-              <option value="delete">Удалить выбранные</option>
-              <option value="tag_add">Добавить метку</option>
-              <option value="tag_remove">Удалить метку</option>
-            </select>
-            <input id="bulk-param" class="input" placeholder="Параметр (название метки)" style="width:180px"/>
-            <button id="btn-bulk-apply" class="btn ghost small">Применить</button>
-          </div>
-          <div class="small muted">Выбрано: <span id="selected-count">0</span></div>
-        </div>
+      <div class="empty" id="emptyMsg" style="display:none;">
+        Нет клиентов. Нажми «Добавить клиента», чтобы начать.
       </div>
-
-      <!-- Chart -->
-      <div class="card pad">
-        <div style="display:flex;justify-content:space-between;align-items:center">
-          <div class="small muted">Статистика по месяцам (последние 12 мес.)</div>
-          <div class="small muted">Авто-логаут: <span id="idle-timeout-label">5 мин</span></div>
-        </div>
-        <canvas id="chart" width="800" height="260" style="width:100%;height:180px;margin-top:8px;border-radius:8px"></canvas>
-      </div>
-
-      <!-- Settings modal (hidden by default) -->
-      <div id="settings-modal" class="modal hidden">
-        <div class="card pad">
-          <h3 style="margin:0 0 10px 0">Настройки</h3>
-          <form id="settings-form" style="display:flex;flex-direction:column;gap:8px">
-            <label class="label">Сменить пароль администратора</label>
-            <input id="new-password" class="input" type="password" placeholder="Новый пароль (мин.6)"/>
-            <div class="row">
-              <label class="label">Таймаут авто-логаута (минут)</label>
-              <input id="idle-timeout" class="input" type="number" min="1" max="240" value="5"/>
-            </div>
-            <div style="display:flex;gap:8px">
-              <button class="btn" type="submit">Сохранить</button>
-              <button id="btn-clear-all" type="button" class="btn action-danger">Стереть все данные</button>
-              <button id="btn-close-settings-modal" type="button" class="btn ghost">Закрыть</button>
-            </div>
-            <div class="small muted">Данные хранятся локально в браузере. Рекомендуется экспортировать резервную копию.</div>
-          </form>
-        </div>
-      </div>
-
-    </section>
-  </main>
-
-  <div class="footer small" style="padding:10px 16px;border-top:1px solid var(--sep);display:flex;justify-content:space-between">
-    <div>Версия: offline · Без сервера</div>
-    <div class="small muted">Откройте этот файл в браузере — всё работает локально</div>
+    </main>
   </div>
 </div>
 
-<!-- hidden file input -->
-<input id="file-input" type="file" accept="application/json,text/csv" class="hidden"/>
+<!-- modal -->
+<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
+  <div class="modal" role="document">
+    <h2 id="modalTitle">Новый клиент</h2>
+    <div class="field">
+      <label for="clientName">Имя</label>
+      <input id="clientName" type="text" placeholder="Иван Иванов" />
+    </div>
+    <div class="field">
+      <label for="clientPhone">Телефон</label>
+      <input id="clientPhone" type="tel" placeholder="+7 900 000-00-00" />
+    </div>
+    <div class="field">
+      <label for="clientNote">Заметка</label>
+      <textarea id="clientNote" rows="2" placeholder="Комментарий..."></textarea>
+    </div>
 
+    <div style="margin-bottom:8px;">
+      <label class="small muted">Месяц плана</label>
+      <select id="planMonth" style="width:100%; margin-top:6px;">
+        <!-- months populated by JS -->
+      </select>
+    </div>
+
+    <div style="display:flex; gap:8px; justify-content:flex-end;">
+      <button id="cancelBtn" class="btn ghost">Отмена</button>
+      <button id="saveClientBtn" class="btn">Сохранить</button>
+    </div>
+  </div>
+</div>
+
+<!-- lightweight templates as JS strings -->
 <script>
-/* ============================
-   Авторизация по паролю:
-   По умолчанию пароль установлен в переменной DEFAULT_PASSWORD ниже.
-   ============================ */
+(() => {
+  // Simple client admin with monthly plan structure
+  const storageKey = 'admin_clients_v1';
 
-/* ---------------- Константы ---------------- */
-const KEYS = {
-  CLIENTS: 'clients_offline_v2',
-  ADMIN_SALT: 'admin_salt_v2',
-  ADMIN_HASH: 'admin_hash_v2',
-  SETTINGS: 'settings_v2'
-};
-// <- ТЫ МЕНЯЛ ПАРОЛЬ: здесь установлен твой приватный пароль по умолчанию
-const DEFAULT_PASSWORD = 'nikitabelyy1337';
+  // DOM
+  const addClientBtn = document.getElementById('addClientBtn');
+  const modalBp = document.getElementById('modalBackdrop');
+  const cancelBtn = document.getElementById('cancelBtn');
+  const saveClientBtn = document.getElementById('saveClientBtn');
+  const clientsContainer = document.getElementById('clientsContainer');
+  const emptyMsg = document.getElementById('emptyMsg');
+  const modalTitle = document.getElementById('modalTitle');
 
-const app = {
-  clients: [],
-  session: false,
-  settings: { idleTimeoutMin: 5 } // minutes
-};
+  const clientNameInput = document.getElementById('clientName');
+  const clientPhoneInput = document.getElementById('clientPhone');
+  const clientNoteInput = document.getElementById('clientNote');
+  const planMonthSelect = document.getElementById('planMonth');
 
-/* ---------------- WebCrypto helpers ---------------- */
-const te = new TextEncoder();
-async function sha256Base64(str){
-  const buf = await crypto.subtle.digest('SHA-256', te.encode(str));
-  return btoa(String.fromCharCode(...new Uint8Array(buf)));
-}
-function genSalt(len=16){ const b = new Uint8Array(len); crypto.getRandomValues(b); return btoa(String.fromCharCode(...b)); }
-async function hashPassword(pwd, salt){ return await sha256Base64(salt + pwd); }
+  const exportBtn = document.getElementById('exportBtn');
+  const importBtn = document.getElementById('importBtn');
+  const importFile = document.getElementById('importFile');
 
-/* ---------------- Storage ---------------- */
-function loadAll(){
-  try{ app.clients = JSON.parse(localStorage.getItem(KEYS.CLIENTS) || '[]'); }catch{ app.clients = []; }
-  try{ app.settings = JSON.parse(localStorage.getItem(KEYS.SETTINGS) || JSON.stringify(app.settings)); }catch{ }
-}
-function saveClients(){ localStorage.setItem(KEYS.CLIENTS, JSON.stringify(app.clients, null, 2)); updateUI(); }
-function saveSettings(){ localStorage.setItem(KEYS.SETTINGS, JSON.stringify(app.settings)); }
+  const viewListBtn = document.getElementById('viewList');
+  const viewGridBtn = document.getElementById('viewGrid');
 
-/* ---------------- Admin init/check ---------------- */
-async function ensureAdmin(){
-  // Если в localStorage нет админ-хэша — создаём хэш от DEFAULT_PASSWORD
-  let s = localStorage.getItem(KEYS.ADMIN_SALT), h = localStorage.getItem(KEYS.ADMIN_HASH);
-  if(!s || !h){
-    s = genSalt(16);
-    const hh = await hashPassword(DEFAULT_PASSWORD, s);
-    localStorage.setItem(KEYS.ADMIN_SALT, s);
-    localStorage.setItem(KEYS.ADMIN_HASH, hh);
-    // NOTE: мы не показываем пароль в интерфейсе — предполагается, что только ты его знаешь
+  let clients = [];
+  let editingId = null;
+  let viewMode = 'list';
+
+  // months
+  const months = [
+    'Январь','Февраль','Март','Апрель','Май','Июнь',
+    'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'
+  ];
+
+  function uid(){
+    return 'id_' + Math.random().toString(36).slice(2,9);
   }
-}
-async function checkPassword(pwd){
-  const salt = localStorage.getItem(KEYS.ADMIN_SALT);
-  const real = localStorage.getItem(KEYS.ADMIN_HASH);
-  if(!salt || !real) return false;
-  const calc = await hashPassword(pwd, salt);
-  return calc === real;
-}
-async function changePassword(newPwd){
-  const s = genSalt(16);
-  const h = await hashPassword(newPwd, s);
-  localStorage.setItem(KEYS.ADMIN_SALT, s);
-  localStorage.setItem(KEYS.ADMIN_HASH, h);
-}
 
-/* ---------------- UI helpers ---------------- */
-const $ = s => document.querySelector(s);
-const $$ = s => Array.from(document.querySelectorAll(s));
-function show(sel){ $(sel).classList.remove('hidden'); }
-function hide(sel){ $(sel).classList.add('hidden'); }
+  function defaultMonthPlan(year, monthIndex){
+    // return plan as array of 4 weeks; each week is array of tasks
+    const weeks = [];
+    for(let w=0; w<4; w++){
+      weeks.push([]);
+    }
+    return {year, monthIndex, weeks};
+  }
 
-/* ---------------- Idle / Auto-logout ---------------- */
-let idleTimer = null;
-function resetIdleTimer(){
-  if(idleTimer) clearTimeout(idleTimer);
-  const ms = (app.settings.idleTimeoutMin || 5) * 60 * 1000;
-  idleTimer = setTimeout(()=>{ sessionStorage.removeItem('session_ok'); app.session=false; alert('Сессия истекла из-за простоя'); showLogin(); }, ms);
-}
-['mousemove','keydown','touchstart'].forEach(ev => window.addEventListener(ev, resetIdleTimer));
+  function load(){
+    try {
+      const raw = localStorage.getItem(storageKey);
+      clients = raw ? JSON.parse(raw) : [];
+    } catch(e){
+      clients = [];
+      console.error('load error', e);
+    }
+  }
+  function save(){
+    localStorage.setItem(storageKey, JSON.stringify(clients));
+  }
 
-/* ---------------- Init ---------------- */
-(async function init(){
-  await ensureAdmin();
-  loadAll();
-  const sessionOk = sessionStorage.getItem('session_ok') === '1';
-  if(sessionOk){ app.session = true; showApp(); } else { showLogin(); }
-  populateTagFilter();
-  updateUI();
-  attachEvents();
-  resetIdleTimer();
-})();
+  function renderClients(){
+    clientsContainer.innerHTML = '';
+    if(clients.length === 0){
+      emptyMsg.style.display = 'block';
+      return;
+    }
+    emptyMsg.style.display = 'none';
 
-/* ---------------- Show screens ---------------- */
-function showLogin(){ hide('#screen-app'); show('#screen-login'); $('#btn-logout').classList.add('hidden'); }
-function showApp(){ hide('#screen-login'); show('#screen-app'); $('#btn-logout').classList.remove('hidden'); }
+    clients.forEach(c => {
+      const card = document.createElement('article');
+      card.className = 'client-card';
+      card.setAttribute('data-id', c.id);
 
-/* ---------------- Events ---------------- */
-function attachEvents(){
-  // login
-  $('#login-form').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const pwd = $('#password').value || '';
-    const ok = await checkPassword(pwd);
-    if(ok){
-      sessionStorage.setItem('session_ok','1'); app.session = true; $('#password').value=''; showApp(); updateUI(); resetIdleTimer();
-    } else alert('Неверный пароль');
+      // header row
+      const row = document.createElement('div');
+      row.className = 'client-row';
+
+      const info = document.createElement('div');
+      info.className = 'client-info';
+
+      const avatar = document.createElement('div');
+      avatar.className = 'avatar';
+      avatar.textContent = (c.name || '?').split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase();
+
+      const meta = document.createElement('div');
+      meta.className = 'meta';
+      const h3 = document.createElement('h3');
+      h3.textContent = c.name || 'Без имени';
+      const p = document.createElement('p');
+      p.textContent = c.phone || '';
+
+      meta.appendChild(h3);
+      meta.appendChild(p);
+      info.appendChild(avatar);
+      info.appendChild(meta);
+
+      const actions = document.createElement('div');
+      actions.className = 'card-actions';
+      // edit
+      const editBtn = document.createElement('button');
+      editBtn.className = 'icon-btn';
+      editBtn.title = 'Редактировать';
+      editBtn.innerHTML = '✏️';
+      editBtn.addEventListener('click', () => openEditClient(c.id));
+
+      // quick add task button
+      const addTaskBtn = document.createElement('button');
+      addTaskBtn.className = 'icon-btn';
+      addTaskBtn.title = 'Добавить задачу в текущий месяц';
+      addTaskBtn.innerHTML = '＋';
+      addTaskBtn.addEventListener('click', () => openQuickTask(c.id));
+
+      const delBtn = document.createElement('button');
+      delBtn.className = 'icon-btn';
+      delBtn.title = 'Удалить';
+      delBtn.innerHTML = '🗑️';
+      delBtn.addEventListener('click', () => {
+        if(confirm('Удалить клиента?')) {
+          clients = clients.filter(x => x.id !== c.id);
+          save();
+          renderClients();
+        }
+      });
+
+      actions.appendChild(addTaskBtn);
+      actions.appendChild(editBtn);
+      actions.appendChild(delBtn);
+
+      row.appendChild(info);
+      row.appendChild(actions);
+      card.appendChild(row);
+
+      // note
+      if(c.note){
+        const note = document.createElement('div');
+        note.className = 'small';
+        note.textContent = c.note;
+        card.appendChild(note);
+      }
+
+      // month label and plan preview
+      const monthLabel = document.createElement('div');
+      monthLabel.className = 'small muted';
+      const mname = months[c.plan.monthIndex] || '—';
+      monthLabel.textContent = `${mname} ${c.plan.year}`;
+      card.appendChild(monthLabel);
+
+      // plan preview (first 4 tasks)
+      const preview = document.createElement('div');
+      preview.style.marginTop = '8px';
+      preview.style.display = 'grid';
+      preview.style.gridTemplateColumns = 'repeat(2,1fr)';
+      preview.style.gap = '6px';
+
+      c.plan.weeks.forEach((wk, idx) => {
+        const wdiv = document.createElement('div');
+        wdiv.className = 'week';
+        const wtitle = document.createElement('h4');
+        wtitle.textContent = 'Неделя ' + (idx+1);
+        wdiv.appendChild(wtitle);
+        if(wk.length === 0){
+          const em = document.createElement('div');
+          em.className = 'small muted';
+          em.textContent = 'Нет задач';
+          wdiv.appendChild(em);
+        } else {
+          wk.slice(0,3).forEach(t => {
+            const tdiv = document.createElement('div');
+            tdiv.className = 'task';
+            tdiv.innerHTML = `<div style="flex:1">${escapeHtml(t)}</div>`;
+            wdiv.appendChild(tdiv);
+          });
+        }
+        preview.appendChild(wdiv);
+      });
+
+      card.appendChild(preview);
+
+      // expand button
+      const expandRow = document.createElement('div');
+      expandRow.style.display='flex';
+      expandRow.style.justifyContent='flex-end';
+      expandRow.style.marginTop='8px';
+      const openBtn = document.createElement('button');
+      openBtn.className='btn ghost';
+      openBtn.textContent='Открыть план';
+      openBtn.addEventListener('click', ()=> openPlanModal(c.id));
+      expandRow.appendChild(openBtn);
+      card.appendChild(expandRow);
+
+      clientsContainer.appendChild(card);
+    });
+
+    // view mode tweaks
+    if(viewMode === 'grid'){
+      clientsContainer.style.gridTemplateColumns = 'repeat(2,1fr)';
+    } else {
+      clientsContainer.style.gridTemplateColumns = '1fr';
+    }
+  }
+
+  // modal helpers
+  function openNewClient(){
+    editingId = null;
+    modalTitle.textContent = 'Новый клиент';
+    clientNameInput.value = '';
+    clientPhoneInput.value = '';
+    clientNoteInput.value = '';
+    // default month: current
+    const now = new Date();
+    planMonthSelect.value = now.getMonth() + '|' + now.getFullYear();
+    showModal();
+  }
+
+  function openEditClient(id){
+    const c = clients.find(x=>x.id===id);
+    if(!c) return;
+    editingId = id;
+    modalTitle.textContent = 'Редактирование';
+    clientNameInput.value = c.name;
+    clientPhoneInput.value = c.phone || '';
+    clientNoteInput.value = c.note || '';
+    planMonthSelect.value = c.plan.monthIndex + '|' + c.plan.year;
+    showModal();
+  }
+
+  function showModal(){
+    modalBp.classList.add('show');
+    modalBp.setAttribute('aria-hidden','false');
+    clientNameInput.focus();
+  }
+  function closeModal(){
+    modalBp.classList.remove('show');
+    modalBp.setAttribute('aria-hidden','true');
+    editingId = null;
+  }
+
+  // on save
+  saveClientBtn.addEventListener('click', () => {
+    const name = clientNameInput.value.trim();
+    if(!name){
+      alert('Введите имя клиента');
+      clientNameInput.focus();
+      return;
+    }
+    const phone = clientPhoneInput.value.trim();
+    const note = clientNoteInput.value.trim();
+    const [mIdxStr, yearStr] = planMonthSelect.value.split('|');
+    const monthIndex = parseInt(mIdxStr,10);
+    const year = parseInt(yearStr,10);
+
+    if(editingId){
+      const c = clients.find(x=>x.id===editingId);
+      if(c){
+        c.name = name;
+        c.phone = phone;
+        c.note = note;
+        c.plan.year = year;
+        c.plan.monthIndex = monthIndex;
+      }
+    } else {
+      const newClient = {
+        id: uid(),
+        name, phone, note,
+        plan: defaultMonthPlan(year, monthIndex)
+      };
+      clients.unshift(newClient);
+    }
+    save();
+    renderClients();
+    closeModal();
   });
-  $('#btn-login-reset').addEventListener('click', ()=>{
-    if(confirm('Сбросить ВСЕ локальные данные и пароль? Это удалит клиентов и настройки.')){ localStorage.clear(); sessionStorage.clear(); alert('Данные удалены. Перезагрузите страницу.'); location.reload(); }
-  });
-  $('#btn-logout').addEventListener('click', ()=>{ sessionStorage.removeItem('session_ok'); app.session=false; showLogin(); });
 
-  // add
-  $('#btn-add').addEventListener('click', ()=>{ show('#panel-add'); $('#name').focus(); });
-  $('#btn-cancel-add').addEventListener('click', ()=>{ hide('#panel-add'); $('#add-form').reset(); });
-  $('#add-form').addEventListener('submit', (e)=>{
-    e.preventDefault();
-    const id = crypto.randomUUID(), name = $('#name').value.trim();
-    if(!name){ alert('Введите имя'); return; }
-    const client = {
-      id, name, phone: $('#phone').value.trim(), note: $('#note').value.trim(),
-      tags: parseTags($('#tags').value), createdAt: new Date().toISOString()
-    };
-    app.clients.push(client);
-    saveClients();
-    $('#add-form').reset(); hide('#panel-add');
+  cancelBtn.addEventListener('click', closeModal);
+  modalBp.addEventListener('click', (e) => {
+    if(e.target === modalBp) closeModal();
   });
 
-  // search/filter/sort
-  $('#search').addEventListener('input', renderList);
-  $('#tag-filter').addEventListener('change', renderList);
-  $('#sort-by').addEventListener('change', renderList);
+  addClientBtn.addEventListener('click', openNewClient);
 
   // export/import
-  $('#btn-export-json').addEventListener('click', exportJSON);
-  $('#btn-export-csv').addEventListener('click', exportCSV);
-  $('#btn-import').addEventListener('click', ()=> $('#file-input').click());
-  $('#file-input').addEventListener('change', handleFileImport);
-
-  // select all
-  $('#select-all').addEventListener('change', (e)=>{
-    const checked = e.target.checked;
-    $$('.chk-select').forEach(c=>c.checked = checked);
-    updateSelectedCount();
+  exportBtn.addEventListener('click', () => {
+    const dataStr = JSON.stringify(clients, null, 2);
+    const blob = new Blob([dataStr], {type:'application/json'});
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'clients_export.json';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+  importBtn.addEventListener('click', ()=> importFile.click());
+  importFile.addEventListener('change', (ev) => {
+    const file = ev.target.files[0];
+    if(!file) return;
+    const reader = new FileReader();
+    reader.onload = (e) => {
+      try {
+        const parsed = JSON.parse(e.target.result);
+        if(Array.isArray(parsed)){
+          if(confirm('Импортировать и заменить текущую базу?')) {
+            clients = parsed;
+            save();
+            renderClients();
+            alert('Импорт выполнен');
+          }
+        } else alert('Некорректный файл');
+      } catch(err){
+        alert('Ошибка чтения файла');
+      }
+    };
+    reader.readAsText(file);
+    ev.target.value = '';
   });
 
-  // bulk
-  $('#btn-bulk-apply').addEventListener('click', ()=> applyBulkAction());
-
-  // settings modal
-  $('#btn-settings').addEventListener('click', ()=> { show('#settings-modal'); $('#idle-timeout').value = app.settings.idleTimeoutMin || 5; });
-  $('#btn-close-settings-modal').addEventListener('click', ()=> hide('#settings-modal'));
-  $('#settings-form').addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    const p = $('#new-password').value.trim();
-    const t = parseInt($('#idle-timeout').value || 5);
-    if(p.length>0){
-      if(p.length<6){ alert('Пароль должен быть минимум 6 символов'); return; }
-      await changePassword(p);
-      $('#new-password').value='';
-      alert('Пароль изменён');
+  // quick task add: opens small inline prompt to add a task into week 1 by default
+  function openQuickTask(clientId){
+    const client = clients.find(x=>x.id===clientId);
+    if(!client) return;
+    const task = prompt('Добавить задачу в первый неделю:');
+    if(task && task.trim()){
+      client.plan.weeks[0].push(task.trim());
+      save();
+      renderClients();
     }
-    app.settings.idleTimeoutMin = Math.max(1, Math.min(240, t));
-    saveSettings();
-    $('#idle-timeout-label').textContent = app.settings.idleTimeoutMin + ' мин';
-    resetIdleTimer();
-    hide('#settings-modal');
-  });
-  $('#btn-clear-all').addEventListener('click', ()=>{
-    if(confirm('Стереть все данные клиентов и настройки?')){ localStorage.removeItem(KEYS.CLIENTS); localStorage.removeItem(KEYS.ADMIN_SALT); localStorage.removeItem(KEYS.ADMIN_HASH); localStorage.removeItem(KEYS.SETTINGS); app.clients=[]; saveClients(); alert('Готово. Перезагрузите страницу.'); location.reload(); }
-  });
-
-  // selection checkboxes update selected count
-  document.addEventListener('change', (e)=>{ if(e.target && e.target.classList && e.target.classList.contains('chk-select')) updateSelectedCount(); });
-}
-
-/* ---------------- Utilities ---------------- */
-function parseTags(s){
-  if(!s) return [];
-  return s.split(',').map(x=>x.trim()).filter(Boolean).map(x=>x.toLowerCase());
-}
-function uniqueTags(){
-  const set = new Set();
-  app.clients.forEach(c=> (c.tags||[]).forEach(t=> set.add(t)));
-  return Array.from(set).sort();
-}
-
-/* ---------------- List rendering ---------------- */
-function renderList(){
-  const cont = $('#list'); cont.innerHTML = '';
-  const q = ($('#search').value||'').toLowerCase().trim();
-  const tagFilter = $('#tag-filter').value;
-  const sortBy = $('#sort-by').value;
-  let items = [...app.clients];
-
-  if(tagFilter) items = items.filter(c => (c.tags||[]).includes(tagFilter));
-  if(q) items = items.filter(c => (c.name||'').toLowerCase().includes(q) || (c.phone||'').toLowerCase().includes(q) || (c.note||'').toLowerCase().includes(q));
-
-  if(sortBy === 'created_desc') items.sort((a,b)=> new Date(b.createdAt)-new Date(a.createdAt));
-  else if(sortBy === 'created_asc') items.sort((a,b)=> new Date(a.createdAt)-new Date(b.createdAt));
-  else if(sortBy === 'name_asc') items.sort((a,b)=> a.name.localeCompare(b.name));
-  else if(sortBy === 'name_desc') items.sort((a,b)=> b.name.localeCompare(a.name));
-
-  if(items.length === 0){
-    cont.innerHTML = '<div style="padding:14px" class="small muted">Клиенты не найдены</div>';
-    updateSelectedCount(); drawChart();
-    return;
   }
 
-  items.forEach(c=>{
-    const d = new Date(c.createdAt);
-    const when = d.toLocaleString('ru-RU', {day:'2-digit', month:'short', hour:'2-digit', minute:'2-digit'});
-    const row = document.createElement('div'); row.className = 'item';
-    const chk = document.createElement('input'); chk.type='checkbox'; chk.className='checkbox chk-select'; chk.dataset.id = c.id;
-    const middle = document.createElement('div');
-    middle.innerHTML = `<div class="name">${escapeHtml(c.name)} ${ (c.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('') }</div>
-      <div class="note">${escapeHtml(c.phone||'')} ${c.phone && c.note?'· ':''}${escapeHtml(c.note||'')}</div>`;
-    const right = document.createElement('div'); right.style.textAlign='right';
-    right.innerHTML = `<div class="pill" title="${d.toLocaleString()}">${when}</div>
-      <div style="height:8px"></div>
-      <div style="display:flex;flex-direction:column;gap:6px;align-items:flex-end">
-        <button class="btn ghost small" onclick="editClient('${c.id}')">Изменить</button>
-        <button class="btn action-danger small" onclick="deleteClient('${c.id}')">Удалить</button>
-      </div>`;
-    row.appendChild(chk); row.appendChild(middle); row.appendChild(right);
-    cont.appendChild(row);
-  });
-  updateSelectedCount(); drawChart();
-  populateTagFilter();
-}
+  // plan modal: create a quick editor overlay for full month plan
+  function openPlanModal(clientId){
+    const client = clients.find(x=>x.id===clientId);
+    if(!client) return;
+    // build simple prompt UI
+    const modal = document.createElement('div');
+    modal.style.position='fixed';
+    modal.style.inset='0';
+    modal.style.zIndex='120';
+    modal.style.display='flex';
+    modal.style.alignItems='center';
+    modal.style.justifyContent='center';
+    modal.style.padding='20px';
+    modal.style.backdropFilter='blur(6px)';
+    modal.innerHTML = `
+      <div style="width:100%;max-width:680px;background:white;border-radius:14px;padding:14px;box-shadow:0 30px 80px rgba(20,30,50,0.12);max-height:90vh;overflow:auto;">
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+          <div>
+            <h3 style="margin:0 0 4px 0">${escapeHtml(client.name)} — план</h3>
+            <div class="small muted">${months[client.plan.monthIndex] || ''} ${client.plan.year}</div>
+          </div>
+          <div>
+            <button id="closePlan" class="btn ghost">Закрыть</button>
+          </div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
+        </div>
+      </div>
+    `;
+    document.body.appendChild(modal);
 
-function escapeHtml(s){ return String(s||'').replace(/[&<>"'`=\/]/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;','/':'&#x2F;','`':'&#x60;','=':'&#x3D;'}[ch])); }
+    const grid = modal.querySelector('div > div:nth-child(2)');
 
-/* ---------------- Selection / Bulk ---------------- */
-function getSelectedIds(){
-  return $$('.chk-select').filter(c=>c.checked).map(c=>c.dataset.id);
-}
-function updateSelectedCount(){ $('#selected-count').textContent = getSelectedIds().length; $('#select-all').checked = $$('.chk-select').length>0 && $$('.chk-select').every(c=>c.checked); }
-
-function applyBulkAction(){
-  const action = $('#bulk-action').value;
-  const ids = getSelectedIds();
-  if(!action){ alert('Выберите действие'); return; }
-  if(ids.length===0){ alert('Нет выбранных клиентов'); return; }
-
-  if(action === 'delete'){
-    if(!confirm(`Удалить ${ids.length} выбранных клиентов?`)) return;
-    app.clients = app.clients.filter(c=> !ids.includes(c.id));
-    saveClients(); renderList(); return;
-  }
-  const param = ($('#bulk-param').value || '').trim().toLowerCase();
-  if(!param){ alert('Укажите параметр (название метки)'); return; }
-  if(action === 'tag_add'){
-    app.clients.forEach(c=>{ if(ids.includes(c.id)){ c.tags = Array.from(new Set([...(c.tags||[]), param])); }});
-    saveClients(); renderList(); return;
-  }
-  if(action === 'tag_remove'){
-    app.clients.forEach(c=>{ if(ids.includes(c.id)){ c.tags = (c.tags||[]).filter(t=>t!==param); }});
-    saveClients(); renderList(); return;
-  }
-}
-
-/* ---------------- Edit / Delete single ---------------- */
-window.deleteClient = function(id){
-  if(!confirm('Удалить клиента?')) return;
-  app.clients = app.clients.filter(c=>c.id !== id);
-  saveClients(); renderList();
-};
-window.editClient = function(id){
-  const c = app.clients.find(x=>x.id===id);
-  if(!c){ alert('Клиент не найден'); return; }
-  show('#panel-add');
-  $('#name').value = c.name; $('#phone').value = c.phone||''; $('#note').value = c.note||''; $('#tags').value = (c.tags||[]).join(',');
-  const handler = function(e){
-    e.preventDefault();
-    c.name = $('#name').value.trim() || c.name;
-    c.phone = $('#phone').value.trim();
-    c.note = $('#note').value.trim();
-    c.tags = parseTags($('#tags').value);
-    saveClients(); renderList();
-    $('#add-form').removeEventListener('submit', handler);
-    $('#add-form').reset(); hide('#panel-add');
-  };
-  $('#add-form').addEventListener('submit', handler);
-};
-
-/* ---------------- Export / Import ---------------- */
-function exportJSON(){
-  const blob = new Blob([JSON.stringify(app.clients, null, 2)], {type:'application/json'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `clients_backup_${(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'_')}.json`; document.body.appendChild(a); a.click(); a.remove();
-}
-function exportCSV(){
-  if(app.clients.length===0){ alert('Нет данных для экспорта'); return; }
-  const rows = [['id','name','phone','note','tags','createdAt']];
-  app.clients.forEach(c=> rows.push([c.id, c.name, c.phone||'', c.note||'', (c.tags||[]).join(';'), c.createdAt]));
-  const csv = rows.map(r => r.map(cell => `"${String(cell||'').replace(/"/g,'""')}"`).join(',')).join('\n');
-  const blob = new Blob([csv], {type:'text/csv'});
-  const a = document.createElement('a'); a.href = URL.createObjectURL(blob);
-  a.download = `clients_export_${(new Date()).toISOString().slice(0,19).replace(/[:T]/g,'_')}.csv`; document.body.appendChild(a); a.click(); a.remove();
-}
-
-async function handleFileImport(e){
-  const f = e.target.files && e.target.files[0]; if(!f) return;
-  try{
-    const text = await f.text();
-    const isJson = f.type.includes('json') || text.trim().startsWith('[');
-    if(isJson){
-      const arr = JSON.parse(text);
-      if(!Array.isArray(arr)) throw new Error('Неверный JSON формат');
-      arr.forEach(x=>{ if(!x.id) x.id = crypto.randomUUID(); if(!x.createdAt) x.createdAt = new Date().toISOString(); if(!x.tags) x.tags = parseTags(x.tags?String(x.tags):''); });
-      app.clients = arr;
-      saveClients(); renderList(); alert('Импорт JSON выполнен');
-    } else {
-      const lines = text.split(/\r?\n/).filter(Boolean);
-      const out = [];
-      const headers = lines.shift().split(',').map(h=>h.replace(/^"|"$/g,'').trim());
-      lines.forEach(line=>{
-        const cols = line.match(/("([^"]|"")*"|[^,]+)/g) || [];
-        const row = cols.map(c => c.replace(/^"|"$/g,'').replace(/""/g,'"'));
-        const obj = {};
-        headers.forEach((h,i)=> obj[h]=row[i]||'');
-        out.push({ id: obj.id || crypto.randomUUID(), name: obj.name||'', phone: obj.phone||'', note: obj.note||'', tags: parseTags(obj.tags || ''), createdAt: obj.createdAt||new Date().toISOString() });
+    // render weeks with add/remove
+    client.plan.weeks.forEach((wk, widx) => {
+      const wdiv = document.createElement('div');
+      wdiv.style.background='linear-gradient(180deg,#fff,#fbfbff)';
+      wdiv.style.padding='10px';
+      wdiv.style.borderRadius='12px';
+      wdiv.innerHTML = `<h4 style="margin:0 0 8px 0">Неделя ${widx+1}</h4>`;
+      const list = document.createElement('div');
+      list.style.display='flex';
+      list.style.flexDirection='column';
+      list.style.gap='8px';
+      wk.forEach((task, tidx) => {
+        const row = document.createElement('div');
+        row.style.display='flex';
+        row.style.gap='8px';
+        const inp = document.createElement('input');
+        inp.type='text';
+        inp.value = task;
+        inp.style.flex='1';
+        inp.style.padding='8px';
+        inp.style.borderRadius='8px';
+        inp.style.border='1px solid #eef2f7';
+        inp.addEventListener('input', (e) => {
+          client.plan.weeks[widx][tidx] = e.target.value;
+          save();
+        });
+        const del = document.createElement('button');
+        del.textContent='✕';
+        del.style.background='transparent';
+        del.style.border='0';
+        del.style.cursor='pointer';
+        del.addEventListener('click', () => {
+          client.plan.weeks[widx].splice(tidx,1);
+          save();
+          modal.remove();
+          openPlanModal(clientId);
+        });
+        row.appendChild(inp);
+        row.appendChild(del);
+        list.appendChild(row);
       });
-      app.clients = out;
-      saveClients(); renderList(); alert('Импорт CSV выполнен');
+      const addRow = document.createElement('div');
+      addRow.style.display='flex';
+      addRow.style.gap='8px';
+      addRow.style.marginTop='8px';
+      const newInp = document.createElement('input');
+      newInp.type='text';
+      newInp.placeholder='Новая задача...';
+      newInp.style.flex='1';
+      const addBtn = document.createElement('button');
+      addBtn.className='btn';
+      addBtn.textContent='Добавить';
+      addBtn.addEventListener('click', () => {
+        const v = newInp.value.trim();
+        if(v){
+          client.plan.weeks[widx].push(v);
+          save();
+          modal.remove();
+          openPlanModal(clientId);
+        }
+      });
+      addRow.appendChild(newInp);
+      addRow.appendChild(addBtn);
+
+      wdiv.appendChild(list);
+      wdiv.appendChild(addRow);
+      grid.appendChild(wdiv);
+    });
+
+    modal.querySelector('#closePlan').addEventListener('click', () => {
+      modal.remove();
+      renderClients();
+    });
+    // click outside closes
+    modal.addEventListener('click', (e) => {
+      if(e.target === modal) {
+        modal.remove();
+        renderClients();
+      }
+    });
+  }
+
+  // init month options
+  function populateMonths(){
+    const now = new Date();
+    for(let i=-2;i<=2;i++){ // show range around current month
+      const d = new Date(now.getFullYear(), now.getMonth()+i, 1);
+      const opt = document.createElement('option');
+      opt.value = d.getMonth() + '|' + d.getFullYear();
+      opt.textContent = months[d.getMonth()] + ' ' + d.getFullYear();
+      planMonthSelect.appendChild(opt);
     }
-  }catch(err){ alert('Ошибка импорта: '+err.message); }
-  e.target.value = '';
-}
-
-/* ---------------- Chart ---------------- */
-function drawChart(){
-  const canvas = $('#chart'); if(!canvas) return;
-  const ctx = canvas.getContext('2d');
-  const now = new Date();
-  const months = []; const counts = [];
-  for(let i=11;i>=0;i--){
-    const d = new Date(now.getFullYear(), now.getMonth()-i, 1);
-    months.push(d.toLocaleString('ru-RU',{month:'short',year:'2-digit'}));
-    const keyYear = d.getFullYear(), keyMonth = d.getMonth();
-    const cnt = app.clients.filter(c=>{ const dd=new Date(c.createdAt); return dd.getFullYear()===keyYear && dd.getMonth()===keyMonth; }).length;
-    counts.push(cnt);
+    // ensure at least current is selected
+    planMonthSelect.value = now.getMonth() + '|' + now.getFullYear();
   }
-  const DPR = window.devicePixelRatio || 1;
-  const w = canvas.clientWidth, h = canvas.clientHeight;
-  canvas.width = Math.floor(w * DPR); canvas.height = Math.floor(h * DPR); ctx.resetTransform && ctx.resetTransform();
-  ctx.scale(DPR, DPR);
-  ctx.clearRect(0,0,w,h);
-  const padding = 32; const chartW = w - padding*2; const chartH = h - padding*2;
-  const max = Math.max(1, ...counts);
-  const barWidth = chartW / counts.length * 0.6;
-  for(let i=0;i<counts.length;i++){
-    const x = padding + i * (chartW / counts.length) + (chartW / counts.length - barWidth)/2;
-    const barH = (counts[i]/max) * (chartH - 20);
-    const y = padding + (chartH - barH);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--tint').trim() || '#0a84ff';
-    roundRect(ctx, x, y, barWidth, barH, 6); ctx.fill();
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--muted').trim() || '#888';
-    ctx.font = '11px system-ui'; ctx.textAlign='center';
-    ctx.fillText(months[i].replace(/\s+/,' '), x + barWidth/2, padding + chartH + 14);
-    ctx.fillStyle = getComputedStyle(document.documentElement).getPropertyValue('--text').trim() || '#000';
-    ctx.font = '12px system-ui';
-    ctx.fillText(String(counts[i]), x + barWidth/2, y - 6);
+
+  function escapeHtml(str){
+    if(!str) return '';
+    return String(str).replace(/[&<>"']/g, function(m){
+      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
+    });
   }
-}
-function roundRect(ctx,x,y,w,h,r){ const rad=Math.min(r,w/2,h/2); ctx.beginPath(); ctx.moveTo(x+rad,y); ctx.arcTo(x+w,y,x+w,y+h,rad); ctx.arcTo(x+w,y+h,x,y+h,rad); ctx.arcTo(x,y+h,x,y,rad); ctx.arcTo(x,y,x+w,y,rad); ctx.closePath(); }
 
-/* ---------------- Tags / Filters ---------------- */
-function populateTagFilter(){
-  const sel = $('#tag-filter'); const current = sel.value;
-  const tags = uniqueTags();
-  sel.innerHTML = '<option value="">Все метки</option>' + tags.map(t=>`<option value="${escapeHtml(t)}">${escapeHtml(t)}</option>`).join('');
-  if(tags.includes(current)) sel.value = current;
-}
+  // view toggles
+  viewListBtn.addEventListener('click', ()=>{
+    viewMode='list';
+    viewListBtn.classList.add('active');
+    viewGridBtn.classList.remove('active');
+    renderClients();
+  });
+  viewGridBtn.addEventListener('click', ()=>{
+    viewMode='grid';
+    viewGridBtn.classList.add('active');
+    viewListBtn.classList.remove('active');
+    renderClients();
+  });
 
-/* ---------------- UI update ---------------- */
-function updateUI(){
-  loadAll();
-  $('#total-count').textContent = app.clients.length;
-  const now = new Date();
-  const mcount = app.clients.filter(c=>{ const d=new Date(c.createdAt); return d.getFullYear()===now.getFullYear() && d.getMonth()===now.getMonth(); }).length;
-  $('#month-count').textContent = mcount;
-  $('#idle-timeout-label').textContent = (app.settings.idleTimeoutMin || 5) + ' мин';
-  renderList();
-  drawChart();
-}
+  // initial load
+  populateMonths();
+  load();
+  renderClients();
 
-/* ---------------- Helpers on resize ---------------- */
-let resizeTimer; window.addEventListener('resize', ()=>{ clearTimeout(resizeTimer); resizeTimer = setTimeout(()=>{ drawChart(); },150); });
+  // expose for debugging in console (optional)
+  window.adminApp = {
+    clients,
+    save,
+    load,
+    renderClients
+  };
 
+})();
 </script>
 </body>
 </html>

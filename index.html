@@ -1,0 +1,444 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="theme-color" content="#0a84ff">
+  <title>Клиенты · Статистика (PWA + Face ID)</title>
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADAAAAAA...">
+  <style>
+  :root{
+    --tint:#0a84ff;--bg:#0b0c10;--card:#14161c;--text:#ffffff;--muted:#98a2b3;
+    --danger:#ff453a;--radius:20px;--shadow:0 10px 30px rgba(0,0,0,.4);
+  }
+  *{box-sizing:border-box} html,body{height:100%}
+  body{margin:0;font-family:-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,Inter,system-ui,Arial;
+       color:var(--text);background:linear-gradient(180deg,#0b0c10,#0d0f15 40%,#0b0c10)}
+  .safe-area{padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left)}
+  .app{min-height:100%;display:flex;flex-direction:column;gap:16px}
+  .toolbar{position:sticky;top:0;display:flex;justify-content:space-between;align-items:center;
+    padding:12px 16px;backdrop-filter:saturate(180%) blur(16px);background:rgba(10,12,18,.6);border-bottom:1px solid #1f2430;z-index:2}
+  .toolbar .seg{background:transparent;border:1px solid #2b3242;color:#cbd5e1;padding:8px 12px;border-radius:14px;margin-right:6px}
+  .toolbar .seg.active{background:var(--tint);color:#fff;border-color:transparent}
+  .badge{padding:6px 10px;border-radius:100px;font-size:12px;border:1px solid #2b3242}
+  .badge.online{background:#1e293b}
+  .title{margin:8px 16px 0;font-size:24px;font-weight:700}
+  .subtitle{margin:0 0 8px 0;font-size:16px;color:#e2e8f0}
+  .view{display:none;padding:0 16px 80px}.view.active{display:block}
+  .card{background:var(--card);border-radius:var(--radius);padding:16px;margin:16px 0;box-shadow:var(--shadow);border:1px solid #1f2430}
+  .kpi{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+  .kpi-label{color:var(--muted);font-size:12px}.kpi-value{font-size:34px;font-weight:800}
+  .form .row{display:flex;flex-direction:column;gap:8px;margin-bottom:12px}
+  input,button{font:inherit} input{border:none;background:#0e1117;color:#fff;border-radius:14px;padding:12px 14px;outline:none;border:1px solid #222938}
+  input::placeholder{color:#667085}
+  .btn{border:none;background:#1f2430;color:#d1d5db;border-radius:14px;padding:10px 14px;cursor:pointer;border:1px solid #2b3242}
+  .btn.primary{background:var(--tint);color:#fff;border-color:transparent}
+  .btn.danger{background:var(--danger);color:#fff;border-color:transparent}
+  .btn.file{display:inline-flex;align-items:center;gap:8px}
+  .list{list-style:none;margin:0;padding:0}.list li{display:flex;justify-content:space-between;align-items:center;padding:12px;border-bottom:1px solid #1f2430}
+  .list li .meta{color:var(--muted);font-size:12px}
+  .list-head{display:flex;gap:8px;align-items:center;margin-bottom:8px}
+  .grid{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+  .center{text-align:center}.muted{color:var(--muted)}.hidden{display:none}
+  .tabbar{position:fixed;bottom:0;left:0;right:0;display:flex;gap:8px;justify-content:space-around;
+    padding:8px 12px env(safe-area-inset-bottom);backdrop-filter:saturate(180%) blur(16px);
+    background:rgba(10,12,18,.6);border-top:1px solid #1f2430}
+  .tab{flex:1;border:none;background:#0e1117;color:#cbd5e1;padding:12px;border-radius:16px}
+  .tab.active{background:var(--tint);color:#fff}
+  @media (max-width:420px){ .kpi{grid-template-columns:1fr 1fr 1fr} .toolbar-left{display:none}}
+  </style>
+</head>
+<body>
+  <div class="app safe-area">
+    <header class="toolbar">
+      <div class="toolbar-left">
+        <button id="nav-dashboard" class="seg active" aria-label="Панель">Панель</button>
+        <button id="nav-clients" class="seg" aria-label="Клиенты">Клиенты</button>
+        <button id="nav-admin" class="seg" aria-label="Админ">Админ</button>
+      </div>
+      <div class="toolbar-right">
+        <span id="onlineStatus" class="badge online">offline?</span>
+      </div>
+    </header>
+
+    <main id="view-dashboard" class="view active" role="region" aria-label="Панель">
+      <h1 class="title">Моя статистика</h1>
+      <section class="card">
+        <div class="kpi">
+          <div><div class="kpi-label">Клиенты за месяц</div><div class="kpi-value" id="kpi-month-count">0</div></div>
+          <div><div class="kpi-label">Сегодня</div><div class="kpi-value" id="kpi-today-count">0</div></div>
+          <div><div class="kpi-label">Всего</div><div class="kpi-value" id="kpi-total-count">0</div></div>
+        </div>
+      </section>
+      <section class="card">
+        <h2 class="subtitle">Динамика за 12 месяцев</h2>
+        <canvas id="chart12" width="400" height="160" aria-label="График клиентов за 12 месяцев"></canvas>
+      </section>
+    </main>
+
+    <main id="view-clients" class="view" role="region" aria-label="Клиенты">
+      <h1 class="title">Клиенты</h1>
+      <section class="card">
+        <form id="addClientForm" class="form">
+          <div class="row"><label>Имя клиента</label><input id="clientName" type="text" required placeholder="Иван Петров"></div>
+          <div class="row"><label>Дата визита</label><input id="clientDate" type="date" required></div>
+          <div class="row"><label>Заметка</label><input id="clientNote" type="text" placeholder="Комментарий (необязательно)"></div>
+          <button class="btn primary" type="submit">Добавить</button>
+        </form>
+      </section>
+
+      <section class="card">
+        <div class="list-head">
+          <input id="search" type="search" placeholder="Поиск по имени/заметке">
+          <button id="exportBtn" class="btn">Экспорт JSON</button>
+          <label class="btn file">Импорт <input type="file" id="importFile" accept="application/json" hidden></label>
+        </div>
+        <ul id="clientsList" class="list"></ul>
+        <div class="muted center" id="emptyNote">Пока пусто. Добавьте первого клиента ↑</div>
+      </section>
+    </main>
+
+    <main id="view-admin" class="view" role="region" aria-label="Админ">
+      <h1 class="title">Админ-панель</h1>
+      <section class="card">
+        <div id="adminLock">
+          <p class="muted">Вход по PIN или Face ID (passkey). Face ID требует https или localhost.</p>
+          <div class="row">
+            <label>PIN</label>
+            <input id="pinInput" type="password" inputmode="numeric" placeholder="••••" maxlength="6">
+          </div>
+          <div class="grid">
+            <button id="setPinBtn" class="btn">Установить/Обновить PIN</button>
+            <button id="unlockBtn" class="btn primary">Войти PIN</button>
+          </div>
+          <hr style="opacity:.2;border:none;border-top:1px solid #1f2430;margin:12px 0">
+          <div class="grid">
+            <button id="enableFaceIdBtn" class="btn">Включить Face ID</button>
+            <button id="faceIdLoginBtn" class="btn primary">Войти Face ID</button>
+          </div>
+          <div id="faceStatus" class="muted" style="margin-top:6px"></div>
+        </div>
+
+        <div id="adminArea" class="hidden">
+          <div class="grid">
+            <button id="backupBtn" class="btn">Скачать резервную копию</button>
+            <button id="restoreBtn" class="btn">Восстановить из файла</button>
+            <input type="file" id="restoreFile" accept="application/json" hidden>
+            <button id="wipeBtn" class="btn danger">Стереть всё</button>
+          </div>
+          <div class="row">
+            <label>Экспорт в .ics (календарь)</label><button id="icsBtn" class="btn">Скачать .ics</button>
+          </div>
+          <div class="row">
+            <label>Экспорт в CSV</label><button id="csvBtn" class="btn">Скачать CSV</button>
+          </div>
+        </div>
+      </section>
+    </main>
+
+    <nav class="tabbar">
+      <button class="tab active" data-target="view-dashboard">Панель</button>
+      <button class="tab" data-target="view-clients">Клиенты</button>
+      <button class="tab" data-target="view-admin">Админ</button>
+    </nav>
+  </div>
+
+<script>
+// ===== PWA bootstrap (single-file) =====
+(async function registerPWA(){
+  // Create manifest as a Blob URL (single-file)
+  const manifest = {
+    name: "Клиенты — Статистика",
+    short_name: "Клиенты",
+    start_url: ".",
+    display: "standalone",
+    background_color: "#0b0c10",
+    theme_color: "#0a84ff",
+    icons: [/* iOS зайдёт по apple-touch-icon link; PWA иконки опускаем в single-file */]
+  };
+  const murl = URL.createObjectURL(new Blob([JSON.stringify(manifest)], {type:"application/manifest+json"}));
+  const link = document.createElement('link');
+  link.rel = 'manifest'; link.href = murl; document.head.appendChild(link);
+
+  // Register a minimal service worker from a Blob URL
+  if ('serviceWorker' in navigator) {
+    const swCode = `
+      const CACHE = 'clients-single-v1';
+      const ASSETS = ['.'];
+      self.addEventListener('install', e=>{
+        e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)));
+        self.skipWaiting();
+      });
+      self.addEventListener('activate', e=>{
+        e.waitUntil(caches.keys().then(keys=>Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k)))));
+        self.clients.claim();
+      });
+      self.addEventListener('fetch', e=>{
+        const url = new URL(e.request.url);
+        if (url.origin === location.origin) {
+          e.respondWith(caches.match(e.request).then(r=> r || fetch(e.request)));
+        }
+      });
+    `;
+    const swUrl = URL.createObjectURL(new Blob([swCode], {type:'text/javascript'}));
+    try { await navigator.serviceWorker.register(swUrl); } catch (e) { console.warn('SW failed', e); }
+  }
+})();
+
+// ===== Online badge =====
+const onlineBadge = document.getElementById('onlineStatus');
+function updateOnlineBadge(){
+  onlineBadge.textContent = navigator.onLine ? 'online' : 'offline';
+  onlineBadge.className = 'badge ' + (navigator.onLine ? 'online' : '');
+}
+window.addEventListener('online', updateOnlineBadge);
+window.addEventListener('offline', updateOnlineBadge);
+updateOnlineBadge();
+
+// ===== Tabs =====
+const tabs = document.querySelectorAll('.tab');
+const views = document.querySelectorAll('.view');
+tabs.forEach(tab=>{
+  tab.addEventListener('click', ()=>{
+    tabs.forEach(t=>t.classList.remove('active'));
+    tab.classList.add('active');
+    views.forEach(v=>v.classList.remove('active'));
+    document.getElementById(tab.dataset.target).classList.add('active');
+    window.scrollTo({top:0,behavior:'smooth'});
+  });
+});
+['nav-dashboard','nav-clients','nav-admin'].forEach(id=>{
+  document.getElementById(id).addEventListener('click',()=>{
+    const map={ 'nav-dashboard':'view-dashboard', 'nav-clients':'view-clients', 'nav-admin':'view-admin' };
+    document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+    document.querySelector(\`.tab[data-target="\${map[id]}"]\`).classList.add('active');
+    views.forEach(v=>v.classList.remove('active'));
+    document.getElementById(map[id]).classList.add('active');
+  });
+});
+
+// ===== IndexedDB =====
+const dbName = 'clients-db-v1'; let db;
+const req = indexedDB.open(dbName, 1);
+req.onupgradeneeded = (e)=>{
+  db = e.target.result;
+  const store = db.createObjectStore('clients', { keyPath:'id', autoIncrement:true });
+  store.createIndex('by_date','date'); store.createIndex('by_name','name');
+};
+req.onsuccess = (e)=>{ db = e.target.result; refreshAll(); };
+req.onerror = (e)=>console.error('DB error', e);
+const $ = sel => document.querySelector(sel);
+function tx(store, mode='readonly'){ return db.transaction(store, mode).objectStore(store) }
+function toISO(dateStr){ return dateStr ? dateStr : new Date().toISOString().slice(0,10); }
+async function addClient(name,date,note){ return new Promise((res,rej)=>{
+  const obj={ name:name.trim(), date:toISO(date), note:(note||'').trim(), createdAt:Date.now() };
+  const r = tx('clients','readwrite').add(obj); r.onsuccess=()=>res(true); r.onerror=rej;
+});}
+async function getAll(){ return new Promise((res,rej)=>{
+  const out=[]; const r=tx('clients').openCursor(null,'prev');
+  r.onsuccess=(e)=>{ const c=e.target.result; if(c){ out.push(c.value); c.continue(); } else res(out); };
+  r.onerror=rej;
+});}
+async function removeClient(id){ return new Promise((res,rej)=>{ const r=tx('clients','readwrite').delete(id); r.onsuccess=()=>res(true); r.onerror=rej; });}
+
+// ===== UI: Add/List/Search =====
+const form = $('#addClientForm');
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  const name=$('#clientName').value; const date=$('#clientDate').value||new Date().toISOString().slice(0,10); const note=$('#clientNote').value;
+  if(!name.trim()) return;
+  await addClient(name,date,note); form.reset(); $('#clientDate').value = new Date().toISOString().slice(0,10);
+  refreshAll();
+});
+$('#clientDate').value = new Date().toISOString().slice(0,10);
+$('#search').addEventListener('input', renderList);
+async function renderList(){
+  const list = $('#clientsList'); list.innerHTML='';
+  const q = ($('#search').value||'').toLowerCase(); const items = await getAll();
+  const filtered = items.filter(it=> (it.name||'').toLowerCase().includes(q) || (it.note||'').toLowerCase().includes(q));
+  $('#emptyNote').style.display = filtered.length===0 ? 'block':'none';
+  filtered.forEach(it=>{
+    const li=document.createElement('li');
+    const left=document.createElement('div');
+    left.innerHTML = \`<div><strong>\${escapeHtml(it.name)}</strong></div><div class="meta">\${it.date}\${it.note?' · '+escapeHtml(it.note):''}</div>\`;
+    const right=document.createElement('div');
+    const del=document.createElement('button'); del.className='btn danger'; del.textContent='Удалить';
+    del.addEventListener('click', async ()=>{ if(confirm('Удалить запись?')){ await removeClient(it.id); refreshAll(); } });
+    right.appendChild(del); li.appendChild(left); li.appendChild(right); list.appendChild(li);
+  });
+}
+function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;' }[m])) }
+
+// ===== KPIs + chart =====
+async function updateKPIs(){
+  const items = await getAll();
+  const today = new Date().toISOString().slice(0,10); const now = new Date();
+  const monthKey = now.getFullYear()+'-'+String(now.getMonth()+1).padStart(2,'0');
+  let total=items.length, todayCount=0, monthCount=0;
+  const buckets={}; for(let i=11;i>=0;i--){ const d=new Date(now.getFullYear(), now.getMonth()-i, 1); const k=d.getFullYear()+'-'+String(d.getMonth()+1).padStart(2,'0'); buckets[k]=0; }
+  items.forEach(it=>{ if(it.date===today) todayCount++; if(it.date.startsWith(monthKey)) monthCount++; const k=it.date.slice(0,7); if(k in buckets) buckets[k]++; });
+  $('#kpi-total-count').textContent=total; $('#kpi-today-count').textContent=todayCount; $('#kpi-month-count').textContent=monthCount;
+  drawChart(Object.keys(buckets), Object.values(buckets));
+}
+function drawChart(labels, data){
+  const canvas = document.getElementById('chart12'); const ctx = canvas.getContext('2d');
+  ctx.clearRect(0,0,canvas.width,canvas.height);
+  const P={l:30,r:10,t:10,b:20}; const W=canvas.width-P.l-P.r; const H=canvas.height-P.t-P.b;
+  const max=Math.max(1, ...data); const stepX = W/(labels.length-1);
+  ctx.globalAlpha=0.2; ctx.strokeStyle='#ffffff'; ctx.lineWidth=1;
+  for(let i=0;i<=4;i++){ const y=P.t+(H*i/4); ctx.beginPath(); ctx.moveTo(P.l,y); ctx.lineTo(P.l+W,y); ctx.stroke(); }
+  ctx.globalAlpha=1; ctx.beginPath();
+  data.forEach((v,i)=>{ const x=P.l+stepX*i; const y=P.t+H-(v/max)*H; if(i===0) ctx.moveTo(x,y); else ctx.lineTo(x,y); });
+  ctx.strokeStyle='#0a84ff'; ctx.lineWidth=3; ctx.stroke();
+  data.forEach((v,i)=>{ const x=P.l+stepX*i; const y=P.t+H-(v/max)*H; ctx.beginPath(); ctx.arc(x,y,3,0,Math.PI*2); ctx.fillStyle='#0a84ff'; ctx.fill(); });
+  ctx.fillStyle='#cbd5e1'; ctx.font='12px -apple-system, system-ui, sans-serif';
+  labels.forEach((lb,i)=>{ if(i%2) return; const x=P.l+stepX*i; const y=canvas.height-4; ctx.textAlign='center'; ctx.fillText(lb.replace(/^\\d{4}-/,'').replace(/^0/,'' )+'м', x, y); });
+}
+async function refreshAll(){ await updateKPIs(); await renderList(); }
+
+// ===== Export/Import =====
+document.getElementById('exportBtn').addEventListener('click', async ()=>{
+  const data = await getAll(); downloadFile('clients.json', JSON.stringify(data,null,2), 'application/json');
+});
+document.getElementById('importFile').addEventListener('change', async (e)=>{
+  const f=e.target.files[0]; if(!f) return; const text = await f.text(); const arr = JSON.parse(text);
+  if(!Array.isArray(arr)) return alert('Неверный формат');
+  const store=tx('clients','readwrite');
+  await new Promise(res=>{ const c=store.clear(); c.onsuccess=res; c.onerror=res; });
+  await Promise.all(arr.map(o=> new Promise((res,rej)=>{ const {id,...rest}=o; const r=store.add(rest); r.onsuccess=res; r.onerror=rej; })));
+  refreshAll();
+});
+
+// ===== Admin: PIN & Face ID (WebAuthn) =====
+const adminArea = document.getElementById('adminArea');
+const adminLock = document.getElementById('adminLock');
+const pinInput = document.getElementById('pinInput');
+document.getElementById('setPinBtn').addEventListener('click',()=>{
+  const pin = pinInput.value.trim(); if(!pin) return alert('Введите PIN');
+  localStorage.setItem('clients_pin', btoa(pin)); alert('PIN сохранён');
+});
+document.getElementById('unlockBtn').addEventListener('click',()=>{
+  const pin = pinInput.value.trim(); const saved = localStorage.getItem('clients_pin');
+  if(!saved){ alert('Сначала установите PIN'); return; }
+  if(btoa(pin) === saved){ adminArea.classList.remove('hidden'); adminLock.classList.add('hidden'); }
+  else alert('Неверный PIN');
+});
+
+const faceStatus = document.getElementById('faceStatus');
+const FACE_KEY = 'clients_faceid_credId';
+(async function checkPlatformAuth(){
+  if (window.PublicKeyCredential && PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable) {
+    try {
+      const available = await PublicKeyCredential.isUserVerifyingPlatformAuthenticatorAvailable();
+      faceStatus.textContent = available ? 'Face ID доступен на этом устройстве.' : 'Face ID недоступен.';
+    } catch(e){ faceStatus.textContent = 'Не удалось проверить поддержку Face ID.'; }
+  } else {
+    faceStatus.textContent = 'Браузер не поддерживает WebAuthn.';
+  }
+})();
+
+document.getElementById('enableFaceIdBtn').addEventListener('click', async ()=>{
+  try{
+    // Требуется https или localhost
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      alert('Для Face ID нужен HTTPS или localhost'); return;
+    }
+    const userId = new TextEncoder().encode('user-1'); // локальный офлайн идентификатор
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const pubKey = {
+      challenge,
+      rp: { name: 'ClientsApp', id: location.hostname },
+      user: { id: userId, name: 'local@user', displayName: 'Local User' },
+      pubKeyCredParams: [{alg:-7,type:'public-key'},{alg:-257,type:'public-key'}],
+      authenticatorSelection: { authenticatorAttachment:'platform', userVerification:'required', residentKey:'preferred' },
+      timeout: 60000,
+      attestation: 'none'
+    };
+    const cred = await navigator.credentials.create({ publicKey: pubKey });
+    const rawId = arrayBufferToBase64url(cred.rawId);
+    localStorage.setItem(FACE_KEY, rawId);
+    alert('Face ID включён для этого сайта.');
+  }catch(e){ console.error(e); alert('Не удалось включить Face ID: ' + e.message); }
+});
+
+document.getElementById('faceIdLoginBtn').addEventListener('click', async ()=>{
+  try{
+    if (location.protocol !== 'https:' && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+      alert('Для Face ID нужен HTTPS или localhost'); return;
+    }
+    const storedId = localStorage.getItem(FACE_KEY);
+    if(!storedId){ alert('Сначала включите Face ID'); return; }
+    const challenge = crypto.getRandomValues(new Uint8Array(32));
+    const assertion = await navigator.credentials.get({ publicKey: {
+      challenge,
+      timeout: 60000,
+      userVerification: 'required',
+      allowCredentials: [{ id: base64urlToArrayBuffer(storedId), type:'public-key', transports:['internal'] }]
+    }});
+    // Без сервера мы не проверяем криптографию — полагаемся на то, что пользователь прошёл Face ID.
+    adminArea.classList.remove('hidden'); adminLock.classList.add('hidden');
+  }catch(e){ console.error(e); alert('Face ID вход не выполнен: ' + e.message); }
+});
+
+function arrayBufferToBase64url(buf){
+  const b64 = btoa(String.fromCharCode(...new Uint8Array(buf)));
+  return b64.replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');
+}
+function base64urlToArrayBuffer(b64url){
+  b64url = b64url.replace(/-/g,'+').replace(/_/g,'/');
+  const pad = b64url.length%4 ? '='.repeat(4-(b64url.length%4)) : '';
+  const b64 = b64url + pad;
+  const bin = atob(b64); const len = bin.length; const bytes = new Uint8Array(len);
+  for(let i=0;i<len;i++) bytes[i]=bin.charCodeAt(i);
+  return bytes.buffer;
+}
+
+// ===== Admin tools =====
+document.getElementById('backupBtn').addEventListener('click', async ()=>{
+  const data = await getAll(); const payload = { exportedAt: new Date().toISOString(), data };
+  downloadFile('backup.json', JSON.stringify(payload,null,2), 'application/json');
+});
+document.getElementById('restoreBtn').addEventListener('click', ()=> document.getElementById('restoreFile').click());
+document.getElementById('restoreFile').addEventListener('change', async (e)=>{
+  const f=e.target.files[0]; if(!f) return; const text = await f.text(); const obj = JSON.parse(text); const arr = obj.data || obj;
+  if(!Array.isArray(arr)) return alert('Неверный файл');
+  const store = tx('clients','readwrite');
+  await new Promise(res=>{ const clear=store.clear(); clear.onsuccess=res; clear.onerror=res; });
+  await Promise.all(arr.map(o=> new Promise((res,rej)=>{ const {id,...rest}=o; const r=store.add(rest); r.onsuccess=res; r.onerror=rej; })));
+  refreshAll(); alert('Восстановлено');
+});
+document.getElementById('wipeBtn').addEventListener('click', async ()=>{
+  if(!confirm('Стереть все данные? Это необратимо.')) return;
+  await new Promise(res=>{ const r=tx('clients','readwrite').clear(); r.onsuccess=res; r.onerror=res; });
+  refreshAll();
+});
+document.getElementById('icsBtn').addEventListener('click', async ()=>{
+  const items = await getAll();
+  const lines=['BEGIN:VCALENDAR','VERSION:2.0','PRODID:-//ClientsPWA//RU//'];
+  items.forEach((it,i)=>{
+    lines.push('BEGIN:VEVENT');
+    lines.push('UID:client-'+(it.id||i)+'@local');
+    lines.push('DTSTAMP:'+formatICSDate(new Date()));
+    lines.push('DTSTART;VALUE=DATE:'+it.date.replace(/-/g,''));
+    lines.push('SUMMARY:'+escapeICS(it.name));
+    if(it.note) lines.push('DESCRIPTION:'+escapeICS(it.note));
+    lines.push('END:VEVENT');
+  });
+  lines.push('END:VCALENDAR');
+  downloadFile('clients.ics', lines.join('\\r\\n'), 'text/calendar');
+});
+document.getElementById('csvBtn').addEventListener('click', async ()=>{
+  const items = await getAll();
+  const rows = [['id','name','date','note','createdAt']].concat(items.map(it=>[it.id,it.name,it.date,(it.note||'').replace(/"/g,'""'),it.createdAt]));
+  const csv = rows.map(r=> r.map(v=> typeof v==='string' ? \`"\${v}"\` : v).join(',')).join('\\n');
+  downloadFile('clients.csv', csv, 'text/csv');
+});
+
+function formatICSDate(d){ const pad=n=>String(n).padStart(2,'0'); return d.getUTCFullYear()+pad(d.getUTCMonth()+1)+pad(d.getUTCDate())+'T'+pad(d.getUTCHours())+pad(d.getUTCMinutes())+pad(d.getUTCSeconds())+'Z'; }
+function escapeICS(s){ return (s||'').replace(/[\\n,;]/g, m=>({'\\n':'\\\\n',',':'\\\\,',';':'\\\\;'}[m])) }
+function downloadFile(filename, content, type){ const blob=new Blob([content],{type}); const a=document.createElement('a'); a.href=URL.createObjectURL(blob); a.download=filename; a.click(); URL.revokeObjectURL(a.href); }
+</script>
+</body>
+</html>

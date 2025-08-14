@@ -1,819 +1,692 @@
 <!doctype html>
 <html lang="ru">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
-<title>Admin • Клиенты — План на месяц</title>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
+  <meta name="color-scheme" content="dark">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>ДТП Клиенты</title>
+  <style>
+    :root{
+      --bg:#0b0b0f;
+      --card:#15151a;
+      --elev:#1b1b21;
+      --stroke:#2a2a33;
+      --text:#f5f5f7;
+      --text-dim:#9ba0ad;
+      --accent:#0a84ff; /* iOS blue */
+      --green:#30d158;
+      --red:#ff453a;
+      --yellow:#ffd60a;
+      --corner:18px;
+      --shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
+      --safe-top: env(safe-area-inset-top);
+      --safe-bottom: env(safe-area-inset-bottom);
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0; background:var(--bg); color:var(--text);
+      font: -apple-system-body, system-ui, -apple-system, "SF Pro Text",
+            "SF Pro Display", Roboto, Segoe UI, Helvetica, Arial, sans-serif;
+      font-size:16px; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    }
 
-<!-- iOS-like system font and safe area -->
-<style>
-  :root{
-    --bg:#F6F7F9;
-    --card:#FFFFFFE6;
-    --glass: rgba(255,255,255,0.6);
-    --muted:#8b92a6;
-    --accent:#007AFF;
-    --danger:#FF3B30;
-    --radius:14px;
-    --shadow: 0 6px 18px rgba(30,35,50,0.08);
-    --glass-shadow: 0 8px 30px rgba(12,13,20,0.06);
-    --maxw:460px;
-    --gap:14px;
-  }
-  /* mobile-first */
-  html,body{
-    height:100%;
-    margin:0;
-    background: linear-gradient(180deg,#f7f8fb 0%, #eef2f7 100%);
-    font-family: -apple-system, "SF Pro Text", "SF Pro Display", "Helvetica Neue", Roboto, Arial, sans-serif;
-    color:#142334;
-    -webkit-font-smoothing:antialiased;
-    -moz-osx-font-smoothing:grayscale;
-  }
+    /* Large iOS title */
+    .nav{
+      position:sticky; top:0; z-index:50;
+      padding: calc(8px + var(--safe-top)) 16px 10px;
+      background:linear-gradient(180deg, rgba(12,12,16,.9) 0%, rgba(12,12,16,.6) 60%, rgba(12,12,16,0) 100%);
+      backdrop-filter: blur(18px);
+      -webkit-backdrop-filter: blur(18px);
+      border-bottom:1px solid rgba(255,255,255,.04);
+    }
+    .title{
+      font-size:28px; font-weight:700; letter-spacing:-.02em;
+      display:flex; align-items:center; gap:10px;
+    }
+    .subtitle{color:var(--text-dim); font-size:13px; margin-top:4px}
 
-  /* safe area */
-  .app {
-    padding: env(safe-area-inset-top) 18px env(safe-area-inset-bottom);
-    min-height:100vh;
-    box-sizing:border-box;
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-  }
+    .container{padding:16px; padding-bottom:80px}
 
-  .frame {
-    width:100%;
-    max-width:var(--maxw);
-    margin:24px auto;
-  }
+    .card{
+      background:linear-gradient(180deg, var(--card), var(--elev));
+      border:1px solid var(--stroke);
+      border-radius: var(--corner);
+      box-shadow: var(--shadow);
+    }
 
-  header.topbar{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    margin-bottom:var(--gap);
-  }
-  .topbar .title {
-    flex:1;
-  }
-  .topbar h1{
-    margin:0;
-    font-size:18px;
-    font-weight:600;
-    letter-spacing:-0.2px;
-  }
-  .topbar p {
-    margin:0;
-    color:var(--muted);
-    font-size:13px;
-  }
+    .grid{
+      display:grid; gap:12px;
+    }
+    @media(min-width:480px){
+      .grid-2{grid-template-columns:1fr 1fr}
+    }
 
-  /* main panel */
-  .panel{
-    background: linear-gradient(180deg, rgba(255,255,255,0.75), rgba(255,255,255,0.6));
-    border-radius:var(--radius);
-    box-shadow:var(--glass-shadow);
-    padding:14px;
-    backdrop-filter: blur(10px) saturate(110%);
-  }
+    .metric{
+      padding:16px;
+    }
+    .metric h3{margin:0 0 6px 0; font-size:13px; color:var(--text-dim); font-weight:600; letter-spacing:.02em; text-transform:uppercase}
+    .metric .value{font-size:28px; font-weight:700}
 
-  .controls{
-    display:flex;
-    gap:10px;
-    margin-bottom:10px;
-  }
+    /* Segmented control */
+    .seg{
+      display:flex; gap:8px; padding:8px; background:var(--card);
+      border:1px solid var(--stroke); border-radius:14px; box-shadow: var(--shadow);
+    }
+    .seg button{
+      flex:1; padding:10px 12px; border-radius:10px; border:1px solid transparent;
+      background:transparent; color:var(--text-dim); font-weight:600;
+    }
+    .seg button.active{
+      background:var(--elev); color:var(--text); border-color:var(--stroke);
+    }
 
-  button.btn{
-    appearance:none;
-    border:0;
-    background:var(--accent);
-    color:white;
-    padding:10px 12px;
-    border-radius:12px;
-    font-weight:600;
-    box-shadow: 0 6px 14px rgba(0,122,255,0.18);
-    cursor:pointer;
-  }
-  button.btn.ghost{
-    background:transparent;
-    color:var(--accent);
-    border:1px solid rgba(0,122,255,0.12);
-    box-shadow:none;
-  }
-  button.btn.danger{
-    background:var(--danger);
-    box-shadow: 0 6px 14px rgba(255,59,48,0.18);
-  }
+    /* List */
+    .list{margin-top:12px}
+    .item{
+      position:relative; padding:14px 52px 14px 14px; display:flex; gap:12px; align-items:center;
+      border-bottom:1px solid var(--stroke);
+    }
+    .avatar{
+      width:38px; height:38px; border-radius:12px; background: #0f0f13;
+      display:grid; place-items:center; border:1px solid var(--stroke);
+    }
+    .avatar span{font-weight:700}
+    .i-title{font-weight:700; font-size:16px}
+    .i-sub{color:var(--text-dim); font-size:13px; margin-top:2px}
+    .actions{
+      position:absolute; right:8px; top:50%; transform:translateY(-50%);
+      display:flex; gap:6px;
+    }
+    .icon-btn{
+      width:34px; height:34px; border-radius:12px; background:var(--elev);
+      border:1px solid var(--stroke); display:grid; place-items:center;
+    }
+    .empty{
+      text-align:center; color:var(--text-dim); padding:28px 12px;
+    }
 
-  /* list */
-  .clients{
-    display:grid;
-    gap:12px;
-  }
-  .client-card{
-    background:var(--card);
-    border-radius:12px;
-    padding:12px;
-    box-shadow:var(--shadow);
-    display:flex;
-    flex-direction:column;
-    gap:8px;
-  }
-  .client-row{
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-    gap:8px;
-  }
-  .client-info{
-    display:flex;
-    gap:10px;
-    align-items:center;
-  }
-  .avatar{
-    width:52px;
-    height:52px;
-    border-radius:12px;
-    background:linear-gradient(135deg,#e9eefc,#fff);
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    font-weight:700;
-    color:#2b3a67;
-    box-shadow: 0 5px 12px rgba(30,35,50,0.06) inset;
-  }
-  .meta h3{ margin:0; font-size:16px;}
-  .meta p{ margin:0; color:var(--muted); font-size:13px;}
+    /* Search / filters */
+    .toolbar{
+      display:flex; gap:8px; align-items:center; margin:12px 0 8px 0;
+    }
+    .search{
+      flex:1; display:flex; gap:8px; align-items:center; padding:10px 12px;
+      background:var(--card); border:1px solid var(--stroke); border-radius:14px; box-shadow: var(--shadow);
+    }
+    .search input{
+      flex:1; background:transparent; border:0; outline:0; color:var(--text); font-size:16px;
+    }
+    .pill{
+      padding:10px 12px; border-radius:14px; background:var(--card); border:1px solid var(--stroke); box-shadow: var(--shadow);
+      color:var(--text-dim); font-weight:600; font-size:14px;
+    }
+    .pill strong{color:var(--text)}
+    .select{appearance:none; background:transparent; border:0; color:var(--text); font-weight:600}
 
-  .card-actions{
-    display:flex;
-    gap:8px;
-    align-items:center;
-  }
+    /* FAB */
+    .fab{
+      position:fixed; right:16px; bottom:calc(16px + var(--safe-bottom));
+      width:58px; height:58px; border-radius:20px; border:1px solid var(--stroke);
+      background:linear-gradient(180deg, #0f0f14, #17171d); box-shadow: var(--shadow);
+      display:grid; place-items:center; z-index:60;
+    }
 
-  /* monthly plan */
-  .plan {
-    display:grid;
-    grid-template-columns:repeat(2,1fr);
-    gap:8px;
-  }
-  .week {
-    background:linear-gradient(180deg,#fff,#fbfbff);
-    border-radius:10px;
-    padding:8px;
-    font-size:13px;
-  }
-  .week h4 { margin:0 0 6px 0; font-size:13px; color:#243347; }
-  .task {
-    display:flex;
-    gap:8px;
-    align-items:flex-start;
-    margin-bottom:6px;
-  }
-  .task input[type="text"]{
-    flex:1;
-    border:1px solid #eef2f7;
-    padding:8px;
-    border-radius:8px;
-    outline:none;
-    font-size:13px;
-  }
-  .task button{ padding:6px 8px; border-radius:8px; background:transparent; border:none; color:var(--danger); cursor:pointer; }
+    /* Tab bar */
+    .tabs{
+      position:fixed; left:0; right:0; bottom:0; z-index:40;
+      padding-bottom: max(8px, var(--safe-bottom));
+      background:rgba(15,15,20,.7); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
+      border-top:1px solid rgba(255,255,255,.06);
+    }
+    .tabs .row{display:flex; justify-content:space-around; padding:8px 6px}
+    .tabs button{
+      background:transparent; border:0; color:var(--text-dim); font-size:11px;
+      display:flex; flex-direction:column; align-items:center; gap:6px; padding:6px 10px; border-radius:12px;
+    }
+    .tabs button.active{color:var(--text); background:rgba(255,255,255,.04)}
+    .tabs svg{width:22px; height:22px}
 
-  /* modal */
-  .modal-backdrop{
-    position:fixed;
-    inset:0;
-    display:none;
-    align-items:center;
-    justify-content:center;
-    z-index:60;
-    padding:env(safe-area-inset-top) 12px env(safe-area-inset-bottom);
-    backdrop-filter: blur(6px) saturate(110%);
-  }
-  .modal-backdrop.show{ display:flex; }
-  .modal {
-    width:100%;
-    max-width:420px;
-    border-radius:16px;
-    background:linear-gradient(180deg,#fff,#f8fbff);
-    box-shadow:0 20px 60px rgba(20,30,50,0.12);
-    padding:14px;
-  }
-  .modal h2{ margin:0 0 6px 0; font-size:16px; }
-  .field { display:flex; flex-direction:column; gap:6px; margin-bottom:10px; }
-  .field label{ font-size:13px; color:var(--muted); }
-  .field input, .field textarea, .field select{
-    padding:10px;
-    border-radius:10px;
-    border:1px solid #e9eef6;
-    font-size:14px;
-    outline:none;
-    background:white;
-  }
-  .modal .row{ display:flex; gap:8px; }
+    /* Modal / sheet */
+    .sheet{
+      position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; z-index:100;
+      background:rgba(0,0,0,.35);
+    }
+    .sheet.open{display:flex}
+    .panel{
+      width:100%; max-width:600px; background:var(--bg); border-radius:18px 18px 0 0; border:1px solid var(--stroke);
+      box-shadow:0 -10px 30px rgba(0,0,0,.45); padding-bottom: max(12px, var(--safe-bottom));
+      animation: slideUp .18s ease-out;
+    }
+    @keyframes slideUp{from{transform:translateY(20px); opacity:.7} to{transform:translateY(0); opacity:1}}
+    .handle{width:44px; height:5px; border-radius:999px; background:#444; margin:10px auto}
+    .panel h3{margin:0; padding:10px 16px 6px; font-size:18px}
+    .form{padding:0 16px 12px; display:grid; gap:10px}
+    .field{
+      display:grid; gap:6px;
+    }
+    .field label{font-size:13px; color:var(--text-dim)}
+    .input, .textarea, .select2{
+      padding:12px 12px; border-radius:12px; background:var(--card); border:1px solid var(--stroke); color:var(--text);
+    }
+    .textarea{min-height:84px; resize:vertical}
+    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
+    .actions-row{display:flex; gap:8px; padding:8px 16px 16px}
+    .btn{
+      flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--stroke);
+      background:var(--elev); color:var(--text); font-weight:700;
+    }
+    .btn.primary{background:var(--accent); border-color:transparent; color:white}
+    .btn.destructive{background:var(--red)}
+    .note{font-size:12px; color:var(--text-dim); padding:0 16px 12px}
 
-  /* responsive */
-  @media(min-width:760px){
-    .plan { grid-template-columns:repeat(4,1fr); }
-  }
+    /* Canvas card */
+    .canvas-wrap{padding:12px}
+    canvas{width:100%; height:160px; display:block}
 
-  /* small helpers */
-  .muted{ color:var(--muted); font-size:13px; }
-  .small{ font-size:12px; color:var(--muted); }
-  .segmented {
-    display:inline-flex;
-    background:rgba(10,10,10,0.03);
-    padding:4px;
-    border-radius:999px;
-    gap:4px;
-  }
-  .segmented button{
-    border:0;
-    padding:8px 10px;
-    border-radius:999px;
-    background:transparent;
-    cursor:pointer;
-    font-weight:600;
-    color:var(--muted);
-  }
-  .segmented button.active{
-    background:white;
-    box-shadow:0 6px 18px rgba(10,20,60,0.06);
-    color:var(--accent);
-  }
-
-  /* empty state */
-  .empty{
-    text-align:center;
-    padding:28px 8px;
-    color:var(--muted);
-  }
-
-  /* tiny UX */
-  .icon-btn{ background:transparent; border:0; padding:8px; border-radius:10px; cursor:pointer; }
-</style>
+    /* iOS haptics (visual) for taps */
+    button, .icon-btn, .fab {transition: transform .06s ease}
+    button:active, .icon-btn:active, .fab:active {transform: scale(.98)}
+  </style>
 </head>
 <body>
-<div class="app">
-  <div class="frame">
-    <header class="topbar">
-      <div class="title">
-        <h1>Admin • Клиенты</h1>
-        <p>План на месяц • Адаптив для iPhone</p>
-      </div>
-      <div>
-        <div class="segmented" role="tablist" aria-label="View toggle">
-          <button id="viewList" class="active">Список</button>
-          <button id="viewGrid">Карточки</button>
+  <header class="nav">
+    <div class="title">
+      <!-- Calendar Icon -->
+      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+        <path d="M7 2v3M17 2v3M3 9h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+        <rect x="3" y="5" width="18" height="16" rx="4" stroke="currentColor" stroke-width="1.5"/>
+      </svg>
+      ДТП Клиенты
+    </div>
+    <div class="subtitle" id="subtitle"></div>
+  </header>
+
+  <main class="container">
+    <!-- DASHBOARD -->
+    <section id="tab-dashboard">
+      <div class="grid grid-2">
+        <div class="card metric">
+          <h3>Клиенты за месяц</h3>
+          <div class="value" id="mCount">0</div>
+          <div class="i-sub" id="mRange"></div>
+        </div>
+        <div class="card metric">
+          <h3>Сегодня</h3>
+          <div class="value" id="todayCount">0</div>
+          <div class="i-sub" id="todayDate"></div>
         </div>
       </div>
-    </header>
 
-    <main class="panel" role="main">
-      <div class="controls">
-        <button id="addClientBtn" class="btn">+ Добавить клиента</button>
-        <button id="exportBtn" class="btn ghost">Экспорт</button>
-        <button id="importBtn" class="btn ghost">Импорт</button>
-        <input id="importFile" type="file" accept="application/json" style="display:none" />
+      <div class="card canvas-wrap" style="margin-top:12px">
+        <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 4px 10px 4px">
+          <div style="font-weight:700">По дням в месяце</div>
+          <div class="pill"><span id="chartMonthLabel"></span></div>
+        </div>
+        <canvas id="barChart" width="600" height="180" aria-label="Гистограмма клиентов по дням"></canvas>
       </div>
 
-      <section id="clientsContainer" class="clients" aria-live="polite">
-        <!-- client cards rendered here -->
-      </section>
-
-      <div class="empty" id="emptyMsg" style="display:none;">
-        Нет клиентов. Нажми «Добавить клиента», чтобы начать.
+      <div class="card" style="margin-top:12px; padding:12px">
+        <div class="seg" role="tablist" aria-label="Выбор месяца">
+          <button id="seg-prev" aria-label="Предыдущий месяц">←</button>
+          <button id="seg-current" class="active"></button>
+          <button id="seg-next" aria-label="Следующий месяц">→</button>
+        </div>
+        <div class="note">Нажмите ← или → чтобы смотреть другие месяцы.</div>
       </div>
-    </main>
+    </section>
+
+    <!-- CLIENTS / ADMIN -->
+    <section id="tab-clients" style="display:none">
+      <div class="toolbar">
+        <div class="search" role="search">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
+            <path d="M20 20l-3.2-3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
+          </svg>
+          <input id="q" type="search" placeholder="Поиск по имени/телефону" inputmode="search" autocomplete="off">
+        </div>
+        <div class="pill">
+          <select id="monthFilter" class="select">
+            <!-- options injected -->
+          </select>
+        </div>
+      </div>
+
+      <div class="card list" id="list">
+        <!-- items injected -->
+      </div>
+      <div class="empty" id="empty" style="display:none">Пока нет клиентов. Нажмите “+”.</div>
+    </section>
+  </main>
+
+  <!-- FAB -->
+  <button class="fab" id="addBtn" aria-label="Добавить клиента" title="Добавить клиента">
+    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+      <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
+    </svg>
+  </button>
+
+  <!-- TABS -->
+  <nav class="tabs" role="tablist" aria-label="Навигация">
+    <div class="row">
+      <button class="active" data-tab="dashboard" id="tabBtnDashboard">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.5"/></svg>
+        Главная
+      </button>
+      <button data-tab="clients" id="tabBtnClients">
+        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" stroke="currentColor" stroke-width="1.5"/></svg>
+        Клиенты
+      </button>
+    </div>
+  </nav>
+
+  <!-- ADD/EDIT SHEET -->
+  <div class="sheet" id="sheet">
+    <div class="panel">
+      <div class="handle"></div>
+      <h3 id="sheetTitle">Новый клиент</h3>
+      <div class="form">
+        <div class="field">
+          <label for="name">Имя</label>
+          <input id="name" class="input" placeholder="Например, Иван Петров" autocomplete="name">
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="phone">Телефон</label>
+            <input id="phone" class="input" placeholder="+372 ..." inputmode="tel" autocomplete="tel">
+          </div>
+          <div class="field">
+            <label for="date">Дата ДТП</label>
+            <input id="date" class="input" type="date">
+          </div>
+        </div>
+        <div class="field">
+          <label for="notes">Заметки</label>
+          <textarea id="notes" class="textarea" placeholder="Кратко что случилось"></textarea>
+        </div>
+        <div class="row2">
+          <div class="field">
+            <label for="status">Статус</label>
+            <select id="status" class="select2">
+              <option value="new">Новый</option>
+              <option value="inwork">В работе</option>
+              <option value="closed">Закрыт</option>
+            </select>
+          </div>
+          <div class="field">
+            <label for="source">Источник</label>
+            <input id="source" class="input" placeholder="Реклама / Рекомендация / Другое">
+          </div>
+        </div>
+      </div>
+      <div class="actions-row">
+        <button class="btn" id="cancel">Отмена</button>
+        <button class="btn destructive" id="deleteBtn" style="display:none">Удалить</button>
+        <button class="btn primary" id="save">Сохранить</button>
+      </div>
+      <div class="note">Данные сохраняются на этом устройстве (localStorage).</div>
+    </div>
   </div>
-</div>
 
-<!-- modal -->
-<div id="modalBackdrop" class="modal-backdrop" role="dialog" aria-modal="true" aria-hidden="true">
-  <div class="modal" role="document">
-    <h2 id="modalTitle">Новый клиент</h2>
-    <div class="field">
-      <label for="clientName">Имя</label>
-      <input id="clientName" type="text" placeholder="Иван Иванов" />
-    </div>
-    <div class="field">
-      <label for="clientPhone">Телефон</label>
-      <input id="clientPhone" type="tel" placeholder="+7 900 000-00-00" />
-    </div>
-    <div class="field">
-      <label for="clientNote">Заметка</label>
-      <textarea id="clientNote" rows="2" placeholder="Комментарий..."></textarea>
-    </div>
-
-    <div style="margin-bottom:8px;">
-      <label class="small muted">Месяц плана</label>
-      <select id="planMonth" style="width:100%; margin-top:6px;">
-        <!-- months populated by JS -->
-      </select>
-    </div>
-
-    <div style="display:flex; gap:8px; justify-content:flex-end;">
-      <button id="cancelBtn" class="btn ghost">Отмена</button>
-      <button id="saveClientBtn" class="btn">Сохранить</button>
-    </div>
-  </div>
-</div>
-
-<!-- lightweight templates as JS strings -->
-<script>
-(() => {
-  // Simple client admin with monthly plan structure
-  const storageKey = 'admin_clients_v1';
-
-  // DOM
-  const addClientBtn = document.getElementById('addClientBtn');
-  const modalBp = document.getElementById('modalBackdrop');
-  const cancelBtn = document.getElementById('cancelBtn');
-  const saveClientBtn = document.getElementById('saveClientBtn');
-  const clientsContainer = document.getElementById('clientsContainer');
-  const emptyMsg = document.getElementById('emptyMsg');
-  const modalTitle = document.getElementById('modalTitle');
-
-  const clientNameInput = document.getElementById('clientName');
-  const clientPhoneInput = document.getElementById('clientPhone');
-  const clientNoteInput = document.getElementById('clientNote');
-  const planMonthSelect = document.getElementById('planMonth');
-
-  const exportBtn = document.getElementById('exportBtn');
-  const importBtn = document.getElementById('importBtn');
-  const importFile = document.getElementById('importFile');
-
-  const viewListBtn = document.getElementById('viewList');
-  const viewGridBtn = document.getElementById('viewGrid');
-
-  let clients = [];
-  let editingId = null;
-  let viewMode = 'list';
-
-  // months
-  const months = [
-    'Январь','Февраль','Март','Апрель','Май','Июнь',
-    'Июль','Август','Сентябрь','Октябрь','Ноябрь','Декабрь'
-  ];
-
-  function uid(){
-    return 'id_' + Math.random().toString(36).slice(2,9);
-  }
-
-  function defaultMonthPlan(year, monthIndex){
-    // return plan as array of 4 weeks; each week is array of tasks
-    const weeks = [];
-    for(let w=0; w<4; w++){
-      weeks.push([]);
-    }
-    return {year, monthIndex, weeks};
-  }
-
-  function load(){
-    try {
-      const raw = localStorage.getItem(storageKey);
-      clients = raw ? JSON.parse(raw) : [];
-    } catch(e){
-      clients = [];
-      console.error('load error', e);
-    }
-  }
-  function save(){
-    localStorage.setItem(storageKey, JSON.stringify(clients));
-  }
-
-  function renderClients(){
-    clientsContainer.innerHTML = '';
-    if(clients.length === 0){
-      emptyMsg.style.display = 'block';
-      return;
-    }
-    emptyMsg.style.display = 'none';
-
-    clients.forEach(c => {
-      const card = document.createElement('article');
-      card.className = 'client-card';
-      card.setAttribute('data-id', c.id);
-
-      // header row
-      const row = document.createElement('div');
-      row.className = 'client-row';
-
-      const info = document.createElement('div');
-      info.className = 'client-info';
-
-      const avatar = document.createElement('div');
-      avatar.className = 'avatar';
-      avatar.textContent = (c.name || '?').split(' ').map(s => s[0]).slice(0,2).join('').toUpperCase();
-
-      const meta = document.createElement('div');
-      meta.className = 'meta';
-      const h3 = document.createElement('h3');
-      h3.textContent = c.name || 'Без имени';
-      const p = document.createElement('p');
-      p.textContent = c.phone || '';
-
-      meta.appendChild(h3);
-      meta.appendChild(p);
-      info.appendChild(avatar);
-      info.appendChild(meta);
-
-      const actions = document.createElement('div');
-      actions.className = 'card-actions';
-      // edit
-      const editBtn = document.createElement('button');
-      editBtn.className = 'icon-btn';
-      editBtn.title = 'Редактировать';
-      editBtn.innerHTML = '✏️';
-      editBtn.addEventListener('click', () => openEditClient(c.id));
-
-      // quick add task button
-      const addTaskBtn = document.createElement('button');
-      addTaskBtn.className = 'icon-btn';
-      addTaskBtn.title = 'Добавить задачу в текущий месяц';
-      addTaskBtn.innerHTML = '＋';
-      addTaskBtn.addEventListener('click', () => openQuickTask(c.id));
-
-      const delBtn = document.createElement('button');
-      delBtn.className = 'icon-btn';
-      delBtn.title = 'Удалить';
-      delBtn.innerHTML = '🗑️';
-      delBtn.addEventListener('click', () => {
-        if(confirm('Удалить клиента?')) {
-          clients = clients.filter(x => x.id !== c.id);
-          save();
-          renderClients();
-        }
-      });
-
-      actions.appendChild(addTaskBtn);
-      actions.appendChild(editBtn);
-      actions.appendChild(delBtn);
-
-      row.appendChild(info);
-      row.appendChild(actions);
-      card.appendChild(row);
-
-      // note
-      if(c.note){
-        const note = document.createElement('div');
-        note.className = 'small';
-        note.textContent = c.note;
-        card.appendChild(note);
-      }
-
-      // month label and plan preview
-      const monthLabel = document.createElement('div');
-      monthLabel.className = 'small muted';
-      const mname = months[c.plan.monthIndex] || '—';
-      monthLabel.textContent = `${mname} ${c.plan.year}`;
-      card.appendChild(monthLabel);
-
-      // plan preview (first 4 tasks)
-      const preview = document.createElement('div');
-      preview.style.marginTop = '8px';
-      preview.style.display = 'grid';
-      preview.style.gridTemplateColumns = 'repeat(2,1fr)';
-      preview.style.gap = '6px';
-
-      c.plan.weeks.forEach((wk, idx) => {
-        const wdiv = document.createElement('div');
-        wdiv.className = 'week';
-        const wtitle = document.createElement('h4');
-        wtitle.textContent = 'Неделя ' + (idx+1);
-        wdiv.appendChild(wtitle);
-        if(wk.length === 0){
-          const em = document.createElement('div');
-          em.className = 'small muted';
-          em.textContent = 'Нет задач';
-          wdiv.appendChild(em);
-        } else {
-          wk.slice(0,3).forEach(t => {
-            const tdiv = document.createElement('div');
-            tdiv.className = 'task';
-            tdiv.innerHTML = `<div style="flex:1">${escapeHtml(t)}</div>`;
-            wdiv.appendChild(tdiv);
-          });
-        }
-        preview.appendChild(wdiv);
-      });
-
-      card.appendChild(preview);
-
-      // expand button
-      const expandRow = document.createElement('div');
-      expandRow.style.display='flex';
-      expandRow.style.justifyContent='flex-end';
-      expandRow.style.marginTop='8px';
-      const openBtn = document.createElement('button');
-      openBtn.className='btn ghost';
-      openBtn.textContent='Открыть план';
-      openBtn.addEventListener('click', ()=> openPlanModal(c.id));
-      expandRow.appendChild(openBtn);
-      card.appendChild(expandRow);
-
-      clientsContainer.appendChild(card);
-    });
-
-    // view mode tweaks
-    if(viewMode === 'grid'){
-      clientsContainer.style.gridTemplateColumns = 'repeat(2,1fr)';
-    } else {
-      clientsContainer.style.gridTemplateColumns = '1fr';
-    }
-  }
-
-  // modal helpers
-  function openNewClient(){
-    editingId = null;
-    modalTitle.textContent = 'Новый клиент';
-    clientNameInput.value = '';
-    clientPhoneInput.value = '';
-    clientNoteInput.value = '';
-    // default month: current
+  <script>
+    // ---------- Utilities ----------
+    const $$ = sel => document.querySelector(sel);
     const now = new Date();
-    planMonthSelect.value = now.getMonth() + '|' + now.getFullYear();
-    showModal();
-  }
 
-  function openEditClient(id){
-    const c = clients.find(x=>x.id===id);
-    if(!c) return;
-    editingId = id;
-    modalTitle.textContent = 'Редактирование';
-    clientNameInput.value = c.name;
-    clientPhoneInput.value = c.phone || '';
-    clientNoteInput.value = c.note || '';
-    planMonthSelect.value = c.plan.monthIndex + '|' + c.plan.year;
-    showModal();
-  }
-
-  function showModal(){
-    modalBp.classList.add('show');
-    modalBp.setAttribute('aria-hidden','false');
-    clientNameInput.focus();
-  }
-  function closeModal(){
-    modalBp.classList.remove('show');
-    modalBp.setAttribute('aria-hidden','true');
-    editingId = null;
-  }
-
-  // on save
-  saveClientBtn.addEventListener('click', () => {
-    const name = clientNameInput.value.trim();
-    if(!name){
-      alert('Введите имя клиента');
-      clientNameInput.focus();
-      return;
+    function pad(n){return n.toString().padStart(2,'0')}
+    function fmtDate(d){
+      const dt = new Date(d);
+      return `${pad(dt.getDate())}.${pad(dt.getMonth()+1)}.${dt.getFullYear()}`
     }
-    const phone = clientPhoneInput.value.trim();
-    const note = clientNoteInput.value.trim();
-    const [mIdxStr, yearStr] = planMonthSelect.value.split('|');
-    const monthIndex = parseInt(mIdxStr,10);
-    const year = parseInt(yearStr,10);
+    function monthKey(y,m){return `${y}-${pad(m+1)}`}
 
-    if(editingId){
-      const c = clients.find(x=>x.id===editingId);
-      if(c){
-        c.name = name;
-        c.phone = phone;
-        c.note = note;
-        c.plan.year = year;
-        c.plan.monthIndex = monthIndex;
+    const RU_MONTHS = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
+    const RU_MONTHS_SHORT = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+
+    // ---------- Storage ----------
+    const STORE_KEY = 'dtp_clients_v1';
+    let clients = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+
+    function persist(){
+      localStorage.setItem(STORE_KEY, JSON.stringify(clients));
+    }
+
+    // ---------- State ----------
+    let selectedMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+    let editingId = null;
+
+    // ---------- Elements ----------
+    const subtitle = $$('#subtitle');
+    const mCount = $$('#mCount');
+    const mRange = $$('#mRange');
+    const todayCount = $$('#todayCount');
+    const todayDate = $$('#todayDate');
+    const segPrev = $$('#seg-prev');
+    const segCurrent = $$('#seg-current');
+    const segNext = $$('#seg-next');
+    const chartCanvas = $$('#barChart');
+    const chartLabel = $$('#chartMonthLabel');
+
+    const listEl = $$('#list');
+    const emptyEl = $$('#empty');
+    const monthFilter = $$('#monthFilter');
+    const searchInput = $$('#q');
+
+    const sheet = $$('#sheet');
+    const sheetTitle = $$('#sheetTitle');
+    const inputName = $$('#name');
+    const inputPhone = $$('#phone');
+    const inputDate = $$('#date');
+    const inputNotes = $$('#notes');
+    const inputStatus = $$('#status');
+    const inputSource = $$('#source');
+    const btnCancel = $$('#cancel');
+    const btnDelete = $$('#deleteBtn');
+    const btnSave = $$('#save');
+    const addBtn = $$('#addBtn');
+
+    const tabDashboard = $$('#tab-dashboard');
+    const tabClients = $$('#tab-clients');
+    const tabBtnDashboard = $$('#tabBtnDashboard');
+    const tabBtnClients = $$('#tabBtnClients');
+
+    // ---------- Init ----------
+    function init(){
+      // today's label
+      todayDate.textContent = fmtDate(now);
+      subtitle.textContent = `Август 2025 • Ведение клиентов после ДТП`;
+
+      // default date in form
+      inputDate.valueAsDate = new Date();
+
+      // month filter options
+      rebuildMonthFilter();
+      updateDashboard();
+      renderList();
+      drawChart();
+
+      // events
+      segPrev.onclick = ()=> shiftMonth(-1);
+      segNext.onclick = ()=> shiftMonth(1);
+      segCurrent.onclick = ()=> { selectedMonth = new Date(now.getFullYear(), now.getMonth(), 1); updateDashboard(); drawChart(); highlightSeg(); };
+
+      addBtn.onclick = () => openSheet();
+
+      btnCancel.onclick = closeSheet;
+      btnSave.onclick = saveClient;
+      btnDelete.onclick = deleteClient;
+
+      monthFilter.onchange = renderList;
+      searchInput.oninput = renderList;
+
+      // tabs
+      tabBtnDashboard.onclick = ()=> switchTab('dashboard');
+      tabBtnClients.onclick = ()=> switchTab('clients');
+
+      // close sheet on backdrop click
+      sheet.addEventListener('click', (e)=>{ if(e.target===sheet) closeSheet() });
+
+      // swipe down to close (iOS-like)
+      let startY=null;
+      sheet.querySelector('.panel').addEventListener('touchstart', e=>{ startY = e.touches[0].clientY }, {passive:true});
+      sheet.querySelector('.panel').addEventListener('touchmove', e=>{
+        if(startY!==null){
+          const dy = e.touches[0].clientY - startY;
+          if(dy>80) closeSheet();
+        }
+      }, {passive:true});
+    }
+
+    // ---------- Tabs ----------
+    function switchTab(tab){
+      const isDash = tab==='dashboard';
+      tabDashboard.style.display = isDash ? '' : 'none';
+      tabClients.style.display   = isDash ? 'none' : '';
+      tabBtnDashboard.classList.toggle('active', isDash);
+      tabBtnClients.classList.toggle('active', !isDash);
+    }
+
+    // ---------- Month logic ----------
+    function shiftMonth(delta){
+      selectedMonth = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth()+delta, 1);
+      updateDashboard();
+      drawChart();
+      highlightSeg();
+    }
+    function highlightSeg(){
+      segCurrent.textContent = `${RU_MONTHS[selectedMonth.getMonth()]} ${selectedMonth.getFullYear()}`;
+    }
+
+    function clientsInMonth(dt){
+      const y = selectedMonth.getFullYear();
+      const m = selectedMonth.getMonth();
+      return clients.filter(c=>{
+        const d = new Date(c.accidentDate);
+        return d.getFullYear()===y && d.getMonth()===m;
+      })
+    }
+
+    function updateDashboard(){
+      highlightSeg();
+      const list = clientsInMonth();
+      mCount.textContent = list.length;
+      // range label
+      const y = selectedMonth.getFullYear(); const m = selectedMonth.getMonth();
+      const start = new Date(y,m,1);
+      const end   = new Date(y,m+1,0);
+      mRange.textContent = `${fmtDate(start)} — ${fmtDate(end)}`;
+
+      // today
+      const todayKey = monthKey(now.getFullYear(), now.getMonth());
+      const today = clients.filter(c=>{
+        const d = new Date(c.accidentDate);
+        return d.toDateString() === now.toDateString();
+      });
+      todayCount.textContent = today.length;
+      chartLabel.textContent = `${RU_MONTHS[m]} ${y}`;
+    }
+
+    // ---------- Chart ----------
+    function drawChart(){
+      const ctx = chartCanvas.getContext('2d');
+      const y = selectedMonth.getFullYear(); const m = selectedMonth.getMonth();
+      const daysInMonth = new Date(y, m+1, 0).getDate();
+      const counts = Array(daysInMonth).fill(0);
+      clients.forEach(c=>{
+        const d = new Date(c.accidentDate);
+        if(d.getFullYear()===y && d.getMonth()===m){
+          counts[d.getDate()-1]++
+        }
+      });
+
+      // clear
+      ctx.clearRect(0,0,chartCanvas.width, chartCanvas.height);
+
+      // draw axes (minimalistic)
+      const W = chartCanvas.width, H = chartCanvas.height;
+      const padL=28, padR=8, padB=24, padT=8;
+      const cw = (W - padL - padR)/daysInMonth;
+      const max = Math.max(3, ...counts);
+      // grid
+      ctx.globalAlpha = .35;
+      ctx.lineWidth = 1;
+      for(let i=1;i<=max;i++){
+        const yv = padT + (H - padT - padB) * (1 - i/max);
+        ctx.beginPath(); ctx.moveTo(padL, yv); ctx.lineTo(W-padR, yv); ctx.strokeStyle = "#2a2a33"; ctx.stroke();
       }
-    } else {
-      const newClient = {
-        id: uid(),
-        name, phone, note,
-        plan: defaultMonthPlan(year, monthIndex)
+      ctx.globalAlpha = 1;
+
+      // bars
+      for(let i=0;i<daysInMonth;i++){
+        const v = counts[i];
+        const bh = (H - padT - padB) * (v/max);
+        const x = padL + i*cw + 2;
+        const y0 = H - padB - bh;
+        const w = Math.max(2, cw - 4);
+        // bar
+        const grd = ctx.createLinearGradient(0, y0, 0, y0+bh);
+        grd.addColorStop(0, "#0a84ff");
+        grd.addColorStop(1, "#246bff");
+        ctx.fillStyle = grd;
+        ctx.fillRect(x, y0, w, bh);
+      }
+
+      // x labels (1, 5, 10, 15, 20, 25, 30)
+      ctx.fillStyle = "#9ba0ad";
+      ctx.font = "12px -apple-system, system-ui";
+      for(let d=1; d<=daysInMonth; d++){
+        if([1,5,10,15,20,25,30].includes(d)){
+          const x = padL + (d-1)*cw + 2;
+          ctx.fillText(d.toString(), x, H-8);
+        }
+      }
+    }
+
+    // ---------- List / Admin ----------
+    function rebuildMonthFilter(){
+      // collect unique months from data + current month
+      const set = new Set(clients.map(c=>{
+        const d = new Date(c.accidentDate);
+        return monthKey(d.getFullYear(), d.getMonth());
+      }));
+      set.add(monthKey(now.getFullYear(), now.getMonth()));
+      const arr = Array.from(set).sort().reverse();
+      monthFilter.innerHTML = arr.map(key=>{
+        const [y,m] = key.split('-');
+        const lbl = `${RU_MONTHS[parseInt(m,10)-1]} ${y}`;
+        return `<option value="${key}">${lbl}</option>`
+      }).join('');
+      monthFilter.value = monthKey(now.getFullYear(), now.getMonth());
+    }
+
+    function renderList(){
+      const q = searchInput.value.trim().toLowerCase();
+      const [y,m] = monthFilter.value.split('-').map(Number);
+      const filtered = clients.filter(c=>{
+        const d = new Date(c.accidentDate);
+        const inMonth = d.getFullYear()===y && (d.getMonth()+1)===m;
+        const matches = !q || c.name.toLowerCase().includes(q) || (c.phone||'').toLowerCase().includes(q);
+        return inMonth && matches;
+      }).sort((a,b)=> new Date(b.accidentDate)-new Date(a.accidentDate));
+
+      listEl.innerHTML = '';
+      if(filtered.length===0){
+        emptyEl.style.display = '';
+        return;
+      } else {
+        emptyEl.style.display = 'none';
+      }
+
+      filtered.forEach(c=>{
+        const it = document.createElement('div');
+        it.className = 'item';
+        it.innerHTML = `
+          <div class="avatar"><span>${(c.name?.[0]||'?').toUpperCase()}</span></div>
+          <div style="flex:1">
+            <div class="i-title">${escapeHtml(c.name || 'Без имени')}</div>
+            <div class="i-sub">${fmtDate(c.accidentDate)} • ${escapeHtml(c.phone||'без телефона')} • ${badge(c.status)}</div>
+          </div>
+          <div class="actions">
+            <button class="icon-btn" title="Редактировать" aria-label="Редактировать" data-edit="${c.id}">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41L18.37 3.3a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+            <button class="icon-btn" title="Удалить" aria-label="Удалить" data-del="${c.id}">
+              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M6 7h12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m2 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7h12Z" stroke="currentColor" stroke-width="1.2"/></svg>
+            </button>
+          </div>
+        `;
+        listEl.appendChild(it);
+      });
+
+      // attach actions
+      listEl.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => openSheet(b.getAttribute('data-edit')));
+      listEl.querySelectorAll('[data-del]').forEach(b => b.onclick = () => confirmDelete(b.getAttribute('data-del')));
+    }
+
+    function badge(status){
+      const map = {new:['Новый','var(--accent)'], inwork:['В работе','var(--yellow)'], closed:['Закрыт','var(--green)']};
+      const [t, c] = map[status] || ['—','var(--text-dim)'];
+      return `<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:99px;background:${c};display:inline-block"></span>${t}</span>`;
+    }
+
+    function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])) }
+
+    // ---------- Sheet ----------
+    function openSheet(id=null){
+      editingId = id;
+      if(id){
+        sheetTitle.textContent = 'Редактировать клиента';
+        const c = clients.find(x=> x.id===id);
+        inputName.value = c.name||'';
+        inputPhone.value = c.phone||'';
+        inputDate.value = c.accidentDate?.slice(0,10) || new Date().toISOString().slice(0,10);
+        inputNotes.value = c.notes||'';
+        inputStatus.value = c.status||'new';
+        inputSource.value = c.source||'';
+        btnDelete.style.display = '';
+      }else{
+        sheetTitle.textContent = 'Новый клиент';
+        inputName.value = '';
+        inputPhone.value = '';
+        inputDate.valueAsDate = new Date();
+        inputNotes.value = '';
+        inputStatus.value = 'new';
+        inputSource.value = '';
+        btnDelete.style.display = 'none';
+      }
+      sheet.classList.add('open');
+      setTimeout(()=> inputName.focus(), 50);
+    }
+    function closeSheet(){ sheet.classList.remove('open'); }
+
+    function saveClient(){
+      const data = {
+        name: inputName.value.trim(),
+        phone: inputPhone.value.trim(),
+        accidentDate: inputDate.value || new Date().toISOString().slice(0,10),
+        notes: inputNotes.value.trim(),
+        status: inputStatus.value,
+        source: inputSource.value.trim()
       };
-      clients.unshift(newClient);
-    }
-    save();
-    renderClients();
-    closeModal();
-  });
+      if(!data.name){ alert('Укажите имя'); return; }
 
-  cancelBtn.addEventListener('click', closeModal);
-  modalBp.addEventListener('click', (e) => {
-    if(e.target === modalBp) closeModal();
-  });
-
-  addClientBtn.addEventListener('click', openNewClient);
-
-  // export/import
-  exportBtn.addEventListener('click', () => {
-    const dataStr = JSON.stringify(clients, null, 2);
-    const blob = new Blob([dataStr], {type:'application/json'});
-    const url = URL.createObjectURL(blob);
-    const a = document.createElement('a');
-    a.href = url;
-    a.download = 'clients_export.json';
-    a.click();
-    URL.revokeObjectURL(url);
-  });
-  importBtn.addEventListener('click', ()=> importFile.click());
-  importFile.addEventListener('change', (ev) => {
-    const file = ev.target.files[0];
-    if(!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => {
-      try {
-        const parsed = JSON.parse(e.target.result);
-        if(Array.isArray(parsed)){
-          if(confirm('Импортировать и заменить текущую базу?')) {
-            clients = parsed;
-            save();
-            renderClients();
-            alert('Импорт выполнен');
-          }
-        } else alert('Некорректный файл');
-      } catch(err){
-        alert('Ошибка чтения файла');
+      if(editingId){
+        const i = clients.findIndex(x=> x.id===editingId);
+        clients[i] = { ...clients[i], ...data };
+      }else{
+        clients.push({ id: crypto.randomUUID(), createdAt: new Date().toISOString(), ...data });
       }
-    };
-    reader.readAsText(file);
-    ev.target.value = '';
-  });
-
-  // quick task add: opens small inline prompt to add a task into week 1 by default
-  function openQuickTask(clientId){
-    const client = clients.find(x=>x.id===clientId);
-    if(!client) return;
-    const task = prompt('Добавить задачу в первый неделю:');
-    if(task && task.trim()){
-      client.plan.weeks[0].push(task.trim());
-      save();
-      renderClients();
+      persist();
+      rebuildMonthFilter();
+      updateDashboard();
+      renderList();
+      drawChart();
+      closeSheet();
     }
-  }
 
-  // plan modal: create a quick editor overlay for full month plan
-  function openPlanModal(clientId){
-    const client = clients.find(x=>x.id===clientId);
-    if(!client) return;
-    // build simple prompt UI
-    const modal = document.createElement('div');
-    modal.style.position='fixed';
-    modal.style.inset='0';
-    modal.style.zIndex='120';
-    modal.style.display='flex';
-    modal.style.alignItems='center';
-    modal.style.justifyContent='center';
-    modal.style.padding='20px';
-    modal.style.backdropFilter='blur(6px)';
-    modal.innerHTML = `
-      <div style="width:100%;max-width:680px;background:white;border-radius:14px;padding:14px;box-shadow:0 30px 80px rgba(20,30,50,0.12);max-height:90vh;overflow:auto;">
-        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-          <div>
-            <h3 style="margin:0 0 4px 0">${escapeHtml(client.name)} — план</h3>
-            <div class="small muted">${months[client.plan.monthIndex] || ''} ${client.plan.year}</div>
-          </div>
-          <div>
-            <button id="closePlan" class="btn ghost">Закрыть</button>
-          </div>
-        </div>
-        <div style="display:grid;grid-template-columns:repeat(2,1fr);gap:10px;">
-        </div>
-      </div>
-    `;
-    document.body.appendChild(modal);
-
-    const grid = modal.querySelector('div > div:nth-child(2)');
-
-    // render weeks with add/remove
-    client.plan.weeks.forEach((wk, widx) => {
-      const wdiv = document.createElement('div');
-      wdiv.style.background='linear-gradient(180deg,#fff,#fbfbff)';
-      wdiv.style.padding='10px';
-      wdiv.style.borderRadius='12px';
-      wdiv.innerHTML = `<h4 style="margin:0 0 8px 0">Неделя ${widx+1}</h4>`;
-      const list = document.createElement('div');
-      list.style.display='flex';
-      list.style.flexDirection='column';
-      list.style.gap='8px';
-      wk.forEach((task, tidx) => {
-        const row = document.createElement('div');
-        row.style.display='flex';
-        row.style.gap='8px';
-        const inp = document.createElement('input');
-        inp.type='text';
-        inp.value = task;
-        inp.style.flex='1';
-        inp.style.padding='8px';
-        inp.style.borderRadius='8px';
-        inp.style.border='1px solid #eef2f7';
-        inp.addEventListener('input', (e) => {
-          client.plan.weeks[widx][tidx] = e.target.value;
-          save();
-        });
-        const del = document.createElement('button');
-        del.textContent='✕';
-        del.style.background='transparent';
-        del.style.border='0';
-        del.style.cursor='pointer';
-        del.addEventListener('click', () => {
-          client.plan.weeks[widx].splice(tidx,1);
-          save();
-          modal.remove();
-          openPlanModal(clientId);
-        });
-        row.appendChild(inp);
-        row.appendChild(del);
-        list.appendChild(row);
-      });
-      const addRow = document.createElement('div');
-      addRow.style.display='flex';
-      addRow.style.gap='8px';
-      addRow.style.marginTop='8px';
-      const newInp = document.createElement('input');
-      newInp.type='text';
-      newInp.placeholder='Новая задача...';
-      newInp.style.flex='1';
-      const addBtn = document.createElement('button');
-      addBtn.className='btn';
-      addBtn.textContent='Добавить';
-      addBtn.addEventListener('click', () => {
-        const v = newInp.value.trim();
-        if(v){
-          client.plan.weeks[widx].push(v);
-          save();
-          modal.remove();
-          openPlanModal(clientId);
-        }
-      });
-      addRow.appendChild(newInp);
-      addRow.appendChild(addBtn);
-
-      wdiv.appendChild(list);
-      wdiv.appendChild(addRow);
-      grid.appendChild(wdiv);
-    });
-
-    modal.querySelector('#closePlan').addEventListener('click', () => {
-      modal.remove();
-      renderClients();
-    });
-    // click outside closes
-    modal.addEventListener('click', (e) => {
-      if(e.target === modal) {
-        modal.remove();
-        renderClients();
+    function confirmDelete(id){
+      if(confirm('Удалить клиента?')){
+        clients = clients.filter(c=> c.id !== id);
+        persist();
+        rebuildMonthFilter();
+        updateDashboard();
+        renderList();
+        drawChart();
       }
-    });
-  }
-
-  // init month options
-  function populateMonths(){
-    const now = new Date();
-    for(let i=-2;i<=2;i++){ // show range around current month
-      const d = new Date(now.getFullYear(), now.getMonth()+i, 1);
-      const opt = document.createElement('option');
-      opt.value = d.getMonth() + '|' + d.getFullYear();
-      opt.textContent = months[d.getMonth()] + ' ' + d.getFullYear();
-      planMonthSelect.appendChild(opt);
     }
-    // ensure at least current is selected
-    planMonthSelect.value = now.getMonth() + '|' + now.getFullYear();
-  }
+    function deleteClient(){
+      if(!editingId) return;
+      confirmDelete(editingId);
+      closeSheet();
+    }
 
-  function escapeHtml(str){
-    if(!str) return '';
-    return String(str).replace(/[&<>"']/g, function(m){
-      return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m];
-    });
-  }
+    // ---------- Kickoff ----------
+    init();
 
-  // view toggles
-  viewListBtn.addEventListener('click', ()=>{
-    viewMode='list';
-    viewListBtn.classList.add('active');
-    viewGridBtn.classList.remove('active');
-    renderClients();
-  });
-  viewGridBtn.addEventListener('click', ()=>{
-    viewMode='grid';
-    viewGridBtn.classList.add('active');
-    viewListBtn.classList.remove('active');
-    renderClients();
-  });
-
-  // initial load
-  populateMonths();
-  load();
-  renderClients();
-
-  // expose for debugging in console (optional)
-  window.adminApp = {
-    clients,
-    save,
-    load,
-    renderClients
-  };
-
-})();
-</script>
+    // Repaint on orientation change (iPhone)
+    window.addEventListener('orientationchange', ()=> setTimeout(drawChart, 200));
+  </script>
 </body>
 </html>

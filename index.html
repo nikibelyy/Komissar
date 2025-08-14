@@ -2,691 +2,466 @@
 <html lang="ru">
 <head>
   <meta charset="utf-8" />
-  <meta name="viewport" content="viewport-fit=cover, width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
-  <meta name="color-scheme" content="dark">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Клиенты</title>
+
+  <!-- iOS "как приложение" -->
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <title>ДТП Клиенты</title>
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+
+  <!-- (Необязательно для iOS) Встроенный webmanifest как data: URL -->
+  <link rel="manifest" href='data:application/manifest+json,{"name":"%D0%9A%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D1%8B","short_name":"%D0%9A%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D1%8B","start_url":"./index.html","display":"standalone","background_color":"#ffffff","theme_color":"#0A84FF","icons":[{"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAAAAABbnd/AAAAAklEQVR4AewaftIAAABNSURBVO3BQQEAAAgDoK1/aQ8YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgYhFBAABx0y9dwAAAABJRU5ErkJggg==","sizes":"192x192","type":"image/png"},{"src":"data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAgAAAAIACAAAAAB1V6mUAAAAAklEQVR4AewaftIAAABNSURBVO3BQQEAAAgDoK1/aQ8YAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAADgYhFBAABx0y9dwAAAABJRU5ErkJggg==","sizes":"512x512","type":"image/png"}]}'>
+
+  <!-- Встроенная иконка для iOS (можешь заменить на свою data: или файл) -->
+  <link rel="apple-touch-icon" href="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAALQA...trimmed">
+
   <style>
     :root{
-      --bg:#0b0b0f;
-      --card:#15151a;
-      --elev:#1b1b21;
-      --stroke:#2a2a33;
-      --text:#f5f5f7;
-      --text-dim:#9ba0ad;
-      --accent:#0a84ff; /* iOS blue */
-      --green:#30d158;
-      --red:#ff453a;
-      --yellow:#ffd60a;
-      --corner:18px;
-      --shadow:0 10px 30px rgba(0,0,0,.45), inset 0 1px 0 rgba(255,255,255,.04);
-      --safe-top: env(safe-area-inset-top);
-      --safe-bottom: env(safe-area-inset-bottom);
+      --bg: rgba(248,248,250,1);
+      --card: rgba(255,255,255,0.7);
+      --border: rgba(0,0,0,0.1);
+      --text: #111;
+      --sub: #666;
+      --tint: #0A84FF;
+      --danger: #FF453A;
+      --success: #34C759;
+      --shadow: 0 10px 30px rgba(0,0,0,.08);
+      --radius: 14px;
+      --blur: 20px;
+    }
+    @media (prefers-color-scheme: dark){
+      :root{
+        --bg: #000;
+        --card: rgba(28,28,30,0.6);
+        --border: rgba(255,255,255,0.08);
+        --text: #fff;
+        --sub: #aaa;
+        --shadow: 0 10px 30px rgba(0,0,0,.5);
+      }
     }
     *{box-sizing:border-box}
-    html,body{height:100%}
-    body{
-      margin:0; background:var(--bg); color:var(--text);
-      font: -apple-system-body, system-ui, -apple-system, "SF Pro Text",
-            "SF Pro Display", Roboto, Segoe UI, Helvetica, Arial, sans-serif;
-      font-size:16px; -webkit-font-smoothing:antialiased; -moz-osx-font-smoothing:grayscale;
+    html,body{
+      margin:0; padding:0;
+      background: var(--bg);
+      color: var(--text);
+      font: 16px -apple-system, BlinkMacSystemFont, "SF Pro Text", "Segoe UI", Roboto, Arial, sans-serif;
+      -webkit-font-smoothing:antialiased;
+      -webkit-text-size-adjust:100%;
+      height:100%;
     }
-
-    /* Large iOS title */
+    .app{
+      padding-bottom: env(safe-area-inset-bottom);
+      padding-left: env(safe-area-inset-left);
+      padding-right: env(safe-area-inset-right);
+      min-height:100dvh;
+      display:flex; flex-direction:column;
+    }
     .nav{
-      position:sticky; top:0; z-index:50;
-      padding: calc(8px + var(--safe-top)) 16px 10px;
-      background:linear-gradient(180deg, rgba(12,12,16,.9) 0%, rgba(12,12,16,.6) 60%, rgba(12,12,16,0) 100%);
-      backdrop-filter: blur(18px);
-      -webkit-backdrop-filter: blur(18px);
-      border-bottom:1px solid rgba(255,255,255,.04);
+      position: sticky; top:0; z-index:50;
+      backdrop-filter: saturate(180%) blur(20px);
+      -webkit-backdrop-filter: saturate(180%) blur(20px);
+      background: rgba(255,255,255,0.6);
+      border-bottom: 1px solid var(--border);
+      padding: calc(8px + env(safe-area-inset-top)) 16px 8px;
     }
-    .title{
-      font-size:28px; font-weight:700; letter-spacing:-.02em;
-      display:flex; align-items:center; gap:10px;
+    @media (prefers-color-scheme: dark){
+      .nav{ background: rgba(20,20,22,0.6); }
     }
-    .subtitle{color:var(--text-dim); font-size:13px; margin-top:4px}
-
-    .container{padding:16px; padding-bottom:80px}
-
-    .card{
-      background:linear-gradient(180deg, var(--card), var(--elev));
-      border:1px solid var(--stroke);
-      border-radius: var(--corner);
+    .titleLarge{
+      font-weight:700; font-size: 34px; line-height:1.1; letter-spacing:-.02em;
+      margin: 6px 0 0;
+    }
+    .toolbar{
+      display:flex; align-items:center; justify-content:space-between; gap:8px;
+    }
+    .searchBox{
+      display:flex; align-items:center; gap:8px; width:100%;
+      background: var(--card); border:1px solid var(--border); box-shadow: var(--shadow);
+      border-radius: 12px; padding: 10px 12px;
+    }
+    .searchBox input{
+      flex:1; border:0; outline:none; background:transparent; color:var(--text);
+      font-size:16px;
+    }
+    .btn{
+      -webkit-tap-highlight-color: transparent;
+      display:inline-flex; align-items:center; justify-content:center; gap:8px;
+      padding:12px 14px; border-radius: 12px; border:1px solid var(--border);
+      background: var(--card); color: var(--text); font-weight:600;
       box-shadow: var(--shadow);
     }
+    .btn.primary{ background: var(--tint); color:#fff; border-color: transparent; }
+    .btn.ghost{ background: transparent; }
+    .btn.danger{ background: var(--danger); color:#fff; border-color: transparent; }
 
-    .grid{
-      display:grid; gap:12px;
-    }
-    @media(min-width:480px){
-      .grid-2{grid-template-columns:1fr 1fr}
-    }
-
-    .metric{
-      padding:16px;
-    }
-    .metric h3{margin:0 0 6px 0; font-size:13px; color:var(--text-dim); font-weight:600; letter-spacing:.02em; text-transform:uppercase}
-    .metric .value{font-size:28px; font-weight:700}
-
-    /* Segmented control */
-    .seg{
-      display:flex; gap:8px; padding:8px; background:var(--card);
-      border:1px solid var(--stroke); border-radius:14px; box-shadow: var(--shadow);
-    }
-    .seg button{
-      flex:1; padding:10px 12px; border-radius:10px; border:1px solid transparent;
-      background:transparent; color:var(--text-dim); font-weight:600;
-    }
-    .seg button.active{
-      background:var(--elev); color:var(--text); border-color:var(--stroke);
-    }
-
-    /* List */
-    .list{margin-top:12px}
-    .item{
-      position:relative; padding:14px 52px 14px 14px; display:flex; gap:12px; align-items:center;
-      border-bottom:1px solid var(--stroke);
-    }
-    .avatar{
-      width:38px; height:38px; border-radius:12px; background: #0f0f13;
-      display:grid; place-items:center; border:1px solid var(--stroke);
-    }
-    .avatar span{font-weight:700}
-    .i-title{font-weight:700; font-size:16px}
-    .i-sub{color:var(--text-dim); font-size:13px; margin-top:2px}
-    .actions{
-      position:absolute; right:8px; top:50%; transform:translateY(-50%);
-      display:flex; gap:6px;
-    }
-    .icon-btn{
-      width:34px; height:34px; border-radius:12px; background:var(--elev);
-      border:1px solid var(--stroke); display:grid; place-items:center;
-    }
-    .empty{
-      text-align:center; color:var(--text-dim); padding:28px 12px;
-    }
-
-    /* Search / filters */
-    .toolbar{
-      display:flex; gap:8px; align-items:center; margin:12px 0 8px 0;
-    }
-    .search{
-      flex:1; display:flex; gap:8px; align-items:center; padding:10px 12px;
-      background:var(--card); border:1px solid var(--stroke); border-radius:14px; box-shadow: var(--shadow);
-    }
-    .search input{
-      flex:1; background:transparent; border:0; outline:0; color:var(--text); font-size:16px;
-    }
+    .content{ padding: 16px; display:flex; flex-direction:column; gap:12px; }
+    .pillbar{ display:flex; gap:8px; overflow:auto; -webkit-overflow-scrolling:touch; padding:4px 0 8px; }
     .pill{
-      padding:10px 12px; border-radius:14px; background:var(--card); border:1px solid var(--stroke); box-shadow: var(--shadow);
-      color:var(--text-dim); font-weight:600; font-size:14px;
+      padding:8px 12px; border-radius:999px; border:1px solid var(--border); background: var(--card);
+      white-space:nowrap; font-weight:600;
     }
-    .pill strong{color:var(--text)}
-    .select{appearance:none; background:transparent; border:0; color:var(--text); font-weight:600}
+    .pill.active{ background: var(--tint); color:#fff; border-color: transparent;}
 
-    /* FAB */
-    .fab{
-      position:fixed; right:16px; bottom:calc(16px + var(--safe-bottom));
-      width:58px; height:58px; border-radius:20px; border:1px solid var(--stroke);
-      background:linear-gradient(180deg, #0f0f14, #17171d); box-shadow: var(--shadow);
-      display:grid; place-items:center; z-index:60;
+    .card{
+      background: var(--card); border:1px solid var(--border); border-radius: var(--radius);
+      box-shadow: var(--shadow); padding:14px; display:flex; flex-direction:column; gap:8px;
     }
+    .row{ display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .name{ font-weight:700; font-size:17px; letter-spacing:-.01em; }
+    .sub{ color: var(--sub); font-size:14px; }
+    .tags{ display:flex; gap:6px; flex-wrap:wrap; }
+    .tag{ font-size:12px; padding:4px 8px; border-radius:999px; border:1px solid var(--border); background: rgba(0,0,0,0.04);}
+    @media (prefers-color-scheme: dark){ .tag{ background: rgba(255,255,255,0.06); } }
+    .actions{ display:flex; gap:8px; }
+    .empty{ text-align:center; opacity:.7; padding:40px 16px;}
 
-    /* Tab bar */
-    .tabs{
-      position:fixed; left:0; right:0; bottom:0; z-index:40;
-      padding-bottom: max(8px, var(--safe-bottom));
-      background:rgba(15,15,20,.7); backdrop-filter: blur(18px); -webkit-backdrop-filter: blur(18px);
-      border-top:1px solid rgba(255,255,255,.06);
-    }
-    .tabs .row{display:flex; justify-content:space-around; padding:8px 6px}
-    .tabs button{
-      background:transparent; border:0; color:var(--text-dim); font-size:11px;
-      display:flex; flex-direction:column; align-items:center; gap:6px; padding:6px 10px; border-radius:12px;
-    }
-    .tabs button.active{color:var(--text); background:rgba(255,255,255,.04)}
-    .tabs svg{width:22px; height:22px}
-
-    /* Modal / sheet */
     .sheet{
-      position:fixed; inset:0; display:none; align-items:flex-end; justify-content:center; z-index:100;
-      background:rgba(0,0,0,.35);
+      position: fixed; left:0; right:0; bottom:-100%;
+      background: rgba(255,255,255,0.9);
+      -webkit-backdrop-filter: blur(var(--blur));
+      backdrop-filter: blur(var(--blur));
+      border-top-left-radius: 20px; border-top-right-radius: 20px;
+      box-shadow: 0 -20px 40px rgba(0,0,0,0.15);
+      transition: bottom .28s ease; z-index:100;
+      border-top: 1px solid var(--border);
+      padding-bottom: env(safe-area-inset-bottom);
     }
-    .sheet.open{display:flex}
-    .panel{
-      width:100%; max-width:600px; background:var(--bg); border-radius:18px 18px 0 0; border:1px solid var(--stroke);
-      box-shadow:0 -10px 30px rgba(0,0,0,.45); padding-bottom: max(12px, var(--safe-bottom));
-      animation: slideUp .18s ease-out;
-    }
-    @keyframes slideUp{from{transform:translateY(20px); opacity:.7} to{transform:translateY(0); opacity:1}}
-    .handle{width:44px; height:5px; border-radius:999px; background:#444; margin:10px auto}
-    .panel h3{margin:0; padding:10px 16px 6px; font-size:18px}
-    .form{padding:0 16px 12px; display:grid; gap:10px}
-    .field{
-      display:grid; gap:6px;
-    }
-    .field label{font-size:13px; color:var(--text-dim)}
-    .input, .textarea, .select2{
-      padding:12px 12px; border-radius:12px; background:var(--card); border:1px solid var(--stroke); color:var(--text);
-    }
-    .textarea{min-height:84px; resize:vertical}
-    .row2{display:grid; grid-template-columns:1fr 1fr; gap:10px}
-    .actions-row{display:flex; gap:8px; padding:8px 16px 16px}
-    .btn{
-      flex:1; padding:12px 14px; border-radius:12px; border:1px solid var(--stroke);
-      background:var(--elev); color:var(--text); font-weight:700;
-    }
-    .btn.primary{background:var(--accent); border-color:transparent; color:white}
-    .btn.destructive{background:var(--red)}
-    .note{font-size:12px; color:var(--text-dim); padding:0 16px 12px}
+    .sheet.open{ bottom:0; }
+    @media (prefers-color-scheme: dark){ .sheet{ background: rgba(20,20,22,0.9); } }
+    .sheetHeader{ padding:12px 16px; display:flex; align-items:center; justify-content:space-between; gap:8px; }
+    .sheetBody{ padding: 0 16px 16px; }
+    .grip{ width:44px; height:5px; background: var(--border); border-radius:999px; margin:8px auto 4px; }
 
-    /* Canvas card */
-    .canvas-wrap{padding:12px}
-    canvas{width:100%; height:160px; display:block}
+    .field{ display:flex; flex-direction:column; gap:6px; margin:12px 0; }
+    .field label{ font-size:13px; color:var(--sub); }
+    .field input, .field textarea{
+      width:100%; padding:12px 14px; border-radius:12px; border:1px solid var(--border);
+      background: var(--card); color:var(--text); outline:none;
+    }
+    .field textarea{ min-height:90px; resize:vertical; }
 
-    /* iOS haptics (visual) for taps */
-    button, .icon-btn, .fab {transition: transform .06s ease}
-    button:active, .icon-btn:active, .fab:active {transform: scale(.98)}
+    .toast{
+      position: fixed; left:50%; transform: translateX(-50%);
+      bottom: calc(20px + env(safe-area-inset-bottom));
+      background: rgba(0,0,0,.85); color:#fff; padding:10px 14px; border-radius:12px;
+      opacity:0; pointer-events:none; transition: opacity .25s, transform .25s; z-index:200;
+    }
+    .toast.show{ opacity:1; transform: translateX(-50%) translateY(-6px); }
+
+    input, button, textarea{ font: inherit; }
+    button{ border:0; background:none; padding:0; }
+    a{ color:var(--tint); text-decoration:none; }
+    .hidden{ display:none !important; }
   </style>
 </head>
 <body>
-  <header class="nav">
-    <div class="title">
-      <!-- Calendar Icon -->
-      <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-        <path d="M7 2v3M17 2v3M3 9h18" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-        <rect x="3" y="5" width="18" height="16" rx="4" stroke="currentColor" stroke-width="1.5"/>
-      </svg>
-      ДТП Клиенты
+<div class="app">
+  <div class="nav">
+    <div class="toolbar">
+      <div class="searchBox" style="flex:1">
+        <svg width="18" height="18" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M15.5 14h-.79l-.28-.27a6.471 6.471 0 0 0 1.57-4.23C15.99 6.01 13.48 3.5 10.49 3.5S5 6.01 5 9s2.51 5.5 5.5 5.5a6.471 6.471 0 0 0 4.23-1.57l.27.28v.79l4.25 4.25c.41.41 1.09.41 1.5 0s.41-1.09 0-1.5L15.5 14Zm-5 0C8.01 14 6 11.99 6 9.5S8.01 5 10.5 5 15 7.01 15 9.5 12.99 14 10.5 14Z"/></svg>
+        <input id="search" placeholder="Поиск по имени, телефону, тегам…" autocomplete="off">
+      </div>
+      <button id="addBtn" class="btn primary">Добавить</button>
     </div>
-    <div class="subtitle" id="subtitle"></div>
-  </header>
-
-  <main class="container">
-    <!-- DASHBOARD -->
-    <section id="tab-dashboard">
-      <div class="grid grid-2">
-        <div class="card metric">
-          <h3>Клиенты за месяц</h3>
-          <div class="value" id="mCount">0</div>
-          <div class="i-sub" id="mRange"></div>
-        </div>
-        <div class="card metric">
-          <h3>Сегодня</h3>
-          <div class="value" id="todayCount">0</div>
-          <div class="i-sub" id="todayDate"></div>
-        </div>
-      </div>
-
-      <div class="card canvas-wrap" style="margin-top:12px">
-        <div style="display:flex; align-items:center; justify-content:space-between; padding:6px 4px 10px 4px">
-          <div style="font-weight:700">По дням в месяце</div>
-          <div class="pill"><span id="chartMonthLabel"></span></div>
-        </div>
-        <canvas id="barChart" width="600" height="180" aria-label="Гистограмма клиентов по дням"></canvas>
-      </div>
-
-      <div class="card" style="margin-top:12px; padding:12px">
-        <div class="seg" role="tablist" aria-label="Выбор месяца">
-          <button id="seg-prev" aria-label="Предыдущий месяц">←</button>
-          <button id="seg-current" class="active"></button>
-          <button id="seg-next" aria-label="Следующий месяц">→</button>
-        </div>
-        <div class="note">Нажмите ← или → чтобы смотреть другие месяцы.</div>
-      </div>
-    </section>
-
-    <!-- CLIENTS / ADMIN -->
-    <section id="tab-clients" style="display:none">
-      <div class="toolbar">
-        <div class="search" role="search">
-          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-            <circle cx="11" cy="11" r="7" stroke="currentColor" stroke-width="1.5"/>
-            <path d="M20 20l-3.2-3.2" stroke="currentColor" stroke-width="1.5" stroke-linecap="round"/>
-          </svg>
-          <input id="q" type="search" placeholder="Поиск по имени/телефону" inputmode="search" autocomplete="off">
-        </div>
-        <div class="pill">
-          <select id="monthFilter" class="select">
-            <!-- options injected -->
-          </select>
-        </div>
-      </div>
-
-      <div class="card list" id="list">
-        <!-- items injected -->
-      </div>
-      <div class="empty" id="empty" style="display:none">Пока нет клиентов. Нажмите “+”.</div>
-    </section>
-  </main>
-
-  <!-- FAB -->
-  <button class="fab" id="addBtn" aria-label="Добавить клиента" title="Добавить клиента">
-    <svg width="26" height="26" viewBox="0 0 24 24" fill="none" aria-hidden="true">
-      <path d="M12 5v14M5 12h14" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"/>
-    </svg>
-  </button>
-
-  <!-- TABS -->
-  <nav class="tabs" role="tablist" aria-label="Навигация">
-    <div class="row">
-      <button class="active" data-tab="dashboard" id="tabBtnDashboard">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M3 12h18M12 3v18" stroke="currentColor" stroke-width="1.5"/></svg>
-        Главная
-      </button>
-      <button data-tab="clients" id="tabBtnClients">
-        <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 12a5 5 0 1 0-5-5 5 5 0 0 0 5 5Zm0 2c-4.418 0-8 2.239-8 5v1h16v-1c0-2.761-3.582-5-8-5Z" stroke="currentColor" stroke-width="1.5"/></svg>
-        Клиенты
-      </button>
-    </div>
-  </nav>
-
-  <!-- ADD/EDIT SHEET -->
-  <div class="sheet" id="sheet">
-    <div class="panel">
-      <div class="handle"></div>
-      <h3 id="sheetTitle">Новый клиент</h3>
-      <div class="form">
-        <div class="field">
-          <label for="name">Имя</label>
-          <input id="name" class="input" placeholder="Например, Иван Петров" autocomplete="name">
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="phone">Телефон</label>
-            <input id="phone" class="input" placeholder="+372 ..." inputmode="tel" autocomplete="tel">
-          </div>
-          <div class="field">
-            <label for="date">Дата ДТП</label>
-            <input id="date" class="input" type="date">
-          </div>
-        </div>
-        <div class="field">
-          <label for="notes">Заметки</label>
-          <textarea id="notes" class="textarea" placeholder="Кратко что случилось"></textarea>
-        </div>
-        <div class="row2">
-          <div class="field">
-            <label for="status">Статус</label>
-            <select id="status" class="select2">
-              <option value="new">Новый</option>
-              <option value="inwork">В работе</option>
-              <option value="closed">Закрыт</option>
-            </select>
-          </div>
-          <div class="field">
-            <label for="source">Источник</label>
-            <input id="source" class="input" placeholder="Реклама / Рекомендация / Другое">
-          </div>
-        </div>
-      </div>
-      <div class="actions-row">
-        <button class="btn" id="cancel">Отмена</button>
-        <button class="btn destructive" id="deleteBtn" style="display:none">Удалить</button>
-        <button class="btn primary" id="save">Сохранить</button>
-      </div>
-      <div class="note">Данные сохраняются на этом устройстве (localStorage).</div>
-    </div>
+    <div class="titleLarge">Клиенты</div>
   </div>
 
-  <script>
-    // ---------- Utilities ----------
-    const $$ = sel => document.querySelector(sel);
-    const now = new Date();
+  <div class="content">
+    <div class="pillbar">
+      <button class="pill active" data-filter="all">Все</button>
+      <button class="pill" data-filter="recent">Недавно</button>
+      <button class="pill" data-filter="tag:VIP">VIP</button>
+      <button class="pill" data-filter="tag:Новый">Новый</button>
+    </div>
 
-    function pad(n){return n.toString().padStart(2,'0')}
-    function fmtDate(d){
-      const dt = new Date(d);
-      return `${pad(dt.getDate())}.${pad(dt.getMonth()+1)}.${dt.getFullYear()}`
-    }
-    function monthKey(y,m){return `${y}-${pad(m+1)}`}
+    <div class="row">
+      <div class="sub" id="count">0 клиентов</div>
+      <div class="actions">
+        <button id="exportBtn" class="btn ghost">Экспорт</button>
+        <label class="btn ghost" style="cursor:pointer">Импорт <input id="importInput" type="file" accept="application/json" class="hidden"></label>
+        <button id="clearBtn" class="btn danger">Очистить</button>
+      </div>
+    </div>
 
-    const RU_MONTHS = ["Январь","Февраль","Март","Апрель","Май","Июнь","Июль","Август","Сентябрь","Октябрь","Ноябрь","Декабрь"];
-    const RU_MONTHS_SHORT = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+    <div id="list"></div>
+    <div id="empty" class="empty hidden">Пока пусто. Нажми «Добавить», чтобы создать первого клиента.</div>
+  </div>
+</div>
 
-    // ---------- Storage ----------
-    const STORE_KEY = 'dtp_clients_v1';
-    let clients = JSON.parse(localStorage.getItem(STORE_KEY) || '[]');
+<!-- Лист (форма) -->
+<div id="sheet" class="sheet" role="dialog" aria-modal="true" aria-labelledby="sheetTitle">
+  <div class="grip"></div>
+  <div class="sheetHeader">
+    <div style="font-weight:700" id="sheetTitle">Новый клиент</div>
+    <div class="actions">
+      <button id="cancelBtn" class="btn ghost">Отмена</button>
+      <button id="saveBtn" class="btn primary">Сохранить</button>
+    </div>
+  </div>
+  <div class="sheetBody">
+    <form id="form" onsubmit="return false;">
+      <input type="hidden" id="clientId">
+      <div class="field">
+        <label for="name">Имя *</label>
+        <input id="name" placeholder="Например, Ирина Петрова" required>
+      </div>
+      <div class="field">
+        <label for="phone">Телефон</label>
+        <input id="phone" inputmode="tel" placeholder="+7 900 000-00-00">
+      </div>
+      <div class="field">
+        <label for="email">Email</label>
+        <input id="email" type="email" inputmode="email" placeholder="name@example.com">
+      </div>
+      <div class="field">
+        <label for="tags">Теги (через запятую)</label>
+        <input id="tags" placeholder="VIP, Новый">
+      </div>
+      <div class="field">
+        <label for="notes">Заметки</label>
+        <textarea id="notes" placeholder="Любые комментарии…"></textarea>
+      </div>
+      <div class="row">
+        <div class="sub">Создано: <span id="createdAtLabel">—</span></div>
+        <div class="sub">Обновлено: <span id="updatedAtLabel">—</span></div>
+      </div>
+    </form>
+  </div>
+</div>
 
-    function persist(){
-      localStorage.setItem(STORE_KEY, JSON.stringify(clients));
-    }
+<div id="toast" class="toast" role="status" aria-live="polite">Готово</div>
 
-    // ---------- State ----------
-    let selectedMonth = new Date(now.getFullYear(), now.getMonth(), 1);
-    let editingId = null;
+<script>
+/* ====== Хранение ====== */
+const KEY = 'clients.v1';
+const load = () => { try { return JSON.parse(localStorage.getItem(KEY) || '[]'); } catch(e){ return []; } };
+const save = (arr) => localStorage.setItem(KEY, JSON.stringify(arr));
 
-    // ---------- Elements ----------
-    const subtitle = $$('#subtitle');
-    const mCount = $$('#mCount');
-    const mRange = $$('#mRange');
-    const todayCount = $$('#todayCount');
-    const todayDate = $$('#todayDate');
-    const segPrev = $$('#seg-prev');
-    const segCurrent = $$('#seg-current');
-    const segNext = $$('#seg-next');
-    const chartCanvas = $$('#barChart');
-    const chartLabel = $$('#chartMonthLabel');
+/* ====== Утилиты ====== */
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
+const uid = () => crypto.randomUUID ? crypto.randomUUID() : ('id-' + Math.random().toString(36).slice(2));
+const nowISO = () => new Date().toISOString();
+const fmt = iso => iso ? new Date(iso).toLocaleString() : '—';
+const toast = (msg) => { const t = $('#toast'); t.textContent = msg; t.classList.add('show'); setTimeout(()=>t.classList.remove('show'), 1800); };
+const escapeHtml = (s) => String(s).replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;'}[m]));
 
-    const listEl = $$('#list');
-    const emptyEl = $$('#empty');
-    const monthFilter = $$('#monthFilter');
-    const searchInput = $$('#q');
+/* Склонение */
+function decl(n, forms){
+  const n10 = n % 10, n100 = n % 100;
+  if(n10 === 1 && n100 !== 11) return forms[0];
+  if(n10 >= 2 && n10 <= 4 && (n100 < 10 || n100 >= 20)) return forms[1];
+  return forms[2];
+}
 
-    const sheet = $$('#sheet');
-    const sheetTitle = $$('#sheetTitle');
-    const inputName = $$('#name');
-    const inputPhone = $$('#phone');
-    const inputDate = $$('#date');
-    const inputNotes = $$('#notes');
-    const inputStatus = $$('#status');
-    const inputSource = $$('#source');
-    const btnCancel = $$('#cancel');
-    const btnDelete = $$('#deleteBtn');
-    const btnSave = $$('#save');
-    const addBtn = $$('#addBtn');
+/* ====== Состояние ====== */
+let clients = load();
+let filter = 'all';
+let q = '';
 
-    const tabDashboard = $$('#tab-dashboard');
-    const tabClients = $$('#tab-clients');
-    const tabBtnDashboard = $$('#tabBtnDashboard');
-    const tabBtnClients = $$('#tabBtnClients');
-
-    // ---------- Init ----------
-    function init(){
-      // today's label
-      todayDate.textContent = fmtDate(now);
-      subtitle.textContent = `Август 2025 • Ведение клиентов после ДТП`;
-
-      // default date in form
-      inputDate.valueAsDate = new Date();
-
-      // month filter options
-      rebuildMonthFilter();
-      updateDashboard();
-      renderList();
-      drawChart();
-
-      // events
-      segPrev.onclick = ()=> shiftMonth(-1);
-      segNext.onclick = ()=> shiftMonth(1);
-      segCurrent.onclick = ()=> { selectedMonth = new Date(now.getFullYear(), now.getMonth(), 1); updateDashboard(); drawChart(); highlightSeg(); };
-
-      addBtn.onclick = () => openSheet();
-
-      btnCancel.onclick = closeSheet;
-      btnSave.onclick = saveClient;
-      btnDelete.onclick = deleteClient;
-
-      monthFilter.onchange = renderList;
-      searchInput.oninput = renderList;
-
-      // tabs
-      tabBtnDashboard.onclick = ()=> switchTab('dashboard');
-      tabBtnClients.onclick = ()=> switchTab('clients');
-
-      // close sheet on backdrop click
-      sheet.addEventListener('click', (e)=>{ if(e.target===sheet) closeSheet() });
-
-      // swipe down to close (iOS-like)
-      let startY=null;
-      sheet.querySelector('.panel').addEventListener('touchstart', e=>{ startY = e.touches[0].clientY }, {passive:true});
-      sheet.querySelector('.panel').addEventListener('touchmove', e=>{
-        if(startY!==null){
-          const dy = e.touches[0].clientY - startY;
-          if(dy>80) closeSheet();
-        }
-      }, {passive:true});
-    }
-
-    // ---------- Tabs ----------
-    function switchTab(tab){
-      const isDash = tab==='dashboard';
-      tabDashboard.style.display = isDash ? '' : 'none';
-      tabClients.style.display   = isDash ? 'none' : '';
-      tabBtnDashboard.classList.toggle('active', isDash);
-      tabBtnClients.classList.toggle('active', !isDash);
-    }
-
-    // ---------- Month logic ----------
-    function shiftMonth(delta){
-      selectedMonth = new Date(selectedMonth.getFullYear(), selectedMonth.getMonth()+delta, 1);
-      updateDashboard();
-      drawChart();
-      highlightSeg();
-    }
-    function highlightSeg(){
-      segCurrent.textContent = `${RU_MONTHS[selectedMonth.getMonth()]} ${selectedMonth.getFullYear()}`;
-    }
-
-    function clientsInMonth(dt){
-      const y = selectedMonth.getFullYear();
-      const m = selectedMonth.getMonth();
-      return clients.filter(c=>{
-        const d = new Date(c.accidentDate);
-        return d.getFullYear()===y && d.getMonth()===m;
-      })
-    }
-
-    function updateDashboard(){
-      highlightSeg();
-      const list = clientsInMonth();
-      mCount.textContent = list.length;
-      // range label
-      const y = selectedMonth.getFullYear(); const m = selectedMonth.getMonth();
-      const start = new Date(y,m,1);
-      const end   = new Date(y,m+1,0);
-      mRange.textContent = `${fmtDate(start)} — ${fmtDate(end)}`;
-
-      // today
-      const todayKey = monthKey(now.getFullYear(), now.getMonth());
-      const today = clients.filter(c=>{
-        const d = new Date(c.accidentDate);
-        return d.toDateString() === now.toDateString();
-      });
-      todayCount.textContent = today.length;
-      chartLabel.textContent = `${RU_MONTHS[m]} ${y}`;
-    }
-
-    // ---------- Chart ----------
-    function drawChart(){
-      const ctx = chartCanvas.getContext('2d');
-      const y = selectedMonth.getFullYear(); const m = selectedMonth.getMonth();
-      const daysInMonth = new Date(y, m+1, 0).getDate();
-      const counts = Array(daysInMonth).fill(0);
-      clients.forEach(c=>{
-        const d = new Date(c.accidentDate);
-        if(d.getFullYear()===y && d.getMonth()===m){
-          counts[d.getDate()-1]++
-        }
-      });
-
-      // clear
-      ctx.clearRect(0,0,chartCanvas.width, chartCanvas.height);
-
-      // draw axes (minimalistic)
-      const W = chartCanvas.width, H = chartCanvas.height;
-      const padL=28, padR=8, padB=24, padT=8;
-      const cw = (W - padL - padR)/daysInMonth;
-      const max = Math.max(3, ...counts);
-      // grid
-      ctx.globalAlpha = .35;
-      ctx.lineWidth = 1;
-      for(let i=1;i<=max;i++){
-        const yv = padT + (H - padT - padB) * (1 - i/max);
-        ctx.beginPath(); ctx.moveTo(padL, yv); ctx.lineTo(W-padR, yv); ctx.strokeStyle = "#2a2a33"; ctx.stroke();
+/* ====== Рендер ====== */
+const render = () => {
+  const list = $('#list'); list.innerHTML = '';
+  const filtered = clients
+    .filter(c => {
+      if(q){
+        const s = (c.name+' '+(c.phone||'')+' '+(c.email||'')+' '+(c.tags||[]).join(' ')).toLowerCase();
+        if(!s.includes(q.toLowerCase())) return false;
       }
-      ctx.globalAlpha = 1;
-
-      // bars
-      for(let i=0;i<daysInMonth;i++){
-        const v = counts[i];
-        const bh = (H - padT - padB) * (v/max);
-        const x = padL + i*cw + 2;
-        const y0 = H - padB - bh;
-        const w = Math.max(2, cw - 4);
-        // bar
-        const grd = ctx.createLinearGradient(0, y0, 0, y0+bh);
-        grd.addColorStop(0, "#0a84ff");
-        grd.addColorStop(1, "#246bff");
-        ctx.fillStyle = grd;
-        ctx.fillRect(x, y0, w, bh);
+      if(filter === 'recent'){
+        const d = new Date(); const weekAgo = new Date(d.getTime()-7*24*3600*1000);
+        return new Date(c.updatedAt||c.createdAt) >= weekAgo;
       }
-
-      // x labels (1, 5, 10, 15, 20, 25, 30)
-      ctx.fillStyle = "#9ba0ad";
-      ctx.font = "12px -apple-system, system-ui";
-      for(let d=1; d<=daysInMonth; d++){
-        if([1,5,10,15,20,25,30].includes(d)){
-          const x = padL + (d-1)*cw + 2;
-          ctx.fillText(d.toString(), x, H-8);
-        }
+      if(filter.startsWith('tag:')){
+        const tag = filter.split(':')[1];
+        return (c.tags||[]).includes(tag);
       }
-    }
+      return true;
+    })
+    .sort((a,b)=> (b.updatedAt||b.createdAt||'').localeCompare(a.updatedAt||a.createdAt||''));
 
-    // ---------- List / Admin ----------
-    function rebuildMonthFilter(){
-      // collect unique months from data + current month
-      const set = new Set(clients.map(c=>{
-        const d = new Date(c.accidentDate);
-        return monthKey(d.getFullYear(), d.getMonth());
-      }));
-      set.add(monthKey(now.getFullYear(), now.getMonth()));
-      const arr = Array.from(set).sort().reverse();
-      monthFilter.innerHTML = arr.map(key=>{
-        const [y,m] = key.split('-');
-        const lbl = `${RU_MONTHS[parseInt(m,10)-1]} ${y}`;
-        return `<option value="${key}">${lbl}</option>`
-      }).join('');
-      monthFilter.value = monthKey(now.getFullYear(), now.getMonth());
-    }
+  $('#count').textContent = `${clients.length} ${decl(clients.length, ['клиент','клиента','клиентов'])}`;
 
-    function renderList(){
-      const q = searchInput.value.trim().toLowerCase();
-      const [y,m] = monthFilter.value.split('-').map(Number);
-      const filtered = clients.filter(c=>{
-        const d = new Date(c.accidentDate);
-        const inMonth = d.getFullYear()===y && (d.getMonth()+1)===m;
-        const matches = !q || c.name.toLowerCase().includes(q) || (c.phone||'').toLowerCase().includes(q);
-        return inMonth && matches;
-      }).sort((a,b)=> new Date(b.accidentDate)-new Date(a.accidentDate));
+  if(filtered.length === 0){
+    $('#empty').classList.remove('hidden');
+    return;
+  } else {
+    $('#empty').classList.add('hidden');
+  }
 
-      listEl.innerHTML = '';
-      if(filtered.length===0){
-        emptyEl.style.display = '';
-        return;
-      } else {
-        emptyEl.style.display = 'none';
-      }
+  for(const c of filtered){
+    const card = document.createElement('div');
+    card.className = 'card';
 
-      filtered.forEach(c=>{
-        const it = document.createElement('div');
-        it.className = 'item';
-        it.innerHTML = `
-          <div class="avatar"><span>${(c.name?.[0]||'?').toUpperCase()}</span></div>
-          <div style="flex:1">
-            <div class="i-title">${escapeHtml(c.name || 'Без имени')}</div>
-            <div class="i-sub">${fmtDate(c.accidentDate)} • ${escapeHtml(c.phone||'без телефона')} • ${badge(c.status)}</div>
-          </div>
-          <div class="actions">
-            <button class="icon-btn" title="Редактировать" aria-label="Редактировать" data-edit="${c.id}">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M3 17.25V21h3.75L17.81 9.94l-3.75-3.75L3 17.25zM20.71 7.04a1 1 0 0 0 0-1.41L18.37 3.3a1 1 0 0 0-1.41 0l-1.83 1.83 3.75 3.75 1.83-1.83z" stroke="currentColor" stroke-width="1.2"/></svg>
-            </button>
-            <button class="icon-btn" title="Удалить" aria-label="Удалить" data-del="${c.id}">
-              <svg viewBox="0 0 24 24" width="18" height="18" fill="none"><path d="M6 7h12M9 7V5a2 2 0 0 1 2-2h2a2 2 0 0 1 2 2v2m2 0v12a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V7h12Z" stroke="currentColor" stroke-width="1.2"/></svg>
-            </button>
-          </div>
-        `;
-        listEl.appendChild(it);
-      });
+    const top = document.createElement('div'); top.className='row';
+    const left = document.createElement('div');
+    left.innerHTML = `
+      <div class="name">${escapeHtml(c.name)}</div>
+      <div class="sub">${escapeHtml(c.phone||'')}${c.phone&&c.email?' · ':''}${escapeHtml(c.email||'')}</div>
+    `;
+    const right = document.createElement('div'); right.className='actions';
+    right.innerHTML = `
+      <button class="btn ghost" data-edit="${c.id}">Редактировать</button>
+      <button class="btn danger" data-del="${c.id}">Удалить</button>
+    `;
+    top.append(left, right);
 
-      // attach actions
-      listEl.querySelectorAll('[data-edit]').forEach(b => b.onclick = () => openSheet(b.getAttribute('data-edit')));
-      listEl.querySelectorAll('[data-del]').forEach(b => b.onclick = () => confirmDelete(b.getAttribute('data-del')));
-    }
+    const tags = document.createElement('div'); tags.className='tags';
+    (c.tags||[]).forEach(t=>{
+      const el = document.createElement('span');
+      el.className='tag'; el.textContent = t;
+      tags.appendChild(el);
+    });
 
-    function badge(status){
-      const map = {new:['Новый','var(--accent)'], inwork:['В работе','var(--yellow)'], closed:['Закрыт','var(--green)']};
-      const [t, c] = map[status] || ['—','var(--text-dim)'];
-      return `<span style="display:inline-flex;align-items:center;gap:6px"><span style="width:8px;height:8px;border-radius:99px;background:${c};display:inline-block"></span>${t}</span>`;
-    }
+    const meta = document.createElement('div'); meta.className='sub';
+    meta.textContent = `Создано: ${fmt(c.createdAt)} · Обновлено: ${fmt(c.updatedAt||c.createdAt)}`;
 
-    function escapeHtml(s){ return (s||'').replace(/[&<>"']/g, m=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#039;' }[m])) }
+    card.append(top);
+    if((c.tags||[]).length) card.append(tags);
+    if(c.notes){ const n = document.createElement('div'); n.className='sub'; n.textContent = c.notes; card.append(n); }
+    card.append(meta);
 
-    // ---------- Sheet ----------
-    function openSheet(id=null){
-      editingId = id;
-      if(id){
-        sheetTitle.textContent = 'Редактировать клиента';
-        const c = clients.find(x=> x.id===id);
-        inputName.value = c.name||'';
-        inputPhone.value = c.phone||'';
-        inputDate.value = c.accidentDate?.slice(0,10) || new Date().toISOString().slice(0,10);
-        inputNotes.value = c.notes||'';
-        inputStatus.value = c.status||'new';
-        inputSource.value = c.source||'';
-        btnDelete.style.display = '';
-      }else{
-        sheetTitle.textContent = 'Новый клиент';
-        inputName.value = '';
-        inputPhone.value = '';
-        inputDate.valueAsDate = new Date();
-        inputNotes.value = '';
-        inputStatus.value = 'new';
-        inputSource.value = '';
-        btnDelete.style.display = 'none';
-      }
-      sheet.classList.add('open');
-      setTimeout(()=> inputName.focus(), 50);
-    }
-    function closeSheet(){ sheet.classList.remove('open'); }
+    list.append(card);
+  }
 
-    function saveClient(){
-      const data = {
-        name: inputName.value.trim(),
-        phone: inputPhone.value.trim(),
-        accidentDate: inputDate.value || new Date().toISOString().slice(0,10),
-        notes: inputNotes.value.trim(),
-        status: inputStatus.value,
-        source: inputSource.value.trim()
-      };
-      if(!data.name){ alert('Укажите имя'); return; }
+  $$('#list [data-edit]').forEach(b=> b.onclick = () => openEdit(b.getAttribute('data-edit')));
+  $$('#list [data-del]').forEach(b=> b.onclick = () => delClient(b.getAttribute('data-del')));
+};
 
-      if(editingId){
-        const i = clients.findIndex(x=> x.id===editingId);
-        clients[i] = { ...clients[i], ...data };
-      }else{
-        clients.push({ id: crypto.randomUUID(), createdAt: new Date().toISOString(), ...data });
-      }
-      persist();
-      rebuildMonthFilter();
-      updateDashboard();
-      renderList();
-      drawChart();
-      closeSheet();
-    }
+/* ====== CRUD ====== */
+const upsert = (data) => {
+  const idx = clients.findIndex(x=>x.id===data.id);
+  if(idx>=0){ clients[idx] = {...clients[idx], ...data, updatedAt: nowISO()}; }
+  else { clients.unshift({...data, createdAt: nowISO()}); }
+  save(clients); render();
+};
+const delClient = (id) => {
+  if(!confirm('Удалить клиента?')) return;
+  clients = clients.filter(c=>c.id!==id); save(clients); render(); toast('Удалено');
+};
 
-    function confirmDelete(id){
-      if(confirm('Удалить клиента?')){
-        clients = clients.filter(c=> c.id !== id);
-        persist();
-        rebuildMonthFilter();
-        updateDashboard();
-        renderList();
-        drawChart();
-      }
-    }
-    function deleteClient(){
-      if(!editingId) return;
-      confirmDelete(editingId);
-      closeSheet();
-    }
+/* ====== Форма ====== */
+const sheet = $('#sheet');
+const openSheet = () => sheet.classList.add('open');
+const closeSheet = () => sheet.classList.remove('open');
 
-    // ---------- Kickoff ----------
-    init();
+const openNew = () => {
+  $('#sheetTitle').textContent = 'Новый клиент';
+  $('#clientId').value = '';
+  $('#name').value=''; $('#phone').value=''; $('#email').value='';
+  $('#tags').value=''; $('#notes').value='';
+  $('#createdAtLabel').textContent='—'; $('#updatedAtLabel').textContent='—';
+  openSheet();
+};
+const openEdit = (id) => {
+  const c = clients.find(x=>x.id===id); if(!c) return;
+  $('#sheetTitle').textContent = 'Редактирование';
+  $('#clientId').value = c.id;
+  $('#name').value = c.name || '';
+  $('#phone').value = c.phone || '';
+  $('#email').value = c.email || '';
+  $('#tags').value = (c.tags||[]).join(', ');
+  $('#notes').value = c.notes || '';
+  $('#createdAtLabel').textContent = fmt(c.createdAt);
+  $('#updatedAtLabel').textContent = fmt(c.updatedAt||c.createdAt);
+  openSheet();
+};
 
-    // Repaint on orientation change (iPhone)
-    window.addEventListener('orientationchange', ()=> setTimeout(drawChart, 200));
-  </script>
+$('#addBtn').onclick = openNew;
+$('#cancelBtn').onclick = closeSheet;
+$('#saveBtn').onclick = () => {
+  const id = $('#clientId').value || uid();
+  const name = $('#name').value.trim();
+  if(!name) return toast('Введите имя');
+  const phone = $('#phone').value.trim();
+  const email = $('#email').value.trim();
+  const tags = $('#tags').value.split(',').map(s=>s.trim()).filter(Boolean);
+  const notes = $('#notes').value.trim();
+  upsert({ id, name, phone, email, tags, notes });
+  closeSheet(); toast('Сохранено');
+};
+
+$('#search').oninput = (e)=>{ q = e.target.value; render(); };
+$$('.pill').forEach(p=> p.onclick = ()=>{
+  $$('.pill').forEach(x=>x.classList.remove('active'));
+  p.classList.add('active');
+  filter = p.getAttribute('data-filter'); render();
+});
+
+$('#exportBtn').onclick = () => {
+  const blob = new Blob([JSON.stringify(clients, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `clients-export-${new Date().toISOString().slice(0,19).replace(/[:T]/g,'-')}.json`;
+  a.click();
+};
+$('#importInput').onchange = async (e)=>{
+  const file = e.target.files[0]; if(!file) return;
+  try{
+    const text = await file.text();
+    const data = JSON.parse(text);
+    if(!Array.isArray(data)) throw new Error('Неверный формат');
+    const map = new Map(clients.map(c=>[c.id,c]));
+    for(const c of data){ map.set(c.id || uid(), {...c, id: c.id || uid()}); }
+    clients = Array.from(map.values());
+    save(clients); render(); toast('Импортировано');
+  }catch(err){
+    alert('Ошибка импорта: ' + err.message);
+  }finally{
+    e.target.value = '';
+  }
+};
+
+$('#clearBtn').onclick = ()=>{
+  if(confirm('Очистить всех клиентов? Это действие нельзя отменить.')){
+    clients = []; save(clients); render(); toast('Очищено');
+  }
+};
+
+/* ====== Сервис-воркер из Blob (чтобы всё было в одном файле) ====== */
+if('serviceWorker' in navigator){
+  const swCode = `
+    const CACHE = 'clients-app-v1';
+    self.addEventListener('install', (e) => {
+      e.waitUntil(caches.open(CACHE).then(c => c.addAll([self.registration.scope])));
+      self.skipWaiting();
+    });
+    self.addEventListener('activate', (e) => {
+      e.waitUntil(
+        caches.keys().then(keys => Promise.all(keys.filter(k=>k!==CACHE).map(k=>caches.delete(k))))
+      );
+      self.clients.claim();
+    });
+    self.addEventListener('fetch', (e) => {
+      const req = e.request;
+      e.respondWith(
+        caches.match(req).then(cached => cached || fetch(req).then(res => {
+          if(req.method === 'GET' && new URL(req.url).origin === location.origin){
+            const resClone = res.clone();
+            caches.open(CACHE).then(c => c.put(req, resClone));
+          }
+          return res;
+        }).catch(()=> cached))
+      );
+    });
+  `;
+  const blob = new Blob([swCode], {type: 'text/javascript'});
+  const swUrl = URL.createObjectURL(blob);
+  window.addEventListener('load', () => navigator.serviceWorker.register(swUrl).catch(()=>{}));
+}
+
+/* ====== Подсказка "Добавить на экран Домой" для iOS ====== */
+(function(){
+  const isIOS = /iphone|ipad|ipod/i.test(navigator.userAgent);
+  const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+  if(isIOS && !isStandalone){
+    setTimeout(()=>{ toast('Поделитесь → «На экран Домой» чтобы установить'); }, 800);
+  }
+})();
+
+/* Стартовый рендер */
+render();
+</script>
 </body>
 </html>

@@ -34,7 +34,6 @@ form.addEventListener('submit', function(e) {
     form.reset();
 });
 
-// Регистрация service worker для PWA
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
     .then(() => console.log('Service Worker зарегистрирован'))

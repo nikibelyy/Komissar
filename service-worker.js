@@ -1,4 +1,4 @@
-const cacheName = 'crm-pwa-cache-v1';
+const cacheName = 'crm-pwa-cache-v2';
 const assets = [
     './',
     './index.html',

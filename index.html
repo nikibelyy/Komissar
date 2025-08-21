@@ -5,6 +5,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icon.png">
   <title>Личный CRM</title>
   <link rel="stylesheet" href="style.css">
 </head>
@@ -16,7 +18,7 @@
 
     <main id="screen-app" class="screen">
       <section class="toolbar">
-        <input id="search" type="search" placeholder="Поиск по имени, номеру договора...">
+        <input id="search" type="search" placeholder="Поиск по номеру договора...">
         <button id="newClient" class="btn primary">+ Клиент</button>
       </section>
 
@@ -28,9 +30,6 @@
           <input name="id" type="hidden">
           <label>ФИО*<input name="name" required></label>
           <label>Телефон<input name="phone"></label>
-          <label>E-mail<input name="email" type="email"></label>
-          <label>№ договора*<input name="contract_number" required></label>
-          <label>Дата договора<input name="contract_date" type="date"></label>
           <label>Сумма<input name="amount" type="number" step="0.01" inputmode="decimal"></label>
           <label>Статус
             <select name="status">
@@ -51,5 +50,8 @@
   </div>
 
   <script defer src="app.js"></script>
+  <script>
+    if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+  </script>
 </body>
 </html>

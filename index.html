@@ -15,27 +15,10 @@
 <body>
   <div class="header safe">
     <div class="h-title">CRM Авто</div>
-    <div class="meta">Добавляйте клиентов и автомобили. Работает офлайн и на iPhone. Установите на экран «Домой» через «Поделиться» → «На экран Домой».</div>
+    <div class="meta">Чтобы установить на iPhone: откройте сайт в Safari → «Поделиться» → «На экран Домой».</div>
   </div>
 
   <div class="safe">
-    <div class="card">
-      <div class="toolbar" style="justify-content:space-between; align-items:center;">
-        <div class="search">
-          <span class="icon">🔎</span>
-          <input id="search" placeholder="Поиск по номеру, марке или имени клиента">
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="btn secondary" id="exportCsv">Экспорт CSV</button>
-          <button class="btn secondary" id="exportJson">Экспорт JSON</button>
-          <label class="btn ghost" style="cursor:pointer;">
-            Импорт JSON
-            <input type="file" id="importJson" accept="application/json" style="display:none;">
-          </label>
-        </div>
-      </div>
-    </div>
-
     <div class="card">
       <h3 style="margin:0 0 10px 0;">Новая запись</h3>
       <div class="input">
@@ -86,7 +69,7 @@
   <script src="app.js"></script>
   <script>
     if ('serviceWorker' in navigator) {
-      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+      window.addEventListener('load', () => navigator.serviceWorker.register('./sw.js'));
     }
   </script>
 </body>

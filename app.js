@@ -78,3 +78,17 @@ function delClient(id){
 function escapeHtml(str){return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
 
 renderList();
+
+
+// Форматирование телефона
+function formatPhone(input) {
+    let value = input.value.replace(/\D/g, '');
+    if (value.length > 10) {
+        value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, '+$1 ($2) $3-$4-$5');
+    }
+    input.value = value;
+}
+
+document.querySelectorAll('input[type=tel]').forEach(el => {
+    el.addEventListener('input', () => formatPhone(el));
+});

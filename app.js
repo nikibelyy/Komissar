@@ -1,5 +1,32 @@
 const form = document.getElementById('clientForm');
-const clientsTable = document.querySelector('#clientsTable tbody');
+const clientsContainer = document.getElementById('clientsContainer');
+
+let clients = JSON.parse(localStorage.getItem('clients')) || [];
+
+function renderClients() {
+    clientsContainer.innerHTML = '';
+    clients.forEach((client, index) => {
+        const salary = client.dealType === 'Цессия' ? (client.total * 0.15).toFixed(2) : '0.00';
+        const card = document.createElement('div');
+        card.className = 'client-card';
+        card.innerHTML = `
+            <h3>${client.name}</h3>
+            <p>Номер: ${client.carNumber}</p>
+            <p>Марка: ${client.carBrand}</p>
+            <p>Сделка: ${client.dealType}</p>
+            <p>Сумма: ${client.total.toFixed(2)}</p>
+            <p class="salary">Зарплата: ${salary}</p>
+            <button onclick="deleteClient(${index})">Удалить</button>
+        `;
+        clientsContainer.appendChild(card);
+    });
+}
+
+function deleteClient(index) {
+    clients.splice(index, 1);
+    localStorage.setItem('clients', JSON.stringify(clients));
+    renderClients();
+}
 
 form.addEventListener('submit', function(e) {
     e.preventDefault();
@@ -15,25 +42,16 @@ form.addEventListener('submit', function(e) {
         return;
     }
 
-    let salary = 0;
-    if(dealType === 'Цессия'){
-        salary = total * 0.15;
-    }
-
-    const row = document.createElement('tr');
-    row.innerHTML = `
-        <td>${name}</td>
-        <td>${carNumber}</td>
-        <td>${carBrand}</td>
-        <td>${dealType}</td>
-        <td>${total.toFixed(2)}</td>
-        <td>${salary.toFixed(2)}</td>
-    `;
-    clientsTable.appendChild(row);
+    clients.push({ name, carNumber, carBrand, dealType, total });
+    localStorage.setItem('clients', JSON.stringify(clients));
 
     form.reset();
+    renderClients();
 });
 
+renderClients();
+
+// Service Worker для PWA
 if ('serviceWorker' in navigator) {
     navigator.serviceWorker.register('service-worker.js')
     .then(() => console.log('Service Worker зарегистрирован'))

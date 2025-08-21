@@ -1,94 +1,186 @@
-// LocalStorage-based PWA CRM
-const $ = (sel, root=document) => root.querySelector(sel);
-const $$ = (sel, root=document) => Array.from(root.querySelectorAll(sel));
 
-const list = $('#list');
-const search = $('#search');
-const newClientBtn = $('#newClient');
-const dialogEl = $('#clientDialog');
-const formEl = $('#clientForm');
-const dialogTitle = $('#dialogTitle');
+const $ = sel => document.querySelector(sel);
+const $$ = sel => Array.from(document.querySelectorAll(sel));
 
-let clients = JSON.parse(localStorage.getItem('clients')||'[]');
-let nextContractNumber = Number(localStorage.getItem('nextContractNumber')||1);
+const storeKey = 'crm-auto-records-v2';
+
+const state = {
+  records: JSON.parse(localStorage.getItem(storeKey) || '[]'),
+  filter: ''
+};
 
 function save(){
-  localStorage.setItem('clients', JSON.stringify(clients));
-  localStorage.setItem('nextContractNumber', nextContractNumber);
+  localStorage.setItem(storeKey, JSON.stringify(state.records));
+  render();
 }
 
-function renderList(){
-  const q = search.value.trim();
-  const filtered = q ? clients.filter(c=>String(c.contract_number).includes(q)) : clients;
-  list.innerHTML='';
-  if(filtered.length===0){ list.innerHTML='<div class="card">Пока пусто. Добавьте клиента.</div>'; return; }
-  for(const c of filtered){
-    const el = document.createElement('div'); el.className='item'; el.dataset.id=c.id;
-    el.innerHTML=`
-      <div class="row">
-        <div><div class="name">${escapeHtml(c.name)}</div>
-          <div class="meta">Договор №<b>${c.contract_number}</b> • ${escapeHtml(c.status||'—')}</div></div>
-        <div class="badge">${escapeHtml(c.phone||'—')}</div>
-      </div>
-      <div class="meta">Сумма: ${c.amount||'—'}</div>
-      <menu><button class="btn mini" data-edit="${c.id}">Изменить</button>
-      <button class="btn mini" data-del="${c.id}">Удалить</button></menu>`;
-    list.appendChild(el);
-  }
-  $$('.btn[data-edit]').forEach(b=>b.onclick=()=>openEdit(b.dataset.edit));
-  $$('.btn[data-del]').forEach(b=>b.onclick=()=>delClient(b.dataset.del));
+function currency(v){
+  if (!v && v !== 0) return '';
+  const n = Number(v);
+  return n.toLocaleString('ru-RU', { style:'currency', currency:'RUB', maximumFractionDigits:0 });
 }
 
-newClientBtn.onclick = ()=>openCreate();
-search.oninput = renderList;
+function render(){
+  const tbody = $('#list');
+  tbody.innerHTML = '';
+  const filtered = state.records.filter(r => {
+    const q = state.filter.trim().toLowerCase();
+    if (!q) return true;
+    return (r.client||'').toLowerCase().includes(q) ||
+           (r.plate||'').toLowerCase().includes(q) ||
+           (r.brand||'').toLowerCase().includes(q) ||
+           (r.type||'').toLowerCase().includes(q);
+  });
 
-function openCreate(){
-  formEl.reset(); formEl.id.value='';
-  dialogTitle.textContent='Новый клиент'; dialogEl.showModal();
-}
-function openEdit(id){
-  const c = clients.find(x=>x.id===id); if(!c) return;
-  formEl.reset(); formEl.id.value=c.id;
-  formEl.name.value=c.name||'';
-  formEl.phone.value=c.phone||'';
-  formEl.amount.value=c.amount||'';
-  formEl.status.value=c.status||'Новый';
-  formEl.notes.value=c.notes||'';
-  dialogTitle.textContent='Редактирование'; dialogEl.showModal();
-}
-
-formEl.addEventListener('submit',e=>{
-  e.preventDefault();
-  const data=Object.fromEntries(new FormData(formEl).entries());
-  if(!data.name) return;
-  let obj={id:data.id||Date.now().toString(), name:data.name, phone:data.phone, amount:data.amount?Number(data.amount):null,
-           status:data.status, notes:data.notes, contract_number:data.id?clients.find(c=>c.id===data.id).contract_number:nextContractNumber++};
-  if(data.id){ const idx=clients.findIndex(c=>c.id===data.id); if(idx>=0) clients[idx]=obj; }
-  else clients.unshift(obj);
-  save(); dialogEl.close(); renderList();
-});
-
-function delClient(id){
-  const el=list.querySelector(`.item[data-id="${id}"]`); if(!el) return;
-  if(!confirm('Удалить этого клиента?')) return;
-  el.classList.add('removing');
-  setTimeout(()=>{clients=clients.filter(c=>c.id!==id); save(); renderList();},280);
-}
-
-function escapeHtml(str){return String(str).replace(/[&<>"']/g,s=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[s]));}
-
-renderList();
-
-
-// Форматирование телефона
-function formatPhone(input) {
-    let value = input.value.replace(/\D/g, '');
-    if (value.length > 10) {
-        value = value.replace(/(\d{1})(\d{3})(\d{3})(\d{2})(\d{2})/, '+$1 ($2) $3-$4-$5');
+  filtered.forEach((r, idx) => {
+    let salary = '';
+    if(r.type === 'Цессия'){
+      salary = currency(r.amount * 0.15);
     }
-    input.value = value;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `
+      <td><div class="row">
+        <div>${r.client || ''}</div>
+        <div>${r.plate || ''}</div>
+        <div>${r.brand || ''}</div>
+        <div><span class="badge">${r.type || ''}</span></div>
+        <div>${currency(r.amount)}</div>
+        <div>${salary}</div>
+        <div style="display:flex; gap:6px; justify-content:flex-end;">
+          <button class="btn secondary" data-edit="${r.id}">Изм.</button>
+          <button class="btn danger" data-del="${r.id}">Удалить</button>
+        </div>
+      </div></td>
+    `;
+    tbody.appendChild(tr);
+  });
+
+  $$('[data-del]').forEach(btn => btn.addEventListener('click', () => {
+    const id = btn.getAttribute('data-del');
+    state.records = state.records.filter(x => x.id !== id);
+    save();
+  }));
+
+  $$('[data-edit]').forEach(btn => btn.addEventListener('click', () => {
+    const id = btn.getAttribute('data-edit');
+    const r = state.records.find(x => x.id === id);
+    if(!r) return;
+    $('#client').value = r.client||'';
+    $('#plate').value = r.plate||'';
+    $('#brand').value = r.brand||'';
+    $('#amount').value = r.amount||'';
+    $$('#dealSegment button').forEach(b => {
+      b.classList.toggle('active', b.dataset.value === r.type);
+    });
+    $('#addBtn').textContent = 'Сохранить изменения';
+    $('#addBtn').dataset.editing = id;
+    window.scrollTo({ top: 0, behavior:'smooth' });
+  }));
 }
 
-document.querySelectorAll('input[type=tel]').forEach(el => {
-    el.addEventListener('input', () => formatPhone(el));
-});
+function getFormData(){
+  const type = $$('#dealSegment button').find(b => b.classList.contains('active'))?.dataset.value || 'Договор';
+  return {
+    client: $('#client').value.trim(),
+    plate: $('#plate').value.trim().toUpperCase(),
+    brand: $('#brand').value.trim(),
+    type,
+    amount: Number($('#amount').value || 0)
+  };
+}
+
+function clearForm(){
+  $('#client').value = '';
+  $('#plate').value = '';
+  $('#brand').value = '';
+  $('#amount').value = '';
+  $$('#dealSegment button').forEach((b,i) => b.classList.toggle('active', i===0));
+  $('#addBtn').textContent = 'Добавить';
+  delete $('#addBtn').dataset.editing;
+}
+
+function exportCSV(){
+  const header = ['Клиент','Номер','Марка','Сделка','Сумма','Зарплата'];
+  const rows = state.records.map(r => {
+    const salary = r.type==='Цессия' ? (r.amount*0.15) : '';
+    return [r.client, r.plate, r.brand, r.type, r.amount, salary];
+  });
+  const all = [header, ...rows].map(row => row.map(x => `"${String(x??'').replaceAll('"','""')}"`).join(',')).join('\n');
+  const blob = new Blob([all], {type:'text/csv;charset=utf-8;'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'crm-auto.csv';
+  a.click();
+}
+
+function exportJSON(){
+  const blob = new Blob([JSON.stringify(state.records, null, 2)], {type:'application/json'});
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'crm-auto.json';
+  a.click();
+}
+
+function importJSON(file){
+  const reader = new FileReader();
+  reader.onload = () => {
+    try{
+      const data = JSON.parse(reader.result);
+      if(Array.isArray(data)){
+        data.forEach(d => { if(!d.id) d.id = crypto.randomUUID(); });
+        state.records = data;
+        save();
+        alert('Импортировано: ' + state.records.length + ' записей');
+      } else {
+        alert('Файл JSON имеет неверный формат');
+      }
+    }catch(e){
+      alert('Ошибка импорта: ' + e.message);
+    }
+  };
+  reader.readAsText(file);
+}
+
+function init(){
+  state.records.forEach(r => { if(!r.id) r.id = crypto.randomUUID(); });
+  save();
+
+  $('#search').addEventListener('input', (e) => { state.filter = e.target.value; render(); });
+
+  $$('#dealSegment button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      $$('#dealSegment button').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+    });
+  });
+
+  $('#addBtn').addEventListener('click', () => {
+    const data = getFormData();
+    if(!data.client || !data.plate || !data.brand){
+      alert('Пожалуйста, заполните: Имя клиента, Номер, Марка');
+      return;
+    }
+    const editingId = $('#addBtn').dataset.editing;
+    if (editingId){
+      const idx = state.records.findIndex(x => x.id === editingId);
+      if (idx >= 0) state.records[idx] = { ...state.records[idx], ...data };
+    } else {
+      state.records.unshift({ id: crypto.randomUUID(), createdAt: Date.now(), ...data });
+    }
+    save();
+    clearForm();
+  });
+
+  $('#clearBtn').addEventListener('click', clearForm);
+  $('#exportCsv').addEventListener('click', exportCSV);
+  $('#exportJson').addEventListener('click', exportJSON);
+  $('#importJson').addEventListener('change', (e) => {
+    const file = e.target.files?.[0];
+    if(file) importJSON(file);
+    e.target.value = '';
+  });
+
+  render();
+}
+
+document.addEventListener('DOMContentLoaded', init);

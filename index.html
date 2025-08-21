@@ -1,57 +1,93 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
+  <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
   <meta name="apple-mobile-web-app-capable" content="yes">
-  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <link rel="manifest" href="manifest.json">
-  <link rel="apple-touch-icon" href="icon.png">
-  <title>Личный CRM</title>
-  <link rel="stylesheet" href="style.css">
+  <meta name="apple-mobile-web-app-status-bar-style" content="default">
+  <meta name="apple-mobile-web-app-title" content="CRM Авто">
+  <link rel="apple-touch-icon" href="icons/icon-180.png">
+  <link rel="manifest" href="manifest.webmanifest">
+  <title>CRM Авто</title>
+  <meta name="theme-color" content="#0b5cf0"/>
+  <link rel="stylesheet" href="styles.css">
 </head>
 <body>
-  <div class="safearea">
-    <header class="ios-nav">
-      <div class="title">Личный CRM</div>
-    </header>
-
-    <main id="screen-app" class="screen">
-      <section class="toolbar">
-        <input id="search" type="search" placeholder="Поиск по номеру договора...">
-        <button id="newClient" class="btn primary">+ Клиент</button>
-      </section>
-
-      <section id="list" class="list"></section>
-
-      <dialog id="clientDialog" class="dialog-anim">
-        <form id="clientForm" method="dialog">
-          <h3 id="dialogTitle">Новый клиент</h3>
-          <input name="id" type="hidden">
-          <label>ФИО*<input name="name" required></label>
-          <label>Телефон<input name="phone"></label>
-          <label>Сумма<input name="amount" type="number" step="0.01" inputmode="decimal"></label>
-          <label>Статус
-            <select name="status">
-              <option value="Новый">Новый</option>
-              <option value="В процессе">В процессе</option>
-              <option value="Оплачен">Оплачен</option>
-              <option value="Закрыт">Закрыт</option>
-            </select>
-          </label>
-          <label><!-- <textarea name="notes" rows="3"></textarea> --></label>
-          <menu>
-            <button value="cancel" class="btn ghost">Отмена</button>
-            <button id="saveBtn" value="default" class="btn primary">Сохранить</button>
-          </menu>
-        </form>
-      </dialog>
-    </main>
+  <div class="header safe">
+    <div class="h-title">CRM Авто</div>
+    <div class="meta">Добавляйте клиентов и автомобили. Работает офлайн и на iPhone. Установите на экран «Домой» через «Поделиться» → «На экран Домой».</div>
   </div>
 
-  <script defer src="app.js"></script>
+  <div class="safe">
+    <div class="card">
+      <div class="toolbar" style="justify-content:space-between; align-items:center;">
+        <div class="search">
+          <span class="icon">🔎</span>
+          <input id="search" placeholder="Поиск по номеру, марке или имени клиента">
+        </div>
+        <div style="display:flex; gap:8px;">
+          <button class="btn secondary" id="exportCsv">Экспорт CSV</button>
+          <button class="btn secondary" id="exportJson">Экспорт JSON</button>
+          <label class="btn ghost" style="cursor:pointer;">
+            Импорт JSON
+            <input type="file" id="importJson" accept="application/json" style="display:none;">
+          </label>
+        </div>
+      </div>
+    </div>
+
+    <div class="card">
+      <h3 style="margin:0 0 10px 0;">Новая запись</h3>
+      <div class="input">
+        <label>Имя клиента</label>
+        <input id="client" placeholder="Например: Иван Петров">
+      </div>
+      <div class="input">
+        <label>Номер машины</label>
+        <input id="plate" placeholder="Например: А123ВС77">
+      </div>
+      <div class="input">
+        <label>Марка</label>
+        <input id="brand" placeholder="Например: BMW">
+      </div>
+
+      <div class="input">
+        <label>Тип сделки</label>
+        <div class="segment" id="dealSegment">
+          <button data-value="Договор" class="active">Договор</button>
+          <button data-value="25%">25%</button>
+          <button data-value="30%">30%</button>
+          <button data-value="Цессия">Цессия</button>
+        </div>
+      </div>
+
+      <div class="input">
+        <label>Сумма общая (₽)</label>
+        <input id="amount" type="number" inputmode="decimal" placeholder="0">
+      </div>
+
+      <div style="display:flex; gap:10px; flex-wrap:wrap;">
+        <button class="btn" id="addBtn">Добавить</button>
+        <button class="btn secondary" id="clearBtn">Очистить форму</button>
+      </div>
+    </div>
+
+    <div class="card">
+      <table class="table">
+        <thead>
+          <tr><th>Клиент</th><th>Номер</th><th>Марка</th><th>Сделка</th><th>Сумма</th><th>Зарплата</th><th>Действия</th></tr>
+        </thead>
+        <tbody id="list"></tbody>
+      </table>
+      <div class="footer-space"></div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
   <script>
-    if('serviceWorker' in navigator){navigator.serviceWorker.register('sw.js');}
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => navigator.serviceWorker.register('/sw.js'));
+    }
   </script>
 </body>
 </html>

@@ -11,7 +11,7 @@ body {
     padding: 20px;
 }
 
-h1, h2 {
+h1 {
     text-align: center;
     color: #1c1c1e;
 }
@@ -48,23 +48,34 @@ button:hover {
     background-color: #005bb5;
 }
 
-table {
-    width: 100%;
-    border-collapse: collapse;
+#clientsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.client-card {
     background: white;
-    border-radius: 12px;
-    overflow: hidden;
+    border-radius: 16px;
+    padding: 16px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.client-card h3 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    color: #1c1c1e;
+}
+
+.client-card p {
+    margin: 4px 0;
     font-size: 14px;
+    color: #333;
 }
 
-th, td {
-    padding: 10px;
-    text-align: center;
-    border-bottom: 1px solid #eee;
-}
-
-th {
-    background: #f0f0f5;
+.client-card .salary {
+    font-weight: bold;
+    color: #007aff;
 }
 
 @media (max-width: 500px) {
@@ -73,8 +84,11 @@ th {
         padding: 12px;
     }
 
-    th, td {
-        padding: 8px;
-        font-size: 12px;
+    .client-card h3 {
+        font-size: 16px;
+    }
+
+    .client-card p {
+        font-size: 13px;
     }
 }

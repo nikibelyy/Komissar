@@ -3,97 +3,62 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, viewport-fit=cover" />
-  <title>CRM • Авто сделки</title>
-
-  <!-- PWA -->
+  <title>CRM</title>
   <link rel="manifest" href="manifest.webmanifest">
   <meta name="theme-color" content="#0a84ff">
-
-  <!-- iOS add to home -->
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
   <meta name="apple-mobile-web-app-title" content="CRM">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
-
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
   <div class="app">
-
     <header class="nav">
       <div class="nav-title">CRM</div>
-      <div class="nav-subtitle">Авто сделки</div>
       <button id="installBtn" class="btn ghost" hidden>Установить</button>
     </header>
-
     <main class="content">
-
       <section class="card card-enter">
         <h2 class="card-title">Новый клиент</h2>
         <form id="clientForm" autocomplete="off">
           <div class="field">
             <label>Имя клиента</label>
-            <input id="name" type="text" inputmode="text" placeholder="Например: Иван Петров" required>
+            <input id="name" required>
           </div>
-
           <div class="field two">
-            <div>
-              <label>Номер машины</label>
-              <input id="plate" type="text" inputmode="text" placeholder="А123ВС77" required>
-            </div>
-            <div>
-              <label>Марка машины</label>
-              <input id="brand" type="text" inputmode="text" placeholder="Toyota" required>
-            </div>
+            <div><label>Номер машины</label><input id="plate" required></div>
+            <div><label>Марка машины</label><input id="brand" required></div>
           </div>
-
-          <div class="field">
-            <label>Общая сумма, ₽</label>
-            <input id="amount" type="number" inputmode="decimal" step="0.01" min="0" placeholder="Напр.: 350000" required>
-          </div>
-
+          <div class="field"><label>Сумма</label><input id="amount" type="number" required></div>
           <div class="field">
             <label>Тип сделки</label>
-
-            <div class="segmented" role="tablist" aria-label="Тип сделки">
+            <div class="segmented">
               <button type="button" class="segment active" data-type="agency">Агентский</button>
               <button type="button" class="segment" data-type="cession">Цессия</button>
             </div>
-
-            <div id="agencyOptions" class="segmented secondary" role="tablist" aria-label="Процент (агентский)">
+            <div id="agencyOptions" class="segmented secondary">
               <button type="button" class="segment active" data-rate="25">25%</button>
               <button type="button" class="segment" data-rate="30">30%</button>
             </div>
-
-            <div id="cessionInfo" class="note" hidden>Цессия: 15% от общей суммы.</div>
+            <div id="cessionInfo" class="note" hidden>Цессия: 15%</div>
           </div>
-
           <div class="calc">
-            <div>
-              <div class="calc-label">Комиссия</div>
-              <div class="calc-value"><span id="commission">0</span> ₽</div>
-            </div>
-            <div>
-              <div class="calc-label">Процент</div>
-              <div class="calc-value"><span id="percent">25</span>%</div>
-            </div>
+            <div><div class="calc-label">Комиссия</div><div class="calc-value"><span id="commission">0</span> ₽</div></div>
+            <div><div class="calc-label">Процент</div><div class="calc-value"><span id="percent">25</span>%</div></div>
           </div>
-
           <div class="actions">
             <button class="btn primary" type="submit">Добавить</button>
             <button class="btn ghost" type="reset" id="resetBtn">Сброс</button>
           </div>
         </form>
       </section>
-
       <section class="list-block card card-enter">
         <div class="list-header">
           <h2 class="card-title">Клиенты</h2>
-          <input id="search" class="search" type="search" placeholder="Поиск: имя, номер, марка...">
+          <input id="search" class="search" type="search" placeholder="Поиск">
         </div>
-
         <ul id="clients" class="list"></ul>
-
         <template id="clientItem">
           <li class="row swipe-in">
             <div class="row-main">
@@ -102,70 +67,19 @@
               <div class="meta"></div>
             </div>
             <div class="row-actions">
-              <button class="icon-btn edit" title="Редактировать" aria-label="Редактировать">✏️</button>
-              <button class="icon-btn delete" title="Удалить" aria-label="Удалить">🗑️</button>
+              <button class="btn edit">Редактировать</button>
+              <button class="btn delete">Удалить</button>
             </div>
           </li>
         </template>
-
-        <div id="empty" class="empty">Список пуст. Добавьте первого клиента ↑</div>
+        <div id="empty" class="empty">Список пуст.</div>
       </section>
-
-      <dialog id="editDialog">
-        <form method="dialog" id="editForm">
-          <h3>Редактирование</h3>
-          <div class="field">
-            <label>Имя клиента</label>
-            <input id="e_name" required>
-          </div>
-          <div class="field two">
-            <div>
-              <label>Номер машины</label>
-              <input id="e_plate" required>
-            </div>
-            <div>
-              <label>Марка</label>
-              <input id="e_brand" required>
-            </div>
-          </div>
-          <div class="field">
-            <label>Общая сумма, ₽</label>
-            <input id="e_amount" type="number" step="0.01" min="0" required>
-          </div>
-          <div class="field">
-            <label>Тип сделки</label>
-            <select id="e_type">
-              <option value="agency-25">Агентский 25%</option>
-              <option value="agency-30">Агентский 30%</option>
-              <option value="cession-15">Цессия 15%</option>
-            </select>
-          </div>
-          <div class="calc small">
-            <div>
-              <div class="calc-label">Комиссия</div>
-              <div class="calc-value"><span id="e_commission">0</span> ₽</div>
-            </div>
-            <div>
-              <div class="calc-label">Процент</div>
-              <div class="calc-value"><span id="e_percent">0</span>%</div>
-            </div>
-          </div>
-          <menu>
-            <button value="cancel" class="btn ghost">Отмена</button>
-            <button id="editSave" value="default" class="btn primary">Сохранить</button>
-          </menu>
-        </form>
-      </dialog>
-
     </main>
-
     <footer class="tabbar">
       <button class="tab active">Главная</button>
       <button class="tab">Клиенты</button>
-      <button class="tab">Настройки</button>
     </footer>
   </div>
-
   <script src="app.js" type="module"></script>
 </body>
 </html>

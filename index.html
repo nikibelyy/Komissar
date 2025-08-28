@@ -12,15 +12,14 @@
   <meta name="apple-mobile-web-app-title" content="CRM Клиенты" />
 
   <style>
-    /* ========== Basic iOS-like design ========== */
+    /* ========== Phone-optimized iOS-like design ========== */
     :root{
       --bg:#f5f6f7;
       --card:#ffffff;
-      --accent:#007aff; /* iOS blue */
+      --accent:#007aff;
       --muted:#8e8e93;
       --danger:#ff3b30;
       --radius:14px;
-      --glass: rgba(255,255,255,0.7);
     }
     html,body{
       height:100%;
@@ -31,7 +30,7 @@
       -webkit-text-size-adjust:100%;
     }
     main{ 
-      padding: calc(env(safe-area-inset-top) + 14px) 16px 90px;
+      padding: calc(env(safe-area-inset-top) + 14px) 12px 92px;
       max-width:640px;
       margin:0 auto;
     }
@@ -42,19 +41,18 @@
       left:0;
       right:0;
       height: calc(env(safe-area-inset-top) + 68px);
-      background: linear-gradient(180deg, rgba(255,255,255,0.7), rgba(255,255,255,0.6));
+      background: linear-gradient(180deg, rgba(255,255,255,0.85), rgba(255,255,255,0.81));
       backdrop-filter: blur(6px);
       display:flex;
       align-items:flex-end;
       justify-content:space-between;
-      padding:10px 16px;
+      padding:10px 14px;
       z-index:100;
       border-bottom: 1px solid rgba(0,0,0,0.05);
     }
     .title{
       font-size:20px;
-      font-weight:600;
-      letter-spacing: -0.01em;
+      font-weight:700;
       color: #111;
       padding-bottom:6px;
     }
@@ -64,49 +62,23 @@
       padding-bottom:6px;
     }
 
-    /* Clients list */
-    .list{
-      margin-top:8px;
-      display:flex;
-      flex-direction:column;
-      gap:12px;
-    }
+    .list{ margin-top:8px; display:flex; flex-direction:column; gap:12px; padding: 0 4px; }
+
     .card{
       background:var(--card);
-      border-radius:var(--radius);
-      padding:14px;
+      border-radius:14px;
+      padding:12px;
       box-shadow: 0 6px 18px rgba(12,18,26,0.06);
-      transform-origin:center;
-      transition: transform .28s cubic-bezier(.2,.9,.3,1), opacity .28s;
-      will-change:transform,opacity;
       display:flex;
       align-items:center;
       justify-content:space-between;
     }
-    .card.enter { animation: popIn .38s cubic-bezier(.2,.9,.3,1); }
-    .card.leave { animation: popOut .28s ease forwards; opacity:0; transform:translateY(12px) scale(.98); }
 
-    @keyframes popIn {
-      from { transform: translateY(10px) scale(.98); opacity:0 }
-      to { transform:none; opacity:1 }
-    }
-    @keyframes popOut {
-      to { opacity:0; transform:translateY(12px) scale(.98) }
-    }
-
-    .info {
-      display:flex;
-      gap:12px;
-      align-items:center;
-    }
-    .avatar {
-      width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent), #5ac8fa);
-      display:flex;align-items:center;justify-content:center;color:white;font-weight:700;
-      box-shadow: 0 6px 12px rgba(0,0,0,0.07);
-      flex-shrink:0;
-    }
+    .info { display:flex; gap:12px; align-items:center; }
+    .avatar { width:46px;height:46px;border-radius:10px;background:linear-gradient(135deg,var(--accent), #5ac8fa);
+      display:flex;align-items:center;justify-content:center;color:white;font-weight:700; flex-shrink:0; }
     .meta{ display:flex;flex-direction:column; }
-    .name{ font-weight:600; font-size:16px; color:#111; }
+    .name{ font-weight:700; font-size:16px; color:#111; }
     .small{ font-size:13px; color:var(--muted); margin-top:2px; }
 
     .actions{ display:flex; gap:8px; align-items:center; }
@@ -114,53 +86,44 @@
       display:inline-flex; gap:8px; align-items:center; justify-content:center;
       border-radius:12px; padding:8px 12px; font-weight:600; font-size:13px;
       border:none; cursor:pointer; background:linear-gradient(180deg, rgba(0,0,0,0.03), rgba(0,0,0,0.02));
-      transition: transform .12s ease, box-shadow .12s;
       box-shadow: 0 6px 10px rgba(12,18,26,0.04);
     }
-    .ios-btn:active{ transform: translateY(1px) scale(.995); }
     .btn-edit{ color:var(--accent); }
     .btn-delete{ color:var(--danger); }
 
-    /* Floating add */
-    .fab{
-      position: fixed;
-      right: 18px;
-      bottom: calc(env(safe-area-inset-bottom) + 24px);
-      z-index:200;
-    }
-    .fab button{
-      width:64px;height:64px;border-radius:18px;
-      background: linear-gradient(180deg,var(--accent), #0062d1);
-      box-shadow: 0 10px 28px rgba(2,68,255,0.18);
-      border:none;color:white;font-size:30px;font-weight:700;
-      cursor:pointer;
-    }
+    .fab{ position: fixed; right: 18px; bottom: calc(env(safe-area-inset-bottom) + 24px); z-index:200; }
+    .fab button{ width:64px;height:64px;border-radius:18px; background: linear-gradient(180deg,var(--accent), #0062d1);
+      box-shadow: 0 10px 28px rgba(2,68,255,0.18); border:none;color:white;font-size:30px;font-weight:700; cursor:pointer; }
 
-    /* Modal form */
+    /* Modal sheet — now phone-full so all fields are visible without scrolling oddities */
     .modal{
       position: fixed;
       left:0;right:0;bottom:0;top:0;
       display:none; align-items:flex-end; justify-content:center;
       background: linear-gradient(180deg, rgba(0,0,0,0.18), rgba(0,0,0,0.12));
-      z-index:300;
+      z-index:400;
       padding: env(safe-area-inset-bottom);
     }
     .modal.show{ display:flex; }
     .sheet{
-      width:100%; max-width:640px; border-radius:18px 18px 0 0; padding:16px;
+      width:100%; height: calc(100% - env(safe-area-inset-top) - 10px); max-width:640px;
+      border-radius:16px 16px 0 0; padding:14px 14px 20px;
       background: linear-gradient(180deg, var(--card), #fbfcfd);
       box-shadow: 0 -12px 60px rgba(12,18,26,0.12);
-      transform: translateY(10px);
+      overflow:auto;
+      -webkit-overflow-scrolling: touch;
+      transform: translateY(0);
       animation: slideUp .28s cubic-bezier(.2,.9,.3,1);
     }
     @keyframes slideUp{ from { transform: translateY(40px) } to { transform:none } }
 
-    .field{ margin-bottom:10px; }
+    .field{ margin-bottom:12px; width:100%; box-sizing:border-box; }
     label{ display:block; font-size:13px; color:var(--muted); margin-bottom:6px; }
     input[type="text"], input[type="number"], select{
-      width:100%; padding:12px 14px; border-radius:12px; border:none;
+      width:100%; padding:14px 14px; border-radius:12px; border:none;
       background: linear-gradient(180deg,#f8f9fa,#ffffff); box-shadow: inset 0 1px 0 rgba(0,0,0,0.02);
       font-size:16px;
+      box-sizing:border-box;
     }
     .row{ display:flex; gap:10px; }
     .row .col{ flex:1; }
@@ -170,19 +133,20 @@
       gap:6px;
     }
     .segmented button{
-      flex:1; padding:8px; border-radius:10px; border:none; font-weight:600; font-size:13px;
+      flex:1; padding:10px; border-radius:10px; border:none; font-weight:700; font-size:14px;
       background:transparent; cursor:pointer; color:var(--muted);
     }
     .segmented button.active{ background:linear-gradient(180deg, rgba(0,122,255,0.12), rgba(0,98,209,0.08)); color:var(--accent); box-shadow:0 6px 12px rgba(0,122,255,0.06); }
 
     .summary{ margin-top:8px; font-weight:700; font-size:15px; color:#111; }
 
-    footer.hint{ position:fixed; bottom:0; left:0; right:0; padding:8px 16px; text-align:center; color:var(--muted); font-size:13px; background:transparent; pointer-events:none; }
+    /* remove previous footer hint spacing impact */
+    footer.hint{ display:none; }
 
-    /* Responsive small paddings for iPhone */
     @media (max-width:420px){
       .card{ padding:12px; border-radius:12px; }
       .avatar{ width:44px;height:44px;border-radius:10px; }
+      .sheet{ padding:12px; border-radius:12px 12px 0 0; }
     }
   </style>
 </head>
@@ -193,8 +157,7 @@
       <div class="sub">Клиенты</div>
     </div>
     <div aria-hidden="true" style="opacity:.9;">
-      <!-- we intentionally removed 'Авто сделки' label as requested -->
-      <small style="color:var(--muted)">iOS-style</small>
+      <!-- intentionally removed extra label per request -->
     </div>
   </header>
 
@@ -208,28 +171,28 @@
 
   <!-- Modal sheet for add/edit -->
   <div id="modal" class="modal" role="dialog" aria-modal="true">
-    <div class="sheet" role="document">
+    <div class="sheet" role="document" aria-label="Форма клиента">
       <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
-        <div style="font-weight:700;font-size:16px;">Добавить / Редактировать</div>
+        <div style="font-weight:800;font-size:18px;">Добавить / Редактировать клиента</div>
         <button id="closeModal" class="ios-btn" aria-label="Закрыть">✕</button>
       </div>
 
       <div class="field">
-        <label>Имя клиента</label>
+        <label for="inpName">Имя клиента</label>
         <input id="inpName" type="text" placeholder="Иван Иванов" />
       </div>
       <div class="row">
         <div class="col field">
-          <label>Номер машины</label>
+          <label for="inpPlate">Номер машины</label>
           <input id="inpPlate" type="text" placeholder="A000BC" />
         </div>
         <div class="col field">
-          <label>Марка</label>
+          <label for="inpMake">Марка</label>
           <input id="inpMake" type="text" placeholder="Toyota" />
         </div>
       </div>
       <div class="field">
-        <label>Сумма расчёта (₽)</label>
+        <label for="inpAmt">Сумма расчёта (₽)</label>
         <input id="inpAmt" type="number" min="0" step="0.01" placeholder="100000" />
       </div>
 
@@ -244,14 +207,12 @@
 
       <div class="summary" id="calcSummary">Комиссия: — ₽</div>
 
-      <div style="display:flex; gap:8px; margin-top:12px;">
+      <div style="display:flex; gap:8px; margin-top:16px;">
         <button id="saveBtn" class="ios-btn" style="flex:1; background:linear-gradient(180deg,var(--accent), #0062d1); color:white;">Сохранить</button>
         <button id="cancelBtn" class="ios-btn" style="flex:1;">Отмена</button>
       </div>
     </div>
   </div>
-
-  <footer class="hint">Работает офлайн — данные сохраняются локально в браузере</footer>
 
   <script>
   /* ========= Small IndexedDB wrapper ========= */
@@ -312,21 +273,17 @@
 
   /* ========= Commission math (integer cents safe arithmetic) ========= */
   function parseMoneyToCents(v) {
-    // Accept number or string
     const n = Number(String(v).replace(',', '.')) || 0;
-    // Multiply by 100 and round to integer to avoid float errors
     return Math.round(n * 100);
   }
   function centsToStr(cents) {
     return (cents/100).toLocaleString('ru-RU', {minimumFractionDigits: 2, maximumFractionDigits:2});
   }
   function computeCommission(cents, type){
-    // type: 'agent25','agent30','cession15'
     let pct = 0;
     if(type === 'agent25') pct = 25;
     if(type === 'agent30') pct = 30;
     if(type === 'cession15') pct = 15;
-    // commission = cents * pct / 100
     const comm = Math.round(cents * pct / 100);
     return {commission: comm, pct: pct};
   }
@@ -383,6 +340,8 @@
       setSelectedType('agent25');
     }
     updateCalc();
+    // Focus first field so keyboard opens on phones
+    setTimeout(()=> inpName.focus(), 220);
   }
   function closeModalAll(){
     modal.classList.remove('show');
@@ -398,24 +357,22 @@
     const plate = inpPlate.value.trim();
     const make = inpMake.value.trim();
     const amountCents = parseMoneyToCents(inpAmt.value || 0);
-    if(!name){ alert('Введите имя клиента'); return; }
+    if(!name){ alert('Введите имя клиента'); inpName.focus(); return; }
     const id = editingId || ('c_' + Date.now().toString(36));
     const obj = { id, name, plate, make, amountCents, type: selectedType, updated: Date.now() };
     await dbPut(obj);
     await refreshList();
     closeModalAll();
-    // small flourish animation on save
     saveBtn.animate([{transform:'scale(0.98)'},{transform:'scale(1)'}],{duration:220, easing:'ease-out'});
   });
 
   async function refreshList(){
     const arr = await dbAll();
-    // sort by updated desc
     arr.sort((a,b)=> b.updated - a.updated);
     clientsList.innerHTML = '';
     arr.forEach(item => {
       const card = document.createElement('div');
-      card.className = 'card enter';
+      card.className = 'card';
       const firstLetter = (item.name ? item.name[0].toUpperCase() : '?');
       card.innerHTML = `
         <div class="info">
@@ -429,17 +386,17 @@
           </div>
         </div>
         <div class="actions">
-          <button class="ios-btn btn-edit" title="Редактировать" data-id="${item.id}">✎ Ред</button>
-          <button class="ios-btn btn-delete" title="Удалить" data-id="${item.id}">🗑 Уд</button>
+          <button class="ios-btn btn-edit" title="Редактировать" data-id="${item.id}">✎</button>
+          <button class="ios-btn btn-delete" title="Удалить" data-id="${item.id}">🗑</button>
         </div>
       `;
-      // edit
       card.querySelector('.btn-edit').addEventListener('click', ()=> openModal(item));
       card.querySelector('.btn-delete').addEventListener('click', async (e)=>{
         const id = e.currentTarget.dataset.id;
-        // animation then delete
-        card.classList.add('leave');
-        await new Promise(r => setTimeout(r, 260));
+        card.style.transition = 'transform .18s, opacity .18s';
+        card.style.transform = 'translateY(8px) scale(.99)';
+        card.style.opacity = '0.01';
+        await new Promise(r => setTimeout(r, 220));
         await dbDelete(id);
         refreshList();
       });
@@ -452,10 +409,8 @@
     return `Комиссия ${pct}%: ${centsToStr(commission)} ₽`;
   }
 
-  // small html escape
   function escapeHtml(s){ return String(s||'').replace(/[&<>"']/g, function(m){ return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[m]; }); }
 
-  // initial
   (async ()=>{
     try{
       await openDB();
@@ -465,17 +420,14 @@
     }
   })();
 
-  /* ========= PWA: register service worker ========= */
   if('serviceWorker' in navigator){
     navigator.serviceWorker.register('/sw.js').then(()=> console.log('SW registered')).catch(console.error);
   }
 
-  // close modal if clicking outside sheet
   modal.addEventListener('click', (e)=>{
     if(e.target === modal) closeModalAll();
   });
 
-  // Set default selected
   setSelectedType('agent25');
 
   </script>

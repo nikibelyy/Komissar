@@ -1,10 +1,12 @@
 {
   "name": "CRM Авто сделки",
   "short_name": "CRM",
+  "description": "PWA CRM для добавления клиентов: имя, номер, марка, сумма и тип сделки (Агентский 25/30%, Цессия 15%).",
   "start_url": "./",
+  "scope": "./",
   "display": "standalone",
-  "background_color": "#0b0b0c",
   "theme_color": "#0a84ff",
+  "background_color": "#0b0b0c",
   "icons": [
     { "src": "icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
     { "src": "icons/icon-512.png", "sizes": "512x512", "type": "image/png" }

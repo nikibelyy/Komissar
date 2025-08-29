@@ -151,13 +151,13 @@ form.addEventListener('submit',async e=>{
     return;
   }
 
-  // WhatsApp сообщение для клиента
+  // WhatsApp сообщение клиенту
   const waMessage=`Здравствуйте, ${name}!\nВы записаны на осмотр.\n📍 Адрес: ${OFFICE_ADDRESS}\n🚗 Авто: ${make}, ${plate}\n📞 Телефон для связи: ${OFFICE_PHONE}\nС вами свяжутся по телефону для подтверждения времени записи.\nСпасибо за обращение!`;
   const waUrl=`https://wa.me/${phoneDigits}?text=${encodeURIComponent(waMessage)}`;
   window.open(waUrl,'_blank');
 
-  // Telegram запись для вас
-  const tgText=`🚨 Новая запись на осмотр 🚨\n\n👤 Имя: ${name}\n🚗 Марка авто: ${make}\n🪪 Гос. номер: ${plate}\n📍 Адрес: ${OFFICE_ADDRESS}`;
+  // Telegram запись для вас с номером клиента
+  const tgText=`🚨 Новая запись на осмотр 🚨\n\n👤 Имя: ${name}\n📞 Телефон клиента: +${phoneDigits}\n🚗 Марка авто: ${make}\n🪪 Гос. номер: ${plate}\n📍 Адрес: ${OFFICE_ADDRESS}`;
   const tgUrl=`https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&parse_mode=HTML&text=${encodeURIComponent(tgText)}`;
 
   try{

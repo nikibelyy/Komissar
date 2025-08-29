@@ -75,7 +75,7 @@ button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,2
 
     <div class="group">
       <label>Номер телефона</label>
-      <input id="phone" type="tel" value="+7 " maxlength="16" required />
+      <input id="phone" type="tel" value="+7 " maxlength="16" placeholder="+7 XXX XXX XX XX 📱" required />
     </div>
 
     <div class="group">
@@ -112,16 +112,15 @@ button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,2
     statusEl.className = 'status show ' + (ok ? 'ok' : 'err');
   }
 
-  // Маска телефона +7 XXX XXX-XX-XX
+  // Маска телефона +7 XXX XXX XX XX
   phoneInput.addEventListener('input', ()=>{
-    // Всегда начинаем с +7
     if(!phoneInput.value.startsWith('+7')) phoneInput.value = '+7 ';
-    let digits = phoneInput.value.replace(/\D/g,'').slice(1,11); // 10 цифр после 7
+    let digits = phoneInput.value.replace(/\D/g,'').slice(1,11);
     let formatted = '+7 ';
     if(digits.length>0) formatted += digits.substring(0,3);
     if(digits.length>=4) formatted += ' ' + digits.substring(3,6);
-    if(digits.length>=7) formatted += '-' + digits.substring(6,8);
-    if(digits.length>=9) formatted += '-' + digits.substring(8,10);
+    if(digits.length>=7) formatted += ' ' + digits.substring(6,8);
+    if(digits.length>=9) formatted += ' ' + digits.substring(8,10);
     phoneInput.value = formatted;
   });
 
@@ -134,7 +133,7 @@ button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,2
     const plate = document.getElementById('plate').value.trim();
 
     if(phone.length!==11 || !phone.startsWith('7')){
-      showStatus('⚠️ Введите корректный номер телефона в формате +7 XXX XXX-XX-XX', false);
+      showStatus('⚠️ Введите корректный номер телефона в формате +7 XXX XXX XX XX', false);
       return;
     }
 
@@ -143,7 +142,7 @@ button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,2
       return;
     }
 
-    const formattedPhone = '+7 ' + phone.slice(1,4)+' '+phone.slice(4,7)+'-'+phone.slice(7,9)+'-'+phone.slice(9,11);
+    const formattedPhone = '+7 ' + phone.slice(1,4)+' '+phone.slice(4,7)+' '+phone.slice(7,9)+' '+phone.slice(9,11);
 
     const waMessage = `🚨 *Запись на осмотр после ДТП* 🚨\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}\n🚗 Марка авто: ${make}\n🪪 Гос. номер: ${plate}\n\n📍 Адрес: ${OFFICE_ADDRESS}\n☎ Телефон для связи: ${OFFICE_PHONE}\n\n✅ С вами свяжутся для подтверждения времени записи.\n🙏 Спасибо за обращение!`;
     const encoded = encodeURIComponent(waMessage);

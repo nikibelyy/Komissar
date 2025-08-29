@@ -11,7 +11,6 @@
   --muted: #6b7280;
   --accent: #0a84ff;
   --accent-dark: #0066d6;
-  --radius: 18px;
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial;
 }
 html,body{height:100%;}
@@ -43,28 +42,26 @@ h1{font-size:18px;margin:0;color:#0b1220;line-height:1.05;}
 
 form{margin-top:10px;}
 .group{display:flex;flex-direction:column;gap:4px;margin-bottom:12px;}
-label{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
+label{font-size:12px;color:var(--muted);}
 input{-webkit-appearance:none;appearance:none;border:none;outline:none;background: rgba(255,255,255,0.85);border-radius:12px;padding:12px 14px;font-size:16px;box-shadow:0 6px 14px rgba(10,20,50,0.04);transition: all 0.2s ease;}
 input:focus{box-shadow:0 0 0 3px rgba(10,132,255,0.2);background: rgba(255,255,255,0.95);}
 input::placeholder{color:#b8bcc3;}
 
 .actions{display:flex;flex-direction:column;gap:12px;margin-top:16px;}
-button.primary{background:linear-gradient(180deg,var(--accent), var(--accent-dark));color:white;border:none;padding:14px;font-size:16px;border-radius:16px;box-shadow:0 8px 24px rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition: transform 0.1s, box-shadow 0.1s;}
-button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,255,0.15);}
+button.primary{background:linear-gradient(180deg,var(--accent), var(--accent-dark));color:white;border:none;padding:14px;font-size:16px;border-radius:16px;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:8px;}
+button.primary:active{transform: scale(0.97);}
 
 .status{margin-top:12px;padding:10px;border-radius:12px;font-size:14px;display:none;opacity:0;transition: opacity 0.3s ease;}
 .status.show{display:block;opacity:1;}
 .ok{background:rgba(16,185,129,0.08); color:#065f46; border:1px solid rgba(16,185,129,0.12);}
 .err{background:rgba(239,68,68,0.06); color:#7f1d1d; border:1px solid rgba(239,68,68,0.08);}
-
-@media (max-width:420px){.frame{padding:14px;border-radius:20px;}.logo{width:56px;height:56px}}
 </style>
 </head>
 <body>
-<div class="frame" role="application" aria-labelledby="title">
+<div class="frame">
   <header>
     <div class="logo">🚗</div>
-    <div><h1 id="title">Запись на осмотр после ДТП</h1></div>
+    <div><h1>Запись на осмотр после ДТП</h1></div>
   </header>
 
   <form id="apptForm" autocomplete="off">
@@ -97,72 +94,60 @@ button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,2
 </div>
 
 <script>
-(function(){
-  const form = document.getElementById('apptForm');
-  const statusEl = document.getElementById('status');
-  const phoneInput = document.getElementById('phone');
+const form = document.getElementById('apptForm');
+const statusEl = document.getElementById('status');
+const phoneInput = document.getElementById('phone');
 
-  const TELEGRAM_TOKEN = "7875147914:AAGEAZ1Bxg82z54OeSO4Q_zGaeHWeG1xJ1o";
-  const TELEGRAM_CHAT_ID = "7523840597";
-  const OFFICE_ADDRESS = "г. Воронеж, Антонова-Овсиенко, 15А корпус 1";
-  const OFFICE_PHONE = "+7 (995) 719-25-23";
+const TELEGRAM_TOKEN = "7875147914:AAGEAZ1Bxg82z54OeSO4Q_zGaeHWeG1xJ1o";
+const TELEGRAM_CHAT_ID = "7523840597";
+const OFFICE_ADDRESS = "г. Воронеж, Антонова-Овсиенко, 15А корпус 1";
+const OFFICE_PHONE = "+7 (995) 719-25-23";
 
-  function showStatus(text, ok=true){
-    statusEl.textContent = text;
-    statusEl.className = 'status show ' + (ok ? 'ok' : 'err');
+// Маска телефона +7 XXX XXX XX XX
+phoneInput.addEventListener('input', ()=>{
+  if(!phoneInput.value.startsWith('+7')) phoneInput.value = '+7 ';
+  let digits = phoneInput.value.replace(/\D/g,'').slice(1,11);
+  let formatted = '+7 ';
+  if(digits.length>0) formatted += digits.substring(0,3);
+  if(digits.length>=4) formatted += ' ' + digits.substring(3,6);
+  if(digits.length>=7) formatted += ' ' + digits.substring(6,8);
+  if(digits.length>=9) formatted += ' ' + digits.substring(8,10);
+  phoneInput.value = formatted;
+});
+
+form.addEventListener('submit', async (e)=>{
+  e.preventDefault();
+  statusEl.className='status';
+  const name = document.getElementById('name').value.trim();
+  const make = document.getElementById('make').value.trim();
+  const plate = document.getElementById('plate').value.trim();
+  const phoneDigits = phoneInput.value.replace(/\D/g,''); // только цифры
+
+  if(phoneDigits.length!==11 || !phoneDigits.startsWith('7')){
+    statusEl.textContent='⚠️ Введите корректный номер +7 XXX XXX XX XX';
+    statusEl.className='status show err';
+    return;
   }
 
-  // Маска телефона +7 XXX XXX XX XX
-  phoneInput.addEventListener('input', ()=>{
-    if(!phoneInput.value.startsWith('+7')) phoneInput.value = '+7 ';
-    let digits = phoneInput.value.replace(/\D/g,'').slice(1,11);
-    let formatted = '+7 ';
-    if(digits.length>0) formatted += digits.substring(0,3);
-    if(digits.length>=4) formatted += ' ' + digits.substring(3,6);
-    if(digits.length>=7) formatted += ' ' + digits.substring(6,8);
-    if(digits.length>=9) formatted += ' ' + digits.substring(8,10);
-    phoneInput.value = formatted;
-  });
+  const formattedPhone = '+7 ' + phoneDigits.slice(1,4)+' '+phoneDigits.slice(4,7)+' '+phoneDigits.slice(7,9)+' '+phoneDigits.slice(9,11);
 
-  form.addEventListener('submit', async (e)=>{
-    e.preventDefault();
-    statusEl.className='status';
-    const name = document.getElementById('name').value.trim();
-    const phone = phoneInput.value.replace(/\D/g,'');
-    const make = document.getElementById('make').value.trim();
-    const plate = document.getElementById('plate').value.trim();
+  // WhatsApp
+  const waUrl = `https://wa.me/${phoneDigits}?text=${encodeURIComponent(`🚨 Запись на осмотр 🚨\n👤 ${name}\n🚗 ${make}\n🪪 ${plate}\n📞 ${formattedPhone}\n📍 ${OFFICE_ADDRESS}\n☎ ${OFFICE_PHONE}`)}`;
+  window.open(waUrl,'_blank');
 
-    if(phone.length!==11 || !phone.startsWith('7')){
-      showStatus('⚠️ Введите корректный номер телефона в формате +7 XXX XXX XX XX', false);
-      return;
-    }
+  // Telegram
+  const tgText = `🚨 Новая запись 🚨\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}\n🚗 Марка авто: ${make}\n🪪 Гос. номер: ${plate}\n📍 Адрес: ${OFFICE_ADDRESS}`;
+  const tgUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&parse_mode=HTML&text=${encodeURIComponent(tgText)}`;
 
-    if(!name || !make || !plate){
-      showStatus('⚠️ Пожалуйста, заполните все поля', false);
-      return;
-    }
-
-    const formattedPhone = '+7 ' + phone.slice(1,4)+' '+phone.slice(4,7)+' '+phone.slice(7,9)+' '+phone.slice(9,11);
-
-    const waMessage = `🚨 *Запись на осмотр после ДТП* 🚨\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}\n🚗 Марка авто: ${make}\n🪪 Гос. номер: ${plate}\n\n📍 Адрес: ${OFFICE_ADDRESS}\n☎ Телефон для связи: ${OFFICE_PHONE}\n\n✅ С вами свяжутся для подтверждения времени записи.\n🙏 Спасибо за обращение!`;
-    const encoded = encodeURIComponent(waMessage);
-    const waUrl = `https://wa.me/?text=${encoded}`;
-    try { window.location.href = waUrl; } catch { window.open(waUrl,'_blank'); }
-
-    const tgText = `🚨 Новая запись на осмотр 🚨\n\n👤 Имя: ${name}\n📞 Телефон: ${formattedPhone}\n🚗 Марка авто: ${make}\n🪪 Гос. номер: ${plate}\n📍 Адрес: ${OFFICE_ADDRESS}`;
-    const tgUrl = `https://api.telegram.org/bot${TELEGRAM_TOKEN}/sendMessage?chat_id=${encodeURIComponent(TELEGRAM_CHAT_ID)}&parse_mode=HTML&text=${encodeURIComponent(tgText)}`;
-
-    try{
-      const resp = await fetch(tgUrl, {method:'GET', mode:'cors'});
-      if(resp.ok){
-        const data = await resp.json();
-        if(data && data.ok){ showStatus('✅ Запись отправлена в Telegram и открыт WhatsApp', true); }
-        else { showStatus('⚠️ WhatsApp открыт. Не удалось отправить в Telegram', false); }
-      } else { showStatus(`⚠️ WhatsApp открыт. Не удалось отправить в Telegram (HTTP ${resp.status})`, false); }
-    } catch(err){ showStatus('⚠️ WhatsApp открыт. Браузер заблокировал отправку в Telegram (CORS)', false); }
-
-  });
-})();
+  try{
+    await fetch(tgUrl,{method:'GET',mode:'cors'});
+    statusEl.textContent='✅ Запись отправлена в Telegram и открыт WhatsApp';
+    statusEl.className='status show ok';
+  }catch{
+    statusEl.textContent='⚠️ WhatsApp открыт. Не удалось отправить в Telegram';
+    statusEl.className='status show err';
+  }
+});
 </script>
 </body>
 </html>

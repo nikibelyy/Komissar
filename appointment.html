@@ -44,14 +44,13 @@ h1{font-size:18px;margin:0;color:#0b1220;line-height:1.05;}
 form{margin-top:10px;}
 .group{display:flex;flex-direction:column;gap:8px;margin-bottom:12px;}
 label{font-size:12px;color:var(--muted);display:flex;justify-content:space-between;align-items:center;}
-input, select{-webkit-appearance:none;appearance:none;border:none;outline:none;background: rgba(255,255,255,0.85);border-radius:12px;padding:12px 14px;font-size:16px;box-shadow:0 6px 14px rgba(10,20,50,0.04);transition: all 0.2s ease;}
+input{-webkit-appearance:none;appearance:none;border:none;outline:none;background: rgba(255,255,255,0.85);border-radius:12px;padding:12px 14px;font-size:16px;box-shadow:0 6px 14px rgba(10,20,50,0.04);transition: all 0.2s ease;}
 input:focus{box-shadow:0 0 0 3px rgba(10,132,255,0.2);background: rgba(255,255,255,0.95);}
 input::placeholder{color:#b8bcc3;}
 
 .actions{display:flex;flex-direction:column;gap:12px;margin-top:16px;}
 button.primary{background:linear-gradient(180deg,var(--accent), var(--accent-dark));color:white;border:none;padding:14px;font-size:16px;border-radius:16px;box-shadow:0 8px 24px rgba(10,132,255,0.18);display:flex;align-items:center;justify-content:center;gap:8px;cursor:pointer;transition: transform 0.1s, box-shadow 0.1s;}
 button.primary:active{transform: scale(0.97);box-shadow:0 4px 12px rgba(10,132,255,0.15);}
-button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(10,132,255,0.12);padding:12px;border-radius:12px;font-size:14px;cursor:pointer;}
 
 .status{margin-top:12px;padding:10px;border-radius:12px;font-size:14px;display:none;opacity:0;transition: opacity 0.3s ease;}
 .status.show{display:block;opacity:1;}
@@ -76,7 +75,7 @@ button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(10
 
     <div class="group">
       <label>Номер телефона</label>
-      <input id="phone" type="tel" placeholder="+7XXXXXXXXXX 📱" required />
+      <input id="phone" type="tel" value="+7" maxlength="12" placeholder="+7XXXXXXXXXX 📱" required />
     </div>
 
     <div class="group">
@@ -91,7 +90,6 @@ button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(10
 
     <div class="actions">
       <button type="submit" class="primary">📩 Отправить запись</button>
-      <button type="button" id="clearBtn" class="ghost">🧹 Очистить форму</button>
     </div>
 
     <div id="status" class="status"></div>
@@ -102,7 +100,7 @@ button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(10
 (function(){
   const form = document.getElementById('apptForm');
   const statusEl = document.getElementById('status');
-  const clearBtn = document.getElementById('clearBtn');
+  const phoneInput = document.getElementById('phone');
 
   const TELEGRAM_TOKEN = "7875147914:AAGEAZ1Bxg82z54OeSO4Q_zGaeHWeG1xJ1o";
   const TELEGRAM_CHAT_ID = "7523840597";
@@ -114,13 +112,19 @@ button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(10
     statusEl.className = 'status show ' + (ok ? 'ok' : 'err');
   }
 
-  clearBtn.addEventListener('click', () => { form.reset(); statusEl.className='status'; });
+  // Авто-фикс +7
+  phoneInput.addEventListener('input', (e)=>{
+    if(!phoneInput.value.startsWith('+7')){
+      phoneInput.value = '+7';
+    }
+    phoneInput.value = '+7' + phoneInput.value.slice(2).replace(/\D/g,'').slice(0,10);
+  });
 
-  form.addEventListener('submit', async (e) => {
+  form.addEventListener('submit', async (e)=>{
     e.preventDefault();
     statusEl.className='status';
     const name = document.getElementById('name').value.trim();
-    let phone = document.getElementById('phone').value.trim();
+    let phone = phoneInput.value.trim();
     const make = document.getElementById('make').value.trim();
     const plate = document.getElementById('plate').value.trim();
 
@@ -153,7 +157,6 @@ button.ghost{background:transparent;color:var(--accent);border:1px solid rgba(10
         else { showStatus('⚠️ WhatsApp открыт. Не удалось отправить в Telegram', false); }
       } else { showStatus(`⚠️ WhatsApp открыт. Не удалось отправить в Telegram (HTTP ${resp.status})`, false); }
     } catch(err){ showStatus('⚠️ WhatsApp открыт. Браузер заблокировал отправку в Telegram (CORS)', false); }
-
   });
 })();
 </script>

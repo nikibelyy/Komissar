@@ -152,7 +152,7 @@ form.addEventListener('submit',async e=>{
   }
 
   // WhatsApp сообщение клиенту
-  const waMessage=`Здравствуйте, ${name}!\nВы записаны на осмотр.\n📍 Адрес: ${OFFICE_ADDRESS}\n🚗 Авто: ${make}, ${plate}\n📞 Телефон для связи: ${OFFICE_PHONE}\nС вами свяжутся по телефону для подтверждения времени записи.\nСпасибо за обращение!`;
+  const waMessage=`Здравствуйте, ${name}!\nВы записаны на осмотр.\n📍 Адрес: ${OFFICE_ADDRESS}\n🚗 Авто: ${make}, ${plate}\n📞 Телефон для связи: ${OFFICE_PHONE}\nС вами свяжутся по телефону для подтверждения времени записи.\nhttps://вызовдтп.рф`;
   const waUrl=`https://wa.me/${phoneDigits}?text=${encodeURIComponent(waMessage)}`;
   window.open(waUrl,'_blank');
 

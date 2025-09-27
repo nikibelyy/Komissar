@@ -1,174 +1,27 @@
 <!doctype html>
-<html lang="ru">
-<head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
-<title>Plinko Casino</title>
-<style>
-:root {
-  --bg-gradient: linear-gradient(120deg,#0f172a,#0b3d91,#0b6bb0,#00c6ff);
-  --card-bg: rgba(255,255,255,0.08);
-  --text: #f1f6ff;
-  --accent: #25D366;
-  font-family: "Inter", system-ui, sans-serif;
-}
-body {
-  margin:0;
-  min-height:100vh;
-  background: var(--bg-gradient);
-  background-size: 300% 300%;
-  animation: gradientMove 12s ease infinite;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-}
-@keyframes gradientMove {
-  0% {background-position: 0% 50%;}
-  50% {background-position: 100% 50%;}
-  100% {background-position: 0% 50%;}
-}
-.wrap{
-  width:100%;
-  max-width:900px;
-  padding:16px;
-}
-.card{
-  background: var(--card-bg);
-  border-radius:20px;
-  padding:20px;
-  backdrop-filter: blur(14px) saturate(160%);
-  box-shadow:0 10px 40px rgba(0,0,0,0.6);
-  animation: fadeIn .7s ease;
-}
-@keyframes fadeIn {
-  from {opacity:0;transform:translateY(20px);}
-  to {opacity:1;transform:translateY(0);}
-}
-h1{margin:0 0 16px;font-size:24px;font-weight:700;letter-spacing:0.5px;text-align:center;}
-.btn{
-  margin-top:16px;
-  padding:14px 18px;
-  border-radius:14px;
-  border:none;
-  cursor:pointer;
-  font-weight:600;
-  font-size:16px;
-  width:100%;
-  transition: all .25s ease;
-}
-.btn-cta{
-  background:linear-gradient(90deg,#25D366,#1EBEA4);
-  color:#042;
-  box-shadow:0 6px 20px rgba(37,211,102,0.4);
-}
-.btn-cta:hover{transform:translateY(-2px) scale(1.02);box-shadow:0 8px 25px rgba(37,211,102,0.6);}
-.plinko-board {
-  position: relative;
-  width: 100%;
-  max-width: 500px;
-  height: 400px;
-  margin: 0 auto;
-  background: rgba(255,255,255,0.05);
-  border-radius: 14px;
-  overflow: hidden;
-}
-.plinko-peg {
-  width: 10px;
-  height: 10px;
-  background: var(--accent);
-  border-radius: 50%;
-  position: absolute;
-}
-.plinko-ball {
-  width: 20px;
-  height: 20px;
-  background: yellow;
-  border-radius: 50%;
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-}
-.result-bin {
-  position: absolute;
-  bottom: 0;
-  height: 40px;
-  border-left:1px solid #fff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  color:#fff;
-  font-weight:bold;
-}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <div class="card">
-    <h1>🎰 Plinko Casino</h1>
-    <div class="plinko-board" id="plinkoBoard"></div>
-    <button class="btn btn-cta" id="startGame">Играть</button>
-    <div id="result" style="margin-top:16px;text-align:center;font-size:18px;"></div>
-  </div>
-</div>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRM Клиенты - Система управления клиентами из будущего</title>
+    <meta name="description" content="Футуристическая CRM система для управления клиентами с 3D визуализацией и автоматическим расчетом комиссий" />
+    <meta name="author" content="Lovable" />
+    <meta name="theme-color" content="#8B5CF6" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
 
-<script>
-const board=document.getElementById('plinkoBoard');
-const resultEl=document.getElementById('result');
+    <meta property="og:title" content="CRM Клиенты - Система управления из будущего" />
+    <meta property="og:description" content="Футуристическая CRM система с 3D визуализацией и автоматическим расчетом комиссий" />
+    <meta property="og:type" content="website" />
+    <meta property="og:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
 
-// Генерируем штыри
-const rows=7;
-const cols=7;
-for(let r=0;r<rows;r++){
-  for(let c=0;c<cols;c++){
-    const peg=document.createElement('div');
-    peg.className='plinko-peg';
-    const x=c*board.clientWidth/cols + (r%2)*board.clientWidth/(cols*2);
-    const y=r*board.clientHeight/rows*0.8;
-    peg.style.left=x+'px';
-    peg.style.top=y+'px';
-    board.appendChild(peg);
-  }
-}
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:site" content="@lovable_dev" />
+    <meta name="twitter:image" content="https://lovable.dev/opengraph-image-p98pqg.png" />
+  </head>
 
-// Создаем корзины
-const bins=cols+1;
-for(let i=0;i<bins;i++){
-  const bin=document.createElement('div');
-  bin.className='result-bin';
-  bin.style.left=(i*board.clientWidth/bins)+'px';
-  bin.style.width=(board.clientWidth/bins)+'px';
-  bin.textContent= `${Math.floor(Math.random()*1000)} ₽`;
-  board.appendChild(bin);
-}
-
-// Функция падения шарика
-function dropBall(){
-  const ball=document.createElement('div');
-  ball.className='plinko-ball';
-  board.appendChild(ball);
-
-  let x=board.clientWidth/2;
-  let y=0;
-  const interval=setInterval(()=>{
-    const row=Math.floor(y/(board.clientHeight/rows*0.8));
-    const direction=Math.random()<0.5?-1:1;
-    x+=direction*(board.clientWidth/cols/2);
-    y+=5;
-    ball.style.left=x+'px';
-    ball.style.top=y+'px';
-    if(y>=board.clientHeight-40){
-      clearInterval(interval);
-      // Определяем корзину
-      const binIndex=Math.min(Math.floor(x/(board.clientWidth/bins)),bins-1);
-      const prize=board.querySelectorAll('.result-bin')[binIndex].textContent;
-      resultEl.textContent='Вы выиграли: '+prize;
-      setTimeout(()=>board.removeChild(ball),1000);
-    }
-  },30);
-}
-
-document.getElementById('startGame').addEventListener('click',dropBall);
-</script>
-</body>
+  <body>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+  </body>
 </html>

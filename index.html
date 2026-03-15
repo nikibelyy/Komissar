@@ -1,347 +1,83 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-<title>Независимая Экспертиза Воронеж</title>
-
+<title>Независимая Экспертиза</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
-
 <style>
-
-html{
-scroll-behavior:smooth;
-}
-
-*{
-margin:0;
-padding:0;
-box-sizing:border-box;
-font-family:'Inter',sans-serif;
-}
-
-body{
-background:#000;
-color:white;
-line-height:1.6;
-}
+html{scroll-behavior:smooth;}
+*{margin:0;padding:0;box-sizing:border-box;font-family:'Inter',sans-serif;}
+body{background:#000;color:white;line-height:1.6;overflow-x:hidden;}
 
 /* NAVBAR */
-
 nav{
-position:fixed;
-top:0;
-width:100%;
-display:flex;
-justify-content:center;
-align-items:center;
-padding:18px;
-background:rgba(0,0,0,0.7);
-backdrop-filter:blur(10px);
-z-index:100;
+position:fixed;top:0;width:100%;display:flex;justify-content:center;align-items:center;
+padding:18px;background:rgba(0,0,0,0.7);backdrop-filter:blur(10px);z-index:100;
 }
-
-.logo{
-font-weight:600;
-font-size:18px;
-letter-spacing:1px;
-}
+.logo{font-weight:600;font-size:20px;letter-spacing:1px;}
 
 /* HERO */
-
 .hero{
-height:100vh;
-display:flex;
-flex-direction:column;
-justify-content:center;
-align-items:center;
-text-align:center;
-padding:20px;
+height:100vh;display:flex;flex-direction:column;justify-content:center;align-items:center;
+text-align:center;padding:20px;position:relative;overflow:hidden;
 background:linear-gradient(180deg,#000,#0a0a0a);
 }
-
+.hero::before{
+content:"";position:absolute;top:0;left:0;width:100%;height:100%;
+background:rgba(255,255,255,0.03);backdrop-filter:blur(2px);z-index:0;
+}
 .hero h1{
-font-size:64px;
-margin-bottom:20px;
-animation:fadeUp 1.2s ease;
+font-size:56px;font-weight:500;margin-bottom:20px;animation:fadeUp 1.2s ease;position:relative;z-index:1;
 }
-
 .hero p{
-font-size:20px;
-color:#d0d0d0;
-max-width:650px;
-margin-bottom:40px;
-animation:fadeUp 1.6s ease;
+font-size:18px;max-width:600px;color:#d0d0d0;margin-bottom:40px;animation:fadeUp 1.5s ease;position:relative;z-index:1;
+line-height:1.5;
+}
+.hero a{
+padding:20px 50px;border-radius:50px;background:white;color:black;
+font-size:20px;font-weight:600;text-decoration:none;transition:0.3s;position:relative;z-index:1;
+}
+.hero a:hover{transform:scale(1.05);box-shadow:0 10px 25px rgba(255,255,255,0.3);}
+
+/* LIGHT EFFECT */
+.hero::after{
+content:"";position:absolute;top:-50%;left:-50%;width:200%;height:200%;
+background:radial-gradient(circle at center, rgba(255,255,255,0.05), transparent 70%);
+animation:moveLight 10s linear infinite;z-index:0;
 }
 
-.hero-buttons a{
-margin:10px;
-padding:16px 32px;
-border-radius:40px;
-text-decoration:none;
-font-weight:500;
-transition:0.3s;
-}
-
-.btn-white{
-background:white;
-color:black;
-}
-
-.btn-dark{
-border:1px solid #aaa;
-color:white;
-}
-
-.hero-buttons a:hover{
-transform:scale(1.05);
-}
-
-/* SECTION */
-
-.section{
-padding:120px 20px;
-max-width:1100px;
-margin:auto;
-}
-
-.section-title{
-font-size:42px;
-text-align:center;
-margin-bottom:70px;
-}
-
-/* GRID */
-
-.grid{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
-gap:30px;
-}
-
-/* CARD */
-
-.card{
-background:#111;
-padding:35px;
-border-radius:20px;
-opacity:0;
-transform:translateY(40px);
-transition:0.8s;
-}
-
-.card.show{
-opacity:1;
-transform:translateY(0);
-}
-
-.card:hover{
-transform:translateY(-10px);
-background:#181818;
-}
-
-.card h3{
-margin-bottom:15px;
-font-size:20px;
-}
-
-.card p{
-color:#bdbdbd;
-font-size:15px;
-}
-
-/* STEPS */
-
-.steps{
-display:grid;
-grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
-gap:30px;
-}
-
-.step{
-background:#111;
-padding:40px;
-border-radius:20px;
-opacity:0;
-transform:translateY(40px);
-transition:0.8s;
-}
-
-.step.show{
-opacity:1;
-transform:translateY(0);
-}
-
-.step-number{
-font-size:32px;
-font-weight:600;
-margin-bottom:10px;
-}
-
-/* CTA */
-
-.cta{
-background:white;
-color:black;
-text-align:center;
-padding:120px 20px;
-}
-
-.cta h2{
-font-size:44px;
-margin-bottom:20px;
-}
-
-.cta a{
-background:black;
-color:white;
-padding:18px 36px;
-border-radius:40px;
-text-decoration:none;
-font-size:18px;
-transition:0.3s;
-}
-
-.cta a:hover{
-transform:scale(1.05);
-}
-
-/* FOOTER */
-
-footer{
-padding:50px 20px;
-text-align:center;
-background:#050505;
-color:#999;
+@keyframes moveLight{
+0%{transform:rotate(0deg);}
+50%{transform:rotate(180deg);}
+100%{transform:rotate(360deg);}
 }
 
 /* ANIMATIONS */
-
 @keyframes fadeUp{
-from{
-opacity:0;
-transform:translateY(30px);
-}
-to{
-opacity:1;
-transform:translateY(0);
-}
+from{opacity:0;transform:translateY(30px);}
+to{opacity:1;transform:translateY(0);}
 }
 
 /* MOBILE */
-
 @media(max-width:700px){
-.hero h1{
-font-size:38px;
+.hero h1{font-size:38px;}
+.hero p{font-size:16px;}
+.hero a{font-size:18px;padding:16px 40px;}
 }
-.section-title{
-font-size:30px;
-}
-}
-
 </style>
-
 </head>
-
 <body>
 
 <nav>
-<div class="logo">
-Независимая Экспертиза Воронеж
-</div>
+<div class="logo">Независимая Экспертиза</div>
 </nav>
 
 <section class="hero">
-<h1>Независимая Экспертиза<br>в Воронеже</h1>
-<p>Честная независимая экспертиза. Работаем по репутации, защитим ваши права и интересы.</p>
-
-<div class="hero-buttons">
-<a class="btn-white" href="tel:+79518703934">
-Позвонить эксперту
-</a>
-<a class="btn-dark" href="#services">
-Наши услуги
-</a>
-</div>
+<h1>Независимая Экспертиза</h1>
+<p>Мы проводим честные, качественные и профессиональные экспертизы. Работаем по репутации и с максимальной заботой о клиентах. Каждый отчет — прозрачный, точный и полностью объективный.</p>
+<a href="tel:+79518703934">Позвонить эксперту +7 (951) 870-39-34</a>
 </section>
-
-<section id="services" class="section">
-<h2 class="section-title">Наши услуги</h2>
-<div class="grid">
-<div class="card">
-<h3>📄 Оценка и экспертиза</h3>
-<p>Проводим полную независимую экспертизу имущества и документов.</p>
-</div>
-<div class="card">
-<h3>⚖️ Консультации</h3>
-<p>Консультации по вопросам страховых выплат и юридической защиты.</p>
-</div>
-<div class="card">
-<h3>💼 Репутация</h3>
-<p>Работаем только по репутации и рекомендациям наших клиентов.</p>
-</div>
-<div class="card">
-<h3>💰 Выгода клиенту</h3>
-<p>Помогаем получить максимальную компенсацию и объективную оценку.</p>
-</div>
-</div>
-</section>
-
-<section id="steps" class="section">
-<h2 class="section-title">Как мы работаем</h2>
-<div class="steps">
-<div class="step">
-<div class="step-number">1</div>
-Позвоните нам и сообщите детали экспертизы.
-</div>
-<div class="step">
-<div class="step-number">2</div>
-Наш эксперт выезжает на место или проводит онлайн оценку.
-</div>
-<div class="step">
-<div class="step-number">3</div>
-Предоставляем отчет и рекомендации для клиента.
-</div>
-</div>
-</section>
-
-<section class="cta">
-<h2>Нужна независимая экспертиза?</h2>
-<p style="margin-bottom:30px;">Позвоните прямо сейчас</p>
-<a href="tel:+79518703934">
-+7 (951) 870-39-34
-</a>
-</section>
-
-<section class="section">
-<div class="address">
-<h2>Наш офис</h2>
-<p>г. Воронеж, ул. Антонова-Овсиенко 7</p>
-<p>Работаем: Пн–Сб с 09:00 до 19:00</p>
-<a class="btn-white" href="tel:+79518703934">Позвонить эксперту</a>
-</div>
-</section>
-
-<footer>
-Независимая Экспертиза Воронеж  
-<br><br>
-Телефон: +7 (951) 870-39-34
-</footer>
-
-<script>
-const observer = new IntersectionObserver(entries => {
-entries.forEach(entry => {
-if(entry.isIntersecting){
-entry.target.classList.add("show")
-}
-})
-})
-document.querySelectorAll(".card, .step").forEach(el => {
-observer.observe(el)
-})
-</script>
 
 </body>
 </html>

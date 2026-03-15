@@ -1,115 +1,346 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
+
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
 <title>Независимая Экспертиза Воронеж</title>
-<meta name="description" content="Честная независимая экспертиза в Воронеже. Работаем по репутации, опытные специалисты.">
-<meta name="robots" content="index, follow">
 
-<!-- SEO микроразметка -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "LocalBusiness",
-  "name": "Независимая Экспертиза",
-  "image": "https://example.com/logo.png",
-  "address": {
-    "@type": "PostalAddress",
-    "streetAddress": "ул. Антонова-Овсиенко 7",
-    "addressLocality": "Воронеж",
-    "postalCode": "394000",
-    "addressCountry": "RU"
-  },
-  "telephone": "+7 (951) 870-39-34",
-  "openingHours": "Mo-Sa 09:00-19:00",
-  "description": "Честная независимая экспертиза в Воронеже. Работаем по репутации, опытные специалисты.",
-  "url": "https://example.com"
-}
-</script>
-
-<!-- AOS для анимаций -->
-<link href="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.css" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet">
 
 <style>
-*{margin:0;padding:0;box-sizing:border-box;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial;}
-body{background:#0a0a0a;color:white;line-height:1.5;overflow-x:hidden;}
-.container{max-width:1100px;margin:auto;padding:20px;}
-header{display:flex;justify-content:center;align-items:center;height:80px;background: rgba(255,255,255,0.03);backdrop-filter: blur(8px);}
-.logo{font-size:24px;font-weight:500;letter-spacing:1.5px;}
-.hero{padding:100px 20px;text-align:center;background: linear-gradient(135deg,#0d0d0d,#1a1a1a);position:relative;overflow:hidden;}
-.hero::after{content:"";position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(255,255,255,0.03);pointer-events:none;}
-.hero h1{font-size:36px;font-weight:500;margin-bottom:20px;}
-.hero p{font-size:16px;opacity:.8;max-width:600px;margin:auto;line-height:1.5;}
-.btn{display:inline-block;margin-top:25px;padding:14px 30px;border-radius:40px;background:white;color:black;text-decoration:none;font-weight:500;font-size:16px;transition:.3s;}
-.btn:hover{transform:scale(1.05);box-shadow:0 8px 20px rgba(255,255,255,0.2);}
-.section{padding:60px 20px;position:relative;}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;margin-top:40px;}
-.card{background: rgba(255,255,255,0.05);padding:25px;border-radius:20px;border:1px solid rgba(255,255,255,0.1);transition:all 0.3s;backdrop-filter:blur(5px);}
-.card:hover{transform: translateY(-5px);box-shadow:0 12px 25px rgba(255,255,255,0.1);}
-.card h3{margin-bottom:10px;font-size:18px;font-weight:500;}
-.card p{font-size:14px;opacity:.85;}
-.address{background: rgba(255,255,255,0.03);padding:30px;border-radius:20px;text-align:center;margin-top:50px;border:1px solid rgba(255,255,255,0.08);backdrop-filter:blur(5px);}
-.address h2{font-size:20px;margin-bottom:10px;font-weight:500;}
-.address p{font-size:14px;opacity:.85;margin:5px 0;}
-.phone-btn{display:inline-block;margin-top:15px;padding:12px 25px;border-radius:40px;background:white;color:black;text-decoration:none;font-weight:500;font-size:16px;transition:.3s;}
-.phone-btn:hover{transform:scale(1.05);box-shadow:0 8px 20px rgba(255,255,255,0.2);}
-footer{text-align:center;padding:40px 20px;opacity:.6;font-size:14px;}
-@media(max-width:600px){
-.hero h1{font-size:28px;}
-.hero p{font-size:14px;}
-.card h3{font-size:16px;}
-.card p{font-size:13px;}
-.phone-btn{font-size:14px;padding:10px 22px;}
+
+html{
+scroll-behavior:smooth;
 }
+
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:'Inter',sans-serif;
+}
+
+body{
+background:#000;
+color:white;
+line-height:1.6;
+}
+
+/* NAVBAR */
+
+nav{
+position:fixed;
+top:0;
+width:100%;
+display:flex;
+justify-content:center;
+align-items:center;
+padding:18px;
+background:rgba(0,0,0,0.7);
+backdrop-filter:blur(10px);
+z-index:100;
+}
+
+.logo{
+font-weight:600;
+font-size:18px;
+letter-spacing:1px;
+}
+
+/* HERO */
+
+.hero{
+height:100vh;
+display:flex;
+flex-direction:column;
+justify-content:center;
+align-items:center;
+text-align:center;
+padding:20px;
+background:linear-gradient(180deg,#000,#0a0a0a);
+}
+
+.hero h1{
+font-size:64px;
+margin-bottom:20px;
+animation:fadeUp 1.2s ease;
+}
+
+.hero p{
+font-size:20px;
+color:#d0d0d0;
+max-width:650px;
+margin-bottom:40px;
+animation:fadeUp 1.6s ease;
+}
+
+.hero-buttons a{
+margin:10px;
+padding:16px 32px;
+border-radius:40px;
+text-decoration:none;
+font-weight:500;
+transition:0.3s;
+}
+
+.btn-white{
+background:white;
+color:black;
+}
+
+.btn-dark{
+border:1px solid #aaa;
+color:white;
+}
+
+.hero-buttons a:hover{
+transform:scale(1.05);
+}
+
+/* SECTION */
+
+.section{
+padding:120px 20px;
+max-width:1100px;
+margin:auto;
+}
+
+.section-title{
+font-size:42px;
+text-align:center;
+margin-bottom:70px;
+}
+
+/* GRID */
+
+.grid{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(240px,1fr));
+gap:30px;
+}
+
+/* CARD */
+
+.card{
+background:#111;
+padding:35px;
+border-radius:20px;
+opacity:0;
+transform:translateY(40px);
+transition:0.8s;
+}
+
+.card.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.card:hover{
+transform:translateY(-10px);
+background:#181818;
+}
+
+.card h3{
+margin-bottom:15px;
+font-size:20px;
+}
+
+.card p{
+color:#bdbdbd;
+font-size:15px;
+}
+
+/* STEPS */
+
+.steps{
+display:grid;
+grid-template-columns:repeat(auto-fit,minmax(260px,1fr));
+gap:30px;
+}
+
+.step{
+background:#111;
+padding:40px;
+border-radius:20px;
+opacity:0;
+transform:translateY(40px);
+transition:0.8s;
+}
+
+.step.show{
+opacity:1;
+transform:translateY(0);
+}
+
+.step-number{
+font-size:32px;
+font-weight:600;
+margin-bottom:10px;
+}
+
+/* CTA */
+
+.cta{
+background:white;
+color:black;
+text-align:center;
+padding:120px 20px;
+}
+
+.cta h2{
+font-size:44px;
+margin-bottom:20px;
+}
+
+.cta a{
+background:black;
+color:white;
+padding:18px 36px;
+border-radius:40px;
+text-decoration:none;
+font-size:18px;
+transition:0.3s;
+}
+
+.cta a:hover{
+transform:scale(1.05);
+}
+
+/* FOOTER */
+
+footer{
+padding:50px 20px;
+text-align:center;
+background:#050505;
+color:#999;
+}
+
+/* ANIMATIONS */
+
+@keyframes fadeUp{
+from{
+opacity:0;
+transform:translateY(30px);
+}
+to{
+opacity:1;
+transform:translateY(0);
+}
+}
+
+/* MOBILE */
+
+@media(max-width:700px){
+.hero h1{
+font-size:38px;
+}
+.section-title{
+font-size:30px;
+}
+}
+
 </style>
+
 </head>
 
 <body>
 
-<header>
-<div class="logo">Независимая Экспертиза</div>
-</header>
+<nav>
+<div class="logo">
+Независимая Экспертиза Воронеж
+</div>
+</nav>
 
-<section class="hero" data-aos="fade-up">
-<h1>Честная независимая экспертиза в Воронеже</h1>
-<p>Работаем по репутации, объективно и профессионально. Защищаем ваши права и интересы.</p>
-<a class="btn" href="tel:+79518703934">Позвонить эксперту</a>
+<section class="hero">
+<h1>Независимая Экспертиза<br>в Воронеже</h1>
+<p>Честная независимая экспертиза. Работаем по репутации, защитим ваши права и интересы.</p>
+
+<div class="hero-buttons">
+<a class="btn-white" href="tel:+79518703934">
+Позвонить эксперту
+</a>
+<a class="btn-dark" href="#services">
+Наши услуги
+</a>
+</div>
+</section>
+
+<section id="services" class="section">
+<h2 class="section-title">Наши услуги</h2>
+<div class="grid">
+<div class="card">
+<h3>📄 Оценка и экспертиза</h3>
+<p>Проводим полную независимую экспертизу имущества и документов.</p>
+</div>
+<div class="card">
+<h3>⚖️ Консультации</h3>
+<p>Консультации по вопросам страховых выплат и юридической защиты.</p>
+</div>
+<div class="card">
+<h3>💼 Репутация</h3>
+<p>Работаем только по репутации и рекомендациям наших клиентов.</p>
+</div>
+<div class="card">
+<h3>💰 Выгода клиенту</h3>
+<p>Помогаем получить максимальную компенсацию и объективную оценку.</p>
+</div>
+</div>
+</section>
+
+<section id="steps" class="section">
+<h2 class="section-title">Как мы работаем</h2>
+<div class="steps">
+<div class="step">
+<div class="step-number">1</div>
+Позвоните нам и сообщите детали экспертизы.
+</div>
+<div class="step">
+<div class="step-number">2</div>
+Наш эксперт выезжает на место или проводит онлайн оценку.
+</div>
+<div class="step">
+<div class="step-number">3</div>
+Предоставляем отчет и рекомендации для клиента.
+</div>
+</div>
+</section>
+
+<section class="cta">
+<h2>Нужна независимая экспертиза?</h2>
+<p style="margin-bottom:30px;">Позвоните прямо сейчас</p>
+<a href="tel:+79518703934">
++7 (951) 870-39-34
+</a>
 </section>
 
 <section class="section">
-<div class="container">
-<h2 style="text-align:center;font-size:24px;" data-aos="fade-up">Почему выбирают нас</h2>
-<div class="cards">
-<div class="card" data-aos="fade-up" data-aos-delay="100">
-<h3>Честность</h3>
-<p>Проводим независимую оценку без давления и предвзятости.</p>
-</div>
-<div class="card" data-aos="fade-up" data-aos-delay="200">
-<h3>Репутация</h3>
-<p>Большинство клиентов приходит по рекомендациям и доверию.</p>
-</div>
-<div class="card" data-aos="fade-up" data-aos-delay="300">
-<h3>Выгода</h3>
-<p>Максимальная защита интересов клиента и оптимальные решения.</p>
-</div>
-</div>
-
-<div class="address" data-aos="fade-up" data-aos-delay="400">
+<div class="address">
 <h2>Наш офис</h2>
 <p>г. Воронеж, ул. Антонова-Овсиенко 7</p>
 <p>Работаем: Пн–Сб с 09:00 до 19:00</p>
-<a class="phone-btn" href="tel:+79518703934">Позвонить эксперту +7 (951) 870-39-34</a>
-</div>
-
+<a class="btn-white" href="tel:+79518703934">Позвонить эксперту</a>
 </div>
 </section>
 
-<footer>© 2026 Независимая Экспертиза Воронеж</footer>
+<footer>
+Независимая Экспертиза Воронеж  
+<br><br>
+Телефон: +7 (951) 870-39-34
+</footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/aos/2.3.4/aos.js"></script>
 <script>
-AOS.init({duration:1000,once:true});
+const observer = new IntersectionObserver(entries => {
+entries.forEach(entry => {
+if(entry.isIntersecting){
+entry.target.classList.add("show")
+}
+})
+})
+document.querySelectorAll(".card, .step").forEach(el => {
+observer.observe(el)
+})
 </script>
 
 </body>

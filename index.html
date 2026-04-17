@@ -2,247 +2,761 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Никита | Профессиональный Автоюрист в Воронеже</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Автоюрист Воронеж | Помощь при ДТП, ОСАГО, Экспертизы</title>
+    <meta name="description" content="Профессиональный автоюрист в Воронеже. Помощь при ДТП, взыскание максимальной выплаты по ОСАГО/КАСКО, независимая судебная экспертиза. Звоните: +7 (951) 870-39-34">
+    
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        /* Базовые настройки и цвета (Стиль Tesla / Apple Dark Mode) */
+        /* Базовые настройки и переменные */
         :root {
-            --bg-color: #000000;
-            --text-main: #f5f5f7;
-            --text-muted: #86868b;
-            --accent: #2997ff;
-            --accent-hover: #147ce0;
-            --card-bg: #111111;
-            --glass-bg: rgba(20, 20, 20, 0.7);
+            --primary-color: #0f2027; /* Темно-синий/черный */
+            --secondary-color: #203a43;
+            --accent-color: #f2a65a; /* Теплый оранжевый/золотой для кнопок */
+            --accent-hover: #d98a3e;
+            --text-light: #ffffff;
+            --text-dark: #333333;
+            --bg-light: #f8f9fa;
+            --transition: all 0.3s ease-in-out;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: 'Montserrat', sans-serif;
         }
 
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-main);
-            line-height: 1.5;
-            -webkit-font-smoothing: antialiased;
+        html, body {
+            overflow-x: hidden;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            scroll-behavior: smooth;
         }
 
-        /* Прилипающая шапка (App-like Header) */
-        header {
-            position: fixed;
-            top: 0;
+        a {
+            text-decoration: none;
+            color: inherit;
+        }
+
+        ul {
+            list-style: none;
+        }
+
+        /* Утилиты */
+        .container {
             width: 100%;
-            height: 70px;
-            background: var(--glass-bg);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
-            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 0 5%;
-            z-index: 1000;
-        }
-
-        .logo {
-            font-weight: 600;
-            font-size: 1.2rem;
-            letter-spacing: 0.5px;
-        }
-
-        .logo span {
-            color: var(--text-muted);
-            font-weight: 300;
-        }
-
-        .btn-call {
-            background-color: var(--text-main);
-            color: var(--bg-color);
-            text-decoration: none;
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-        }
-
-        .btn-call:hover {
-            background-color: #d1d1d6;
-            transform: scale(1.05);
-        }
-
-        /* Главный экран (Hero Section) */
-        .hero {
-            height: 100vh;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            padding: 0 5%;
-            background: radial-gradient(circle at center, #1a1a1a 0%, #000000 80%);
-            margin-top: 0;
-        }
-
-        .hero h1 {
-            font-size: clamp(2.5rem, 5vw, 4.5rem);
-            font-weight: 800;
-            letter-spacing: -1px;
-            margin-bottom: 20px;
-            background: linear-gradient(180deg, #fff 0%, #86868b 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-
-        .hero p {
-            font-size: clamp(1rem, 2vw, 1.3rem);
-            color: var(--text-muted);
-            max-width: 600px;
-            margin-bottom: 40px;
-        }
-
-        .hero .btn-primary {
-            background-color: var(--accent);
-            color: white;
-            text-decoration: none;
-            padding: 16px 36px;
-            border-radius: 40px;
-            font-size: 1.1rem;
-            font-weight: 600;
-            transition: background 0.3s ease, transform 0.3s ease;
-            box-shadow: 0 4px 15px rgba(41, 151, 255, 0.3);
-        }
-
-        .hero .btn-primary:hover {
-            background-color: var(--accent-hover);
-            transform: translateY(-2px);
-        }
-
-        /* Секция услуг */
-        .services {
-            padding: 100px 5%;
             max-width: 1200px;
             margin: 0 auto;
+            padding: 0 20px;
         }
 
         .section-title {
             text-align: center;
             font-size: 2.5rem;
-            margin-bottom: 60px;
-            font-weight: 600;
+            font-weight: 800;
+            margin-bottom: 3rem;
+            color: var(--primary-color);
+            text-transform: uppercase;
         }
 
-        .grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+        .section-title span {
+            color: var(--accent-color);
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 15px 35px;
+            background-color: var(--accent-color);
+            color: var(--text-light);
+            font-weight: 700;
+            font-size: 1.1rem;
+            border-radius: 50px;
+            border: none;
+            cursor: pointer;
+            transition: var(--transition);
+            text-transform: uppercase;
+            box-shadow: 0 10px 20px rgba(242, 166, 90, 0.3);
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+            transform: translateY(-3px);
+            box-shadow: 0 15px 25px rgba(242, 166, 90, 0.4);
+        }
+
+        /* Анимация пульсации для главного телефона */
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(242, 166, 90, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(242, 166, 90, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(242, 166, 90, 0); }
+        }
+
+        .btn-pulse {
+            animation: pulse 2s infinite;
+        }
+
+        /* Шапка (Header) */
+        header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            background: rgba(15, 32, 39, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            padding: 15px 0;
+            box-shadow: 0 2px 15px rgba(0,0,0,0.1);
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .logo {
+            color: var(--text-light);
+            font-size: 1.5rem;
+            font-weight: 800;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo i {
+            color: var(--accent-color);
+            font-size: 2rem;
+        }
+
+        .nav-links {
+            display: flex;
             gap: 30px;
         }
 
-        .card {
-            background-color: var(--card-bg);
+        .nav-links a {
+            color: var(--text-light);
+            font-weight: 600;
+            font-size: 1rem;
+            transition: var(--transition);
+        }
+
+        .nav-links a:hover {
+            color: var(--accent-color);
+        }
+
+        .header-phone {
+            color: var(--accent-color);
+            font-weight: 800;
+            font-size: 1.2rem;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        /* Мобильное меню */
+        .menu-toggle {
+            display: none;
+            color: var(--text-light);
+            font-size: 1.8rem;
+            cursor: pointer;
+        }
+
+        /* Главный экран (Hero) */
+        .hero {
+            height: 100vh;
+            min-height: 700px;
+            background: linear-gradient(rgba(15, 32, 39, 0.8), rgba(32, 58, 67, 0.8)), url('https://images.unsplash.com/photo-1505322022379-7c3353ee6291?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') center/cover no-repeat;
+            display: flex;
+            align-items: center;
+            position: relative;
+            padding-top: 80px; /* Отступ для шапки */
+        }
+
+        .hero-content {
+            max-width: 800px;
+            color: var(--text-light);
+            z-index: 2;
+        }
+
+        .hero-tagline {
+            color: var(--accent-color);
+            font-weight: 700;
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .hero h1 {
+            font-size: 4rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero p {
+            font-size: 1.2rem;
+            line-height: 1.6;
+            margin-bottom: 40px;
+            font-weight: 300;
+            opacity: 0.9;
+        }
+
+        /* Преимущества (Stats/Features) */
+        .features {
+            padding: 80px 0;
+            background-color: var(--bg-light);
+        }
+
+        .features-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 30px;
+            margin-top: -120px; /* Поднятие над фоном hero */
+            position: relative;
+            z-index: 3;
+        }
+
+        .feature-card {
+            background: #fff;
             padding: 40px 30px;
-            border-radius: 20px;
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: transform 0.4s ease, background 0.4s ease;
+            border-radius: 15px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+            text-align: center;
+            transition: var(--transition);
+            border-bottom: 4px solid var(--accent-color);
         }
 
-        .card:hover {
+        .feature-card:hover {
             transform: translateY(-10px);
-            background-color: #1a1a1a;
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
         }
 
-        .card h3 {
-            font-size: 1.4rem;
+        .feature-card i {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .feature-card h3 {
+            font-size: 1.3rem;
             margin-bottom: 15px;
+            color: var(--primary-color);
         }
 
-        .card p {
-            color: var(--text-muted);
+        .feature-card p {
             font-size: 0.95rem;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        /* Услуги (Services) */
+        .services {
+            padding: 100px 0;
+            background-color: #fff;
+        }
+
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 40px;
+        }
+
+        .service-card {
+            background: var(--bg-light);
+            border-radius: 20px;
+            overflow: hidden;
+            transition: var(--transition);
+            border: 1px solid #eee;
+        }
+
+        .service-card:hover {
+            box-shadow: 0 20px 40px rgba(0,0,0,0.08);
+            transform: translateY(-5px);
+        }
+
+        .service-header {
+            background: var(--primary-color);
+            color: var(--text-light);
+            padding: 30px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .service-header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(242,166,90,0.1) 0%, rgba(255,255,255,0) 70%);
+            transform: scale(0);
+            transition: transform 0.5s;
+        }
+
+        .service-card:hover .service-header::before {
+            transform: scale(1);
+        }
+
+        .service-header i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--accent-color);
+        }
+
+        .service-header h3 {
+            font-size: 1.5rem;
+            font-weight: 700;
+        }
+
+        .service-body {
+            padding: 30px;
+        }
+
+        .service-list {
+            margin-bottom: 20px;
+        }
+
+        .service-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 15px;
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.4;
+        }
+
+        .service-list li::before {
+            content: '\f00c';
+            font-family: 'Font Awesome 6 Free';
+            font-weight: 900;
+            position: absolute;
+            left: 0;
+            top: 2px;
+            color: var(--accent-color);
+        }
+
+        /* Блок доверия / Почему мы */
+        .trust {
+            padding: 100px 0;
+            background: var(--primary-color);
+            color: var(--text-light);
+        }
+
+        .trust .section-title {
+            color: var(--text-light);
+        }
+
+        .trust-content {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 40px;
+            align-items: center;
+        }
+
+        .trust-text {
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .trust-text p {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 20px;
+            color: #ddd;
+        }
+
+        .trust-points {
+            flex: 1;
+            min-width: 300px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .trust-point {
+            background: rgba(255,255,255,0.05);
+            padding: 25px;
+            border-radius: 15px;
+            text-align: center;
+            border: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .trust-point h4 {
+            font-size: 2.5rem;
+            color: var(--accent-color);
+            margin-bottom: 10px;
+        }
+
+        .trust-point span {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        /* Призыв к действию (CTA) / Контакты */
+        .cta {
+            padding: 100px 0;
+            text-align: center;
+            background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(135deg, var(--bg-light) 0%, #e9ecef 100%);
+        }
+
+        .cta h2 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 20px;
+        }
+
+        .cta p {
+            font-size: 1.2rem;
+            color: #555;
+            margin-bottom: 40px;
+            max-width: 700px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .contact-box {
+            background: #fff;
+            max-width: 600px;
+            margin: 0 auto;
+            padding: 50px;
+            border-radius: 20px;
+            box-shadow: 0 20px 50px rgba(0,0,0,0.1);
+        }
+
+        .big-phone {
+            display: block;
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--primary-color);
+            margin: 20px 0;
+            transition: var(--transition);
+        }
+
+        .big-phone:hover {
+            color: var(--accent-color);
+            transform: scale(1.05);
+        }
+
+        .contact-info {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+
+        .contact-info div {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 1.1rem;
+            color: #555;
+            font-weight: 600;
+        }
+
+        .contact-info i {
+            color: var(--accent-color);
+            font-size: 1.5rem;
         }
 
         /* Футер */
         footer {
+            background: #0a151a;
+            color: #888;
+            padding: 40px 0;
             text-align: center;
-            padding: 50px 5%;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-            color: var(--text-muted);
-            font-size: 0.9rem;
         }
 
-        /* Анимации при скролле (JS Intersection Observer) */
+        footer p {
+            margin-bottom: 10px;
+        }
+
+        /* Анимации при скролле (CSS классы для JS) */
         .reveal {
             opacity: 0;
-            transform: translateY(40px);
-            transition: opacity 0.8s ease, transform 0.8s ease;
+            transform: translateY(50px);
+            transition: all 0.8s ease-out;
         }
 
         .reveal.active {
             opacity: 1;
             transform: translateY(0);
         }
+
+        /* Адаптивность (Медиа-запросы) */
+        @media (max-width: 992px) {
+            .hero h1 { font-size: 3rem; }
+            .features-grid { margin-top: 40px; }
+        }
+
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed;
+                top: 70px;
+                right: -100%;
+                flex-direction: column;
+                background: var(--primary-color);
+                width: 100%;
+                text-align: center;
+                padding: 40px 0;
+                transition: 0.4s;
+                box-shadow: 0 10px 15px rgba(0,0,0,0.1);
+            }
+            .nav-links.active { right: 0; }
+            .menu-toggle { display: block; }
+            .header-phone { display: none; } /* Скрываем телефон в шапке на мобилках для экономии места */
+            
+            .hero h1 { font-size: 2.2rem; }
+            .hero p { font-size: 1rem; }
+            .section-title { font-size: 2rem; }
+            
+            .trust-points { grid-template-columns: 1fr; }
+            .big-phone { font-size: 2rem; }
+            .contact-box { padding: 30px 20px; }
+        }
+
+        @media (max-width: 480px) {
+            .hero { text-align: center; padding-top: 100px; }
+            .hero h1 { font-size: 1.8rem; }
+            .feature-card { padding: 30px 20px; }
+            .btn { width: 100%; padding: 15px 0; text-align: center; }
+            .contact-info { flex-direction: column; align-items: center; gap: 15px;}
+        }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">Никита <span>| Автоюрист</span></div>
-        <a href="tel:+79518703934" class="btn-call">Позвонить</a>
+        <div class="container header-content">
+            <a href="#" class="logo">
+                <i class="fa-solid fa-scale-balanced"></i>
+                <span>АвтоЮрист<br><small style="font-size: 0.6rem; font-weight: 400; letter-spacing: 2px;">ВОРОНЕЖ</small></span>
+            </a>
+            
+            <nav class="nav-links" id="navLinks">
+                <a href="#services" class="nav-link">Услуги</a>
+                <a href="#advantages" class="nav-link">Преимущества</a>
+                <a href="#contacts" class="nav-link">Контакты</a>
+            </nav>
+
+            <a href="tel:+79518703934" class="header-phone">
+                <i class="fa-solid fa-phone"></i> +7 (951) 870-39-34
+            </a>
+
+            <i class="fa-solid fa-bars menu-toggle" id="mobileMenuBtn"></i>
+        </div>
     </header>
 
-    <section class="hero reveal active">
-        <h1>Ваш юрист на дорогах.</h1>
-        <p>Профессиональная помощь при ДТП, спорах со страховыми компаниями и судебных экспертизах по Воронежу и области.</p>
-        <a href="tel:+79518703934" class="btn-primary">Связаться со мной</a>
+    <section class="hero">
+        <div class="container">
+            <div class="hero-content reveal active">
+                <div class="hero-tagline">Надежная правовая защита</div>
+                <h1>Страховая платит мало? <br>Попали в ДТП?</h1>
+                <p>Профессиональный автоюрист в Воронеже. Заставлю страховую компанию выплатить всё до копейки. Защищу ваши права в ГИБДД и суде. Оплата только за реальный результат!</p>
+                <a href="tel:+79518703934" class="btn btn-pulse">
+                    <i class="fa-solid fa-phone-volume" style="margin-right: 10px;"></i> Срочная консультация
+                </a>
+            </div>
+        </div>
     </section>
 
-    <section class="services">
-        <h2 class="section-title reveal">Что я делаю</h2>
-        <div class="grid">
-            <div class="card reveal">
-                <h3>Оформление ДТП</h3>
-                <p>Грамотно и быстро оформлю происшествие. Зафиксирую все детали, чтобы у страховой не осталось шансов отказать в выплате.</p>
+    <section class="features" id="advantages">
+        <div class="container">
+            <div class="features-grid">
+                <div class="feature-card reveal">
+                    <i class="fa-solid fa-shield-halved"></i>
+                    <h3>Работаем без предоплаты</h3>
+                    <p>В спорах по ОСАГО и КАСКО вы платите гонорар только после того, как деньги поступят на ваш счет.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay: 0.2s;">
+                    <i class="fa-solid fa-gavel"></i>
+                    <h3>Взыскиваем 100% ущерба</h3>
+                    <p>Получаем не только сумму ремонта, но и штрафы (50% от суммы), неустойки и моральный вред по закону о ЗПП.</p>
+                </div>
+                <div class="feature-card reveal" style="transition-delay: 0.4s;">
+                    <i class="fa-solid fa-microscope"></i>
+                    <h3>Свои эксперты</h3>
+                    <p>Организуем независимую судебную экспертизу с лицензированными специалистами. Точный расчет ущерба.</p>
+                </div>
             </div>
-            <div class="card reveal">
-                <h3>Страховые выплаты</h3>
-                <p>Выбью максимальную компенсацию по ОСАГО и КАСКО. Заставлю страховые компании платить честно и в срок.</p>
+        </div>
+    </section>
+
+    <section class="services" id="services">
+        <div class="container">
+            <h2 class="section-title reveal">Мои <span>Услуги</span></h2>
+            
+            <div class="services-grid">
+                
+                <div class="service-card reveal">
+                    <div class="service-header">
+                        <i class="fa-solid fa-car-burst"></i>
+                        <h3>Помощь при ДТП</h3>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-list">
+                            <li>Срочный выезд на место аварии</li>
+                            <li>Контроль правильности оформления схемы ДТП сотрудниками ГИБДД</li>
+                            <li>Оспаривание вины в ДТП (если вас сделали виноватым незаконно)</li>
+                            <li>Защита интересов в группе разбора и в суде</li>
+                            <li>Помощь при составлении Европротокола без ошибок</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card reveal" style="transition-delay: 0.2s;">
+                    <div class="service-header">
+                        <i class="fa-solid fa-file-invoice-dollar"></i>
+                        <h3>Максимальные выплаты ОСАГО</h3>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-list">
+                            <li>Споры при занижении выплаты страховой компанией</li>
+                            <li>Взыскание выплаты при незаконном отказе (трасология)</li>
+                            <li>Замена некачественного ремонта на денежную выплату</li>
+                            <li>Взыскание УТС (утраты товарной стоимости) для свежих авто</li>
+                            <li>Подготовка досудебной претензии и жалобы Финансовому уполномоченному</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="service-card reveal" style="transition-delay: 0.4s;">
+                    <div class="service-header">
+                        <i class="fa-solid fa-magnifying-glass-chart"></i>
+                        <h3>Судебные экспертизы</h3>
+                    </div>
+                    <div class="service-body">
+                        <ul class="service-list">
+                            <li>Независимая автотехническая экспертиза (реальная стоимость ремонта)</li>
+                            <li>Трасологическая экспертиза (доказательство механизма ДТП)</li>
+                            <li>Проверка качества проведенного ремонта на СТОА от страховой</li>
+                            <li>Рецензирование экспертиз, проведенных страховыми компаниями</li>
+                            <li>Оценка рыночной стоимости годных остатков (при "тотале")</li>
+                        </ul>
+                    </div>
+                </div>
+
             </div>
-            <div class="card reveal">
-                <h3>Судебные экспертизы</h3>
-                <p>Организую независимую оценку ущерба и буду защищать ваши интересы в суде до победного результата.</p>
+        </div>
+    </section>
+
+    <section class="trust reveal">
+        <div class="container trust-content">
+            <div class="trust-text">
+                <h2 class="section-title" style="text-align: left; margin-bottom: 20px;">Опыт, которому <span>доверяют</span></h2>
+                <p>Страховые компании нанимают целый штат юристов, чтобы законно не платить вам деньги. Не пытайтесь бороться с ними в одиночку.</p>
+                <p>Я знаю все лазейки страховых компаний, алгоритмы работы ГИБДД и судебную практику Воронежской области. Моя цель — восстановить справедливость и вернуть ваши деньги в кратчайшие сроки.</p>
+            </div>
+            <div class="trust-points">
+                <div class="trust-point">
+                    <h4>10+</h4>
+                    <span>Лет практики</span>
+                </div>
+                <div class="trust-point">
+                    <h4>98%</h4>
+                    <span>Выигранных дел</span>
+                </div>
+                <div class="trust-point">
+                    <h4>150+</h4>
+                    <span>Дел в год</span>
+                </div>
+                <div class="trust-point">
+                    <h4>50+ млн</h4>
+                    <span>Взыскано для клиентов</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <section class="cta" id="contacts">
+        <div class="container reveal">
+            <h2>Оценим перспективы вашего дела <span>Бесплатно</span></h2>
+            <p>Не теряйте время. Чем раньше юрист подключится к делу, тем больше шансов на успех. Позвоните сейчас, и я расскажу, как действовать именно в вашей ситуации.</p>
+            
+            <div class="contact-box">
+                <h3 style="color: #333; margin-bottom: 10px;">Прямая связь с юристом:</h3>
+                <p style="margin-bottom: 0; font-size: 1rem;">Воронеж и Воронежская область</p>
+                
+                <a href="tel:+79518703934" class="big-phone">+7 (951) 870-39-34</a>
+                
+                <a href="tel:+79518703934" class="btn btn-pulse" style="width: 100%; margin-top: 20px;">
+                    Позвонить прямо сейчас
+                </a>
+
+                <div class="contact-info">
+                    <div><i class="fa-brands fa-whatsapp" style="color: #25D366;"></i> WhatsApp</div>
+                    <div><i class="fa-brands fa-telegram" style="color: #0088cc;"></i> Telegram</div>
+                    <div><i class="fa-regular fa-clock"></i> Ежедневно: 09:00 - 21:00</div>
+                </div>
             </div>
         </div>
     </section>
 
     <footer>
-        <p>Работаем по Воронежу и Воронежской области.</p>
-        <p style="margin-top: 10px; font-weight: 600; color: #fff;">Телефон: +7 (951) 870-39-34</p>
+        <div class="container">
+            <div class="logo" style="justify-content: center; margin-bottom: 20px; color: #888;">
+                <i class="fa-solid fa-scale-balanced" style="color: #888; font-size: 1.5rem;"></i>
+                <span>АвтоЮрист ВОРОНЕЖ</span>
+            </div>
+            <p>&copy; 2023 - 2024. Все права защищены.</p>
+            <p style="font-size: 0.8rem; margin-top: 10px;">Информация на сайте не является публичной офертой. Конфиденциальность ваших данных гарантируется.</p>
+        </div>
     </footer>
 
     <script>
+        // Мобильное меню
+        const mobileMenuBtn = document.getElementById('mobileMenuBtn');
+        const navLinks = document.getElementById('navLinks');
+        const navItems = document.querySelectorAll('.nav-link');
+
+        mobileMenuBtn.addEventListener('click', () => {
+            navLinks.classList.toggle('active');
+            if(navLinks.classList.contains('active')){
+                mobileMenuBtn.classList.remove('fa-bars');
+                mobileMenuBtn.classList.add('fa-xmark');
+            } else {
+                mobileMenuBtn.classList.remove('fa-xmark');
+                mobileMenuBtn.classList.add('fa-bars');
+            }
+        });
+
+        // Закрытие меню при клике на ссылку
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                navLinks.classList.remove('active');
+                mobileMenuBtn.classList.remove('fa-xmark');
+                mobileMenuBtn.classList.add('fa-bars');
+            });
+        });
+
+        // Анимация при скролле (Intersection Observer)
         function reveal() {
             var reveals = document.querySelectorAll(".reveal");
             for (var i = 0; i < reveals.length; i++) {
                 var windowHeight = window.innerHeight;
                 var elementTop = reveals[i].getBoundingClientRect().top;
-                var elementVisible = 100;
-                
+                var elementVisible = 100; // Расстояние до появления
+
                 if (elementTop < windowHeight - elementVisible) {
                     reveals[i].classList.add("active");
                 }
             }
         }
+
         window.addEventListener("scroll", reveal);
-        // Запуск при загрузке для первого экрана
+        // Вызов функции при загрузке, чтобы показать элементы на первом экране
         reveal();
     </script>
-
 </body>
 </html>

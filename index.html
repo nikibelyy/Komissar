@@ -2,342 +2,355 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аварийный Комиссар Никита | Помощь при ДТП 24/7</title>
+    <meta name="viewport" content="width=1200"> <title>Аварийный Комиссар Никита | +7 (951) 870-39-34</title>
     <style>
-        /* Базовые настройки и шрифты */
-        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;700;900&display=swap');
 
         :root {
-            --bg-color: #050505;
-            --text-color: #ffffff;
-            --accent-color: #ffffff;
-            --dark-gray: #1a1a1a;
+            --bg: #000000;
+            --card-bg: #0a0a0a;
+            --text: #ffffff;
+            --accent: #ffffff;
             --tg-color: #2AABEE;
+            --border: rgba(255, 255, 255, 0.1);
         }
 
-        html {
-            scroll-behavior: smooth;
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
         }
 
         body {
-            margin: 0;
-            padding: 0;
             font-family: 'Montserrat', sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            line-height: 1.6;
+            background-color: var(--bg);
+            color: var(--text);
+            overflow-x: hidden;
+            min-width: 1200px; /* Гарантируем десктопный вид */
         }
 
-        a {
-            text-decoration: none;
-            color: var(--text-color);
+        /* АНИМАЦИИ */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Анимация пульсации для кнопок */
         @keyframes pulse {
             0% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
-            70% { box-shadow: 0 0 0 15px rgba(255, 255, 255, 0); }
+            70% { box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 255, 255, 0); }
         }
 
-        /* Шапка сайта */
+        @keyframes slideLine {
+            0% { width: 0; }
+            100% { width: 100px; }
+        }
+
+        .reveal {
+            animation: fadeIn 1s ease forwards;
+        }
+
+        /* ШАПКА (Фиксированная) */
         header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 25px 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 20px 5%;
-            background-color: rgba(5, 5, 5, 0.95);
-            position: fixed;
-            width: 90%;
-            top: 0;
+            background: rgba(0,0,0,0.9);
+            backdrop-filter: blur(10px);
             z-index: 1000;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
-            font-size: 24px;
-            font-weight: 800;
-            letter-spacing: 1px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        .logo span {
-            font-size: 12px;
-            font-weight: 400;
-            color: #aaa;
+            font-weight: 900;
+            font-size: 26px;
+            letter-spacing: 2px;
         }
 
         .nav-links {
             display: flex;
-            gap: 30px;
+            gap: 40px;
         }
 
         .nav-links a {
+            color: var(--text);
+            text-decoration: none;
             font-size: 14px;
+            text-transform: uppercase;
             font-weight: 600;
-            transition: color 0.3s;
+            letter-spacing: 1px;
+            transition: 0.3s;
         }
 
         .nav-links a:hover {
-            color: #aaa;
+            color: #888;
         }
 
-        .header-contacts {
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .btn-call-small {
-            border: 1px solid var(--accent-color);
-            padding: 10px 20px;
-            border-radius: 30px;
-            font-weight: 600;
-            font-size: 14px;
+        .header-btn {
+            border: 1px solid var(--accent);
+            padding: 12px 25px;
+            border-radius: 50px;
+            font-weight: 700;
             animation: pulse 2s infinite;
         }
 
-        /* Главный экран (Hero) */
+        /* ГЛАВНЫЙ БЛОК */
         .hero {
-            margin-top: 80px;
-            padding: 100px 5%;
-            min-height: 70vh;
+            height: 100vh;
             display: flex;
             align-items: center;
-            /* Сюда можно вставить ссылку на ваше фото на фоне машины */
-            background: linear-gradient(90deg, #050505 50%, transparent 100%), 
-                        url('https://images.unsplash.com/photo-1612083549219-c09a361e389e?q=80&w=1920&auto=format&fit=crop') center/cover;
+            padding: 0 10%;
+            background: linear-gradient(to right, #000 40%, rgba(0,0,0,0) 100%), 
+                        url('https://images.unsplash.com/photo-1502877338535-766e1452684a?q=80&w=1920&auto=format&fit=crop');
+            background-size: cover;
+            background-position: center;
         }
 
         .hero-content {
-            max-width: 600px;
+            max-width: 700px;
+            animation: fadeIn 1.2s ease;
         }
 
         .hero h1 {
-            font-size: 48px;
-            font-weight: 800;
+            font-size: 64px;
+            font-weight: 900;
+            line-height: 1.1;
             margin-bottom: 20px;
-            line-height: 1.2;
         }
 
         .hero p {
-            font-size: 18px;
-            color: #ccc;
+            font-size: 20px;
+            color: #aaa;
             margin-bottom: 40px;
+            border-left: 3px solid #fff;
+            padding-left: 20px;
         }
 
-        .hero-buttons {
+        .cta-group {
             display: flex;
             gap: 20px;
-            flex-wrap: wrap;
         }
 
-        .btn-main {
-            display: inline-block;
-            padding: 18px 35px;
-            border-radius: 50px;
+        .btn {
+            padding: 20px 40px;
+            border-radius: 5px;
             font-weight: 800;
-            font-size: 16px;
-            text-align: center;
-            transition: transform 0.2s;
-        }
-
-        .btn-main:active {
-            transform: scale(0.95);
-        }
-
-        .btn-phone {
-            background-color: transparent;
-            border: 2px solid var(--accent-color);
-            color: var(--accent-color);
-            animation: pulse 2s infinite;
-        }
-
-        .btn-tg {
-            background-color: var(--tg-color);
-            color: white;
-            border: none;
-        }
-
-        /* Разделы О нас и Услуги */
-        .section {
-            padding: 80px 5%;
-        }
-
-        .section-title {
-            font-size: 32px;
-            font-weight: 800;
-            margin-bottom: 40px;
-            text-align: center;
+            text-decoration: none;
             text-transform: uppercase;
-            border-bottom: 2px solid #333;
-            padding-bottom: 10px;
+            transition: 0.4s;
             display: inline-block;
         }
 
-        .about-grid, .services-grid {
+        .btn-white {
+            background: #fff;
+            color: #000;
+        }
+
+        .btn-white:hover {
+            background: #ccc;
+            transform: scale(1.05);
+        }
+
+        .btn-outline {
+            border: 2px solid #fff;
+            color: #fff;
+        }
+
+        .btn-outline:hover {
+            background: #fff;
+            color: #000;
+        }
+
+        /* СЕКЦИИ */
+        .section {
+            padding: 100px 10%;
+        }
+
+        .title-wrap {
+            margin-bottom: 60px;
+        }
+
+        .title-wrap h2 {
+            font-size: 40px;
+            text-transform: uppercase;
+            margin-bottom: 10px;
+        }
+
+        .line {
+            height: 4px;
+            background: #fff;
+            width: 100px;
+            animation: slideLine 1.5s ease;
+        }
+
+        /* КАРТОЧКИ УСЛУГ */
+        .services-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            grid-template-columns: repeat(2, 1fr);
             gap: 30px;
-            margin-top: 40px;
         }
 
         .card {
-            background-color: var(--dark-gray);
-            padding: 30px;
-            border-radius: 15px;
-            border: 1px solid #333;
-            transition: transform 0.3s;
+            background: var(--card-bg);
+            padding: 50px;
+            border: 1px solid var(--border);
+            transition: 0.5s;
+            position: relative;
+            overflow: hidden;
         }
 
         .card:hover {
-            transform: translateY(-5px);
-            border-color: #666;
+            border-color: #fff;
+            transform: translateY(-10px);
         }
 
         .card h3 {
-            margin-top: 0;
-            font-size: 22px;
+            font-size: 24px;
+            margin-bottom: 15px;
         }
 
         .card p {
-            color: #aaa;
-            font-size: 15px;
+            color: #888;
+            font-size: 16px;
         }
 
-        /* Контакты / Футер */
+        .card::before {
+            content: "";
+            position: absolute;
+            top: 0; left: -100%;
+            width: 100%; height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.05), transparent);
+            transition: 0.5s;
+        }
+
+        .card:hover::before {
+            left: 100%;
+        }
+
+        /* ОБО МНЕ */
+        .about-content {
+            background: #111;
+            padding: 60px;
+            display: flex;
+            align-items: center;
+            gap: 50px;
+        }
+
+        .about-text h3 {
+            font-size: 32px;
+            margin-bottom: 20px;
+        }
+
+        /* ФУТЕР */
         footer {
-            background-color: #000;
-            padding: 60px 5%;
+            padding: 80px 10%;
+            background: #000;
             text-align: center;
-            border-top: 1px solid #333;
+            border-top: 1px solid var(--border);
         }
 
-        .contact-number {
-            font-size: 36px;
-            font-weight: 800;
-            margin: 20px 0;
+        .footer-phone {
+            font-size: 54px;
+            font-weight: 900;
+            margin: 30px 0;
             display: block;
+            color: #fff;
         }
 
-        /* Адаптация под мобильные устройства */
-        @media (max-width: 768px) {
-            .nav-links {
-                display: none; /* Скрываем меню на телефоне для экономии места */
-            }
+        .tg-btn {
+            background: var(--tg-color);
+            color: #fff;
+            padding: 20px 50px;
+            border-radius: 50px;
+            font-size: 18px;
+            display: inline-block;
+        }
 
-            .header-contacts {
-                gap: 10px;
-            }
+        .copy {
+            margin-top: 50px;
+            color: #444;
+            font-size: 12px;
+        }
 
-            .btn-call-small {
-                padding: 8px 15px;
-                font-size: 12px;
-            }
-
-            .hero {
-                padding: 120px 5% 60px;
-                background: linear-gradient(180deg, #050505 40%, rgba(5,5,5,0.8) 100%), 
-                            url('https://images.unsplash.com/photo-1612083549219-c09a361e389e?q=80&w=600&auto=format&fit=crop') center/cover;
-                text-align: center;
-            }
-
-            .hero h1 {
-                font-size: 32px;
-            }
-
-            .hero-buttons {
-                flex-direction: column;
-                align-items: center;
-            }
-
-            .btn-main {
-                width: 100%;
-                box-sizing: border-box;
-            }
-
-            .contact-number {
-                font-size: 28px;
-            }
+        /* Плавная прокрутка */
+        html {
+            scroll-behavior: smooth;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">
-            АВАРКОМ
-            <span>ПОМОЩЬ ПРИ ДТП</span>
-        </div>
+        <div class="logo">НИКИТА / АВАРКОМ</div>
         <nav class="nav-links">
             <a href="#about">Обо мне</a>
             <a href="#services">Услуги</a>
             <a href="#contacts">Контакты</a>
         </nav>
-        <div class="header-contacts">
-            <a href="tel:+79518703934" class="btn-call-small">ВЫЗОВ 24/7</a>
-        </div>
+        <a href="tel:+79518703934" class="header-btn">ВЫЗОВ 24/7</a>
     </header>
 
     <section class="hero">
         <div class="hero-content">
-            <h1>АВАРИЙНЫЙ КОМИССАР 24/7.<br>ВЫЕЗД ЗА 15 МИНУТ.</h1>
-            <p>Профессиональное оформление ДТП, Европротокол, защита и помощь на месте аварии.</p>
-            <div class="hero-buttons">
-                <a href="tel:+79518703934" class="btn-main btn-phone">📞 +7 (951) 870-39-34</a>
-                <a href="https://t.me/blatsphera" target="_blank" class="btn-main btn-tg">Написать в Telegram</a>
+            <h1>БЫСТРАЯ ПОМОЩЬ<br>ПРИ ДТП.</h1>
+            <p>Ваш персональный аварийный комиссар. Приезд в любую точку города за 15 минут. Работаю тогда, когда другие отдыхают.</p>
+            <div class="cta-group">
+                <a href="tel:+79518703934" class="btn btn-white">Позвонить сейчас</a>
+                <a href="#services" class="btn btn-outline">Наши услуги</a>
             </div>
         </div>
     </section>
 
     <section id="about" class="section">
-        <div style="text-align: center;">
-            <h2 class="section-title">Обо мне</h2>
+        <div class="title-wrap">
+            <h2>Обо мне</h2>
+            <div class="line"></div>
         </div>
-        <div class="card" style="max-width: 800px; margin: 0 auto; text-align: center;">
-            <h3>Здравствуйте, меня зовут Никита!</h3>
-            <p>Я — ваш личный помощник на дороге. Оперативно выезжаю на место ДТП в любое время суток. Помогаю избежать ошибок при общении со вторым участником аварии и сотрудниками ГИБДД. Беру на себя всю бумажную работу, чтобы вы могли сберечь свои нервы и время.</p>
+        <div class="about-content">
+            <div class="about-text">
+                <h3>Никита — эксперт по ДТП</h3>
+                <p>Я частный аварийный комиссар с многолетним опытом. Моя задача — сделать так, чтобы вы не переживали из-за бумаг и споров на дороге. Я полностью беру на себя оформление Европротокола, фотофиксацию и общение с ГИБДД. Работаю прозрачно, честно и быстро.</p>
+            </div>
         </div>
     </section>
 
     <section id="services" class="section">
-        <div style="text-align: center;">
-            <h2 class="section-title">Услуги</h2>
-            <p style="color: #aaa;">Стоимость услуг зависит от сложности ситуации и рассчитывается индивидуально.</p>
+        <div class="title-wrap">
+            <h2>Услуги</h2>
+            <p style="color: #666; margin-top: 10px;">Цена обговаривается индивидуально в зависимости от сложности</p>
+            <div class="line"></div>
         </div>
         <div class="services-grid">
             <div class="card">
-                <h3>Оформление Европротокола</h3>
-                <p>Правильное заполнение извещения о ДТП без вызова сотрудников ГИБДД. Гарантия того, что страховая не откажет в выплате из-за ошибок в бланке.</p>
+                <h3>Европротокол</h3>
+                <p>Оформление ДТП без участия сотрудников полиции. Быстро, грамотно, без очередей.</p>
             </div>
             <div class="card">
-                <h3>Фото и видеофиксация</h3>
-                <p>Составление подробной схемы ДТП, фиксация расположения транспортных средств, следов торможения и повреждений с правильных ракурсов.</p>
+                <h3>Фотофиксация</h3>
+                <p>Профессиональная съемка места аварии для страховой компании и судебных инстанций.</p>
             </div>
             <div class="card">
-                <h3>Юридическая поддержка</h3>
-                <p>Консультация на месте ДТП, защита ваших интересов при спорных ситуациях со вторым участником или сотрудниками автоинспекции.</p>
+                <h3>Юридическая защита</h3>
+                <p>Консультации и помощь в решении спорных вопросов с другими участниками ДТП.</p>
             </div>
             <div class="card">
-                <h3>Помощь с эвакуатором</h3>
-                <p>Организация быстрой подачи проверенного эвакуатора, если ваш автомобиль получил серьезные повреждения и не может передвигаться самостоятельно.</p>
+                <h3>Эвакуация</h3>
+                <p>Быстрый вызов эвакуатора и контроль погрузки вашего транспортного средства.</p>
             </div>
         </div>
     </section>
 
     <footer id="contacts">
-        <h2 class="section-title" style="border-bottom: none; margin-bottom: 10px;">СВЯЗАТЬСЯ СО МНОЙ</h2>
-        <p style="color: #aaa;">Работаю круглосуточно, без выходных</p>
-        
-        <a href="tel:+79518703934" class="contact-number">+7 (951) 870-39-34</a>
-        
-        <div style="margin-top: 30px; display: flex; justify-content: center; gap: 20px;">
-            <a href="https://t.me/blatsphera" target="_blank" class="btn-main btn-tg" style="padding: 15px 40px;">Написать в Telegram @blatsphera</a>
+        <h2>НУЖНА ПОМОЩЬ? ЗВОНИТЕ!</h2>
+        <a href="tel:+79518703934" class="footer-phone">+7 (951) 870-39-34</a>
+        <div style="margin-bottom: 20px;">
+            <a href="https://t.me/blatsphera" target="_blank" class="tg-btn">Написать в Telegram @blatsphera</a>
         </div>
-        
-        <p style="margin-top: 50px; font-size: 12px; color: #555;">© 2024 Аварийный комиссар Никита. Все права защищены.</p>
+        <p class="copy">© 2026 ЧАСТНЫЙ АВАРИЙНЫЙ КОМИССАР НИКИТА. ВСЕ ПРАВА ЗАЩИЩЕНЫ.</p>
     </footer>
 
 </body>

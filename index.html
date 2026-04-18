@@ -3,192 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Никита | Аварийный Комиссар</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <title>Никита | Контакт</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg: #0a0a0a;
-            --accent: #ffcc00; /* Профессиональный желтый */
-            --card-bg: rgba(255, 255, 255, 0.05);
-            --text: #ffffff;
-            --text-dim: #a0a0a0;
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', sans-serif;
+            --bg: #000000;
+            --accent: #ffcc00;
+            --card-bg: #111111;
         }
 
         body {
             background-color: var(--bg);
-            color: var(--text);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
             display: flex;
             justify-content: center;
             align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
+            margin: 0;
             padding: 20px;
         }
 
-        /* Фоновый декор */
-        body::before {
-            content: "";
-            position: fixed;
-            top: -10%;
-            left: -10%;
-            width: 40%;
-            height: 40%;
-            background: radial-gradient(circle, rgba(255, 204, 0, 0.05) 0%, transparent 70%);
-            z-index: -1;
-        }
-
-        .card {
-            width: 100%;
-            max-width: 380px;
+        .qr-card {
             background: var(--card-bg);
-            backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 24px;
-            padding: 40px 24px;
+            padding: 40px 20px;
+            border-radius: 30px;
             text-align: center;
-            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
-            animation: slideUp 0.8s ease-out;
+            border: 1px solid #222;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.8);
+            max-width: 320px;
+            width: 100%;
+            animation: fadeIn 0.6s ease-out;
         }
 
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(40px); }
-            to { opacity: 1; transform: translateY(0); }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
         }
 
-        .header h1 {
-            font-size: 2rem;
+        h1 {
+            font-size: 1.5rem;
+            margin-bottom: 5px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .subtitle {
+            color: var(--accent);
+            font-size: 0.8rem;
             font-weight: 700;
-            letter-spacing: -0.5px;
-            text-transform: uppercase;
-            margin-bottom: 4px;
-        }
-
-        .badge {
-            background: var(--accent);
-            color: #000;
-            display: inline-block;
-            padding: 4px 12px;
-            border-radius: 6px;
-            font-size: 0.75rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            margin-bottom: 24px;
-        }
-
-        .contact-buttons {
-            display: grid;
-            gap: 12px;
             margin-bottom: 30px;
-        }
-
-        .btn {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            padding: 16px;
-            border-radius: 12px;
-            text-decoration: none;
-            font-weight: 600;
-            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-            font-size: 1rem;
-        }
-
-        .btn-call {
-            background-color: var(--accent);
-            color: #000;
-        }
-
-        .btn-call:hover {
-            transform: scale(1.02);
-            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
-        }
-
-        .btn-tg {
-            background-color: rgba(255, 255, 255, 0.08);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-
-        .btn-tg:hover {
-            background-color: rgba(255, 255, 255, 0.15);
-        }
-
-        .address-box {
-            margin-top: 20px;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-            border-top: 1px solid rgba(255, 255, 255, 0.05);
-            padding-top: 20px;
-        }
-
-        .address-box strong {
             display: block;
-            color: var(--text);
-            margin-bottom: 4px;
         }
 
-        /* Секция QR-кода */
-        .qr-section {
-            margin-top: 30px;
+        .qr-container {
             background: #fff;
             padding: 15px;
-            border-radius: 18px;
+            border-radius: 20px;
             display: inline-block;
-            transition: transform 0.3s ease;
+            margin-bottom: 25px;
         }
 
-        .qr-section:hover {
-            transform: scale(1.05);
-        }
-
-        .qr-label {
+        .qr-container img {
             display: block;
-            font-size: 0.7rem;
-            color: #000;
-            margin-bottom: 8px;
-            font-weight: 700;
-            text-transform: uppercase;
+            width: 220px;
+            height: 220px;
         }
 
-        .qr-image {
-            width: 140px;
-            height: 140px;
+        .instruction {
+            font-size: 0.9rem;
+            color: #666;
+            line-height: 1.4;
+        }
+
+        .address {
+            margin-top: 20px;
+            font-size: 0.75rem;
+            color: #444;
         }
     </style>
 </head>
 <body>
 
-    <div class="card">
-        <div class="header">
-            <h1>НИКИТА</h1>
-            <div class="badge">Аварийный Комиссар</div>
+    <div class="qr-card">
+        <h1>НИКИТА</h1>
+        <span class="subtitle">АВАРИЙНЫЙ КОМИССАР</span>
+
+        <div class="qr-container">
+            <img src="https://api.qrserver.com/v1/create-qr-code/?size=250x250&data=BEGIN%3AVCARD%0AVERSION%3A3.0%0AFN%3A%D0%9D%D0%B8%D0%BA%D0%B8%D1%82%D0%B0%20%D0%90%D0%B2%D0%B0%D1%80%D0%BA%D0%BE%D0%BC%0ATEL%3BTYPE%3DCELL%3A%2B79518703934%0ANOTE%3ATelegram%3A%20%40blatsphera%0AADR%3A%3B%3B%D0%90%D0%BD%D1%82%D0%BE%D0%BD%D0%BE%D0%B2%D0%B0-%D0%9E%D0%B2%D1%81%D0%B8%D0%B5%D0%BD%D0%BA%D0%BE%207%3B%D0%92%D0%BE%D1%80%D0%BE%D0%BD%D0%B5%D0%B6%3B%3B%3B%0AEND%3AVCARD" alt="Добавить контакт">
         </div>
 
-        <div class="contact-buttons">
-            <a href="tel:+79518703934" class="btn btn-call">
-                ПОЗВОНИТЬ: +7 (951) 870-39-34
-            </a>
-            <a href="https://t.me/blatsphera" target="_blank" class="btn btn-tg">
-                TELEGRAM: @blatsphera
-            </a>
-        </div>
-
-        <div class="address-box">
-            <strong>Местоположение:</strong>
-            г. Воронеж, ул. Антонова-Овсеенко, 7
-        </div>
-
-        <div class="qr-section">
-            <span class="qr-label">QR CODE</span>
-            <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://nikibelyy.github.io/Komissar/" alt="QR Code">
-        </div>
+        <p class="instruction">Наведите камеру,<br>чтобы сохранить мой контакт</p>
+        
+        <div class="address">Антонова-Овсеенко, 7</div>
     </div>
 
 </body>

@@ -3,149 +3,191 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аварийный Комиссар | Никита</title>
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <title>Никита | Аварийный Комиссар</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #121212;
-            --card-bg: #1e1e1e;
-            --accent-color: #e63946; /* Красный для экстренных служб */
-            --tg-color: #0088cc;
-            --text-color: #ffffff;
+            --bg: #0a0a0a;
+            --accent: #ffcc00; /* Профессиональный желтый */
+            --card-bg: rgba(255, 255, 255, 0.05);
+            --text: #ffffff;
+            --text-dim: #a0a0a0;
         }
 
         * {
             margin: 0;
             padding: 0;
             box-sizing: border-box;
-            font-family: 'Montserrat', sans-serif;
+            font-family: 'Inter', sans-serif;
         }
 
         body {
-            background-color: var(--bg-color);
-            color: var(--text-color);
+            background-color: var(--bg);
+            color: var(--text);
             display: flex;
             justify-content: center;
             align-items: center;
-            min-height: 100-vh;
+            min-height: 100vh;
+            overflow-x: hidden;
             padding: 20px;
         }
 
-        .container {
-            width: 100%;
-            max-width: 400px;
-            text-align: center;
-            animation: fadeIn 1s ease-out;
+        /* Фоновый декор */
+        body::before {
+            content: "";
+            position: fixed;
+            top: -10%;
+            left: -10%;
+            width: 40%;
+            height: 40%;
+            background: radial-gradient(circle, rgba(255, 204, 0, 0.05) 0%, transparent 70%);
+            z-index: -1;
         }
 
-        /* Анимация появления */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
+        .card {
+            width: 100%;
+            max-width: 380px;
+            background: var(--card-bg);
+            backdrop-filter: blur(15px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 24px;
+            padding: 40px 24px;
+            text-align: center;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: slideUp 0.8s ease-out;
+        }
+
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(40px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
-        .profile-img {
-            width: 120px;
-            height: 120px;
-            background: linear-gradient(45deg, var(--accent-color), #f1faee);
-            border-radius: 50%;
-            margin: 0 auto 20px;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            font-size: 50px;
-            box-shadow: 0 10px 20px rgba(230, 57, 70, 0.3);
-        }
-
-        h1 {
-            font-size: 1.8rem;
-            margin-bottom: 5px;
-            letter-spacing: 1px;
-        }
-
-        .status {
-            color: var(--accent-color);
-            font-weight: bold;
+        .header h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            letter-spacing: -0.5px;
             text-transform: uppercase;
-            font-size: 0.9rem;
+            margin-bottom: 4px;
+        }
+
+        .badge {
+            background: var(--accent);
+            color: #000;
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            margin-bottom: 24px;
+        }
+
+        .contact-buttons {
+            display: grid;
+            gap: 12px;
             margin-bottom: 30px;
-            display: block;
         }
 
         .btn {
             display: flex;
             align-items: center;
             justify-content: center;
+            padding: 16px;
+            border-radius: 12px;
             text-decoration: none;
-            color: white;
-            padding: 18px;
-            border-radius: 15px;
-            margin-bottom: 15px;
-            font-weight: 700;
-            transition: all 0.3s ease;
-            font-size: 1.1rem;
+            font-weight: 600;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            font-size: 1rem;
         }
 
-        /* Пульсирующая кнопка вызова */
         .btn-call {
-            background-color: var(--accent-color);
-            box-shadow: 0 5px 15px rgba(230, 57, 70, 0.4);
-            animation: pulse 2s infinite;
+            background-color: var(--accent);
+            color: #000;
         }
 
-        @keyframes pulse {
-            0% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(230, 57, 70, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(230, 57, 70, 0); }
+        .btn-call:hover {
+            transform: scale(1.02);
+            box-shadow: 0 0 20px rgba(255, 204, 0, 0.3);
         }
 
         .btn-tg {
-            background-color: var(--tg-color);
-            box-shadow: 0 5px 15px rgba(0, 136, 204, 0.3);
+            background-color: rgba(255, 255, 255, 0.08);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
 
-        .btn:active {
-            transform: scale(0.95);
+        .btn-tg:hover {
+            background-color: rgba(255, 255, 255, 0.15);
         }
 
-        .info-text {
+        .address-box {
+            margin-top: 20px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            padding-top: 20px;
+        }
+
+        .address-box strong {
+            display: block;
+            color: var(--text);
+            margin-bottom: 4px;
+        }
+
+        /* Секция QR-кода */
+        .qr-section {
             margin-top: 30px;
-            font-size: 0.85rem;
-            opacity: 0.7;
-            line-height: 1.5;
+            background: #fff;
+            padding: 15px;
+            border-radius: 18px;
+            display: inline-block;
+            transition: transform 0.3s ease;
         }
 
-        .qr-placeholder {
-            margin-top: 40px;
-            padding: 20px;
-            border: 1px dashed #444;
-            border-radius: 15px;
-            font-size: 0.8rem;
-            color: #888;
+        .qr-section:hover {
+            transform: scale(1.05);
+        }
+
+        .qr-label {
+            display: block;
+            font-size: 0.7rem;
+            color: #000;
+            margin-bottom: 8px;
+            font-weight: 700;
+            text-transform: uppercase;
+        }
+
+        .qr-image {
+            width: 140px;
+            height: 140px;
         }
     </style>
 </head>
 <body>
 
-    <div class="container">
-        <div class="profile-img">🚔</div>
-        <h1>НИКИТА</h1>
-        <span class="status">Аварийный Комиссар</span>
-
-        <a href="tel:+79518703934" class="btn btn-call">
-            📞 ПОЗВОНИТЬ СЕЙЧАС
-        </a>
-
-        <a href="https://t.me/blatsphera" target="_blank" class="btn btn-tg">
-            ✈️ НАПИСАТЬ В TELEGRAM
-        </a>
-
-        <div class="info-text">
-            Помощь при ДТП, оформление европротокола, <br> консультация на месте. Работаю 24/7.
+    <div class="card">
+        <div class="header">
+            <h1>НИКИТА</h1>
+            <div class="badge">Аварийный Комиссар</div>
         </div>
 
-        <div class="qr-placeholder">
-            Здесь будет ваш QR-код для быстрой передачи контактов
+        <div class="contact-buttons">
+            <a href="tel:+79518703934" class="btn btn-call">
+                ПОЗВОНИТЬ: +7 (951) 870-39-34
+            </a>
+            <a href="https://t.me/blatsphera" target="_blank" class="btn btn-tg">
+                TELEGRAM: @blatsphera
+            </a>
+        </div>
+
+        <div class="address-box">
+            <strong>Местоположение:</strong>
+            г. Воронеж, ул. Антонова-Овсеенко, 7
+        </div>
+
+        <div class="qr-section">
+            <span class="qr-label">Сканируй контакты</span>
+            <img class="qr-image" src="https://api.qrserver.com/v1/create-qr-code/?size=150x150&data=https://nikibelyy.github.io/Komissar/" alt="QR Code">
         </div>
     </div>
 

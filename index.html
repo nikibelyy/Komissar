@@ -2,202 +2,333 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>EXPERT | Аварийный Комиссар</title>
-    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <title>EXPERT | HUD MODULE V1.2</title>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;700&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-main: #0a0a0c;
-            --panel-bg: #141417;
-            --accent: #007AFF; /* Apple Blue */
-            --border: #2c2c2e;
+            --bg: #000000;
+            --panel-bg: rgba(10, 10, 12, 0.9);
+            --accent: #00e1ff; /* Яркий Циан (Cyan) */
+            --border: rgba(0, 225, 255, 0.2);
+            --border-faint: rgba(255, 255, 255, 0.05);
             --text-primary: #f5f5f7;
-            --text-secondary: #86868b;
-            --input-bg: #1c1c1e;
+            --text-secondary: #777777;
+            --input-bg: rgba(255, 255, 255, 0.02);
+            --input-border: rgba(255, 255, 255, 0.1);
+            --font-main: 'JetBrains Mono', monospace;
+        }
+
+        /* Полный сброс для адаптации */
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent; /* Убрать подсветку при клике */
         }
 
         body {
             margin: 0;
             padding: 0;
-            background-color: var(--bg-main);
+            background-color: var(--bg);
+            background-image: linear-gradient(0deg, var(--bg) 0%, rgba(0, 0, 0, 0.5) 100%), 
+                              linear-gradient(90deg, var(--border-faint) 1px, transparent 1px), 
+                              linear-gradient(var(--border-faint) 1px, transparent 1px);
+            background-size: auto, 15px 15px, 15px 15px;
             color: var(--text-primary);
-            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
+            font-family: var(--font-main);
             display: flex;
             justify-content: center;
+            align-items: flex-start; /* Начинаем сверху */
             min-height: 100vh;
+            overflow-x: hidden;
+            overflow-y: auto; /* Позволяем прокрутку */
         }
 
-        .app-wrapper {
+        /* Главный контейнер с отступами от краев телефона */
+        .app-hud-wrapper {
             width: 100%;
-            max-width: 480px;
-            padding: 24px;
-            box-sizing: border-box;
+            max-width: 480px; /* Ограничение ширины для планшетов */
+            padding: 15px 15px calc(20px + env(safe-area-inset-bottom)) 15px; /* Учет safe areas */
         }
 
-        /* Шапка в стиле Expert */
-        .expert-header {
-            border-left: 3px solid var(--accent);
-            padding-left: 15px;
-            margin-bottom: 40px;
-            margin-top: 20px;
-        }
-
-        .expert-header h1 {
-            font-size: 22px;
-            font-weight: 600;
-            letter-spacing: 1px;
-            margin: 0;
-            text-transform: uppercase;
-        }
-
-        .expert-header .status {
-            font-family: 'JetBrains Mono', monospace;
-            font-size: 11px;
-            color: var(--accent);
-            margin-top: 5px;
-            display: flex;
-            align-items: center;
-            gap: 6px;
-        }
-
-        .status::before {
-            content: "";
-            width: 8px;
-            height: 8px;
-            background: var(--accent);
-            border-radius: 50%;
-            display: inline-block;
-            box-shadow: 0 0 8px var(--accent);
-        }
-
-        /* Карточка формы */
-        .expert-panel {
+        /* Основная рамка модуля со сложной FUI геометрией */
+        .hud-main-frame {
             background: var(--panel-bg);
             border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 24px;
+            position: relative;
+            box-shadow: 0 0 20px rgba(0, 225, 255, 0.1);
+            padding: 20px 15px;
         }
 
-        .form-section-title {
-            font-size: 10px;
+        /* Декоративные уголки FUI */
+        .hud-main-frame::before, .hud-main-frame::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-color: var(--accent);
+            border-style: solid;
+        }
+
+        .hud-main-frame::before { top: -1px; left: -1px; border-width: 2px 0 0 2px; }
+        .hud-main-frame::after { top: -1px; right: -1px; border-width: 2px 2px 0 0; }
+
+        /* Внутренние уголки внизу через псевдоэлементы контента */
+        .hud-main-frame-bottom-corners::before, .hud-main-frame-bottom-corners::after {
+            content: '';
+            position: absolute;
+            width: 10px;
+            height: 10px;
+            border-color: var(--accent);
+            border-style: solid;
+        }
+        .hud-main-frame-bottom-corners::before { bottom: -1px; left: -1px; border-width: 0 0 2px 2px; }
+        .hud-main-frame-bottom-corners::after { bottom: -1px; right: -1px; border-width: 0 2px 2px 0; }
+
+        /* Шапка модуля */
+        .hud-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 25px;
+            border-bottom: 1px solid var(--border-faint);
+            padding-bottom: 10px;
+        }
+
+        .hud-header h1 {
+            font-size: 16px;
             font-weight: 700;
-            color: var(--text-secondary);
             text-transform: uppercase;
             letter-spacing: 1.5px;
+            color: var(--accent);
+            margin: 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .hud-status {
+            font-size: 9px;
+            color: var(--text-secondary);
+            text-align: right;
+            text-transform: uppercase;
+        }
+
+        .hud-counter {
+            color: var(--text-primary);
+            animation: pulse 2s infinite;
+        }
+
+        /* Тело формы */
+        .hud-section-title {
+            display: flex;
+            justify-content: space-between;
+            font-size: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            padding-left: 5px;
+            position: relative;
+        }
+        .hud-section-title::before {
+            content: '';
+            position: absolute;
+            left: -5px; top: 0; bottom: 0;
+            width: 2px;
+            background: var(--accent);
+        }
+
+        .form-body {
             margin-bottom: 20px;
-            display: block;
-            border-bottom: 1px solid var(--border);
-            padding-bottom: 8px;
         }
 
         .input-group {
-            margin-bottom: 24px;
+            margin-bottom: 15px;
+            position: relative;
+        }
+
+        .input-code {
+            position: absolute;
+            top: -6px; right: 10px;
+            font-size: 8px;
+            color: var(--border);
+            text-transform: uppercase;
         }
 
         label {
             display: block;
-            font-size: 13px;
-            color: var(--text-secondary);
-            margin-bottom: 8px;
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-primary);
+            margin-bottom: 5px;
+            margin-left: 2px;
         }
 
-        input, select {
+        input {
             width: 100%;
             background: var(--input-bg);
-            border: 1px solid var(--border);
-            border-radius: 8px;
-            padding: 14px;
-            color: white;
-            font-size: 16px;
-            box-sizing: border-box;
+            border: 1px solid var(--input-border);
+            padding: 12px 10px;
+            color: var(--text-primary);
+            font-size: 14px;
+            font-family: var(--font-main);
             outline: none;
             transition: border-color 0.2s;
         }
 
         input:focus {
             border-color: var(--accent);
+            box-shadow: 0 0 5px rgba(0, 225, 255, 0.2);
         }
 
-        /* Кнопка */
-        .btn-expert {
-            width: 100%;
-            background: var(--accent);
-            color: white;
-            border: none;
-            padding: 18px;
-            border-radius: 8px;
-            font-size: 14px;
-            font-weight: 600;
+        input::placeholder {
+            color: var(--text-secondary);
+            opacity: 0.5;
+        }
+
+        /* Специально для даты и времени */
+        input[type="datetime-local"] {
+            color: var(--accent);
             text-transform: uppercase;
-            letter-spacing: 1px;
+        }
+
+        /* Кнопка действия */
+        .btn-hud-action {
+            width: 100%;
+            background: transparent;
+            border: 1px solid var(--accent);
+            padding: 15px;
+            color: var(--accent);
+            font-family: var(--font-main);
+            font-size: 12px;
+            text-transform: uppercase;
+            font-weight: 700;
+            letter-spacing: 2px;
             cursor: pointer;
-            transition: all 0.2s;
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
             margin-top: 10px;
         }
 
-        .btn-expert:active {
-            transform: scale(0.97);
-            background: #0056b3;
+        .btn-hud-action:active {
+            background: rgba(0, 225, 255, 0.1);
+            transform: scale(0.98);
         }
 
-        .footer-note {
-            text-align: center;
-            font-size: 11px;
+        .btn-flicker {
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0, 225, 255, 0.05);
+            opacity: 0;
+            pointer-events: none;
+        }
+        .btn-hud-action:focus .btn-flicker {
+            animation: flicker 0.5s ease-out;
+        }
+
+        /* Нижний блок (Фиктивные данные) */
+        .hud-footer {
+            margin-top: 25px;
+            border-top: 1px solid var(--border-faint);
+            padding-top: 10px;
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+            font-size: 9px;
             color: var(--text-secondary);
-            margin-top: 30px;
-            font-family: 'JetBrains Mono', monospace;
+            text-transform: uppercase;
+            font-weight: 300;
         }
 
-        /* Идентификатор протокола */
-        #protocolID {
-            color: var(--text-primary);
+        .footer-item {
+            display: flex;
+            align-items: center;
+            gap: 5px;
         }
+        .icon-small {
+            width: 6px; height: 6px;
+            background: var(--accent);
+            display: inline-block;
+        }
+
+        /* Анимации */
+        @keyframes pulse {
+            0%, 100% { opacity: 0.7; }
+            50% { opacity: 1; color: var(--accent); }
+        }
+
+        @keyframes flicker {
+            0% { opacity: 0; }
+            50% { opacity: 0.3; }
+            100% { opacity: 0; }
+        }
+
     </style>
 </head>
 <body>
 
-<div class="app-wrapper">
-    <div class="expert-header">
-        <h1>Expert Protocol</h1>
-        <div class="status">SYSTEM ONLINE | ID: <span id="protocolID"></span></div>
-    </div>
+<div class="app-hud-wrapper">
+    <div class="hud-main-frame">
+        <div class="hud-main-frame-bottom-corners"></div>
 
-    <div class="expert-panel">
-        <span class="form-section-title">Данные экспертизы</span>
-        
-        <form id="expertForm">
+        <div class="hud-header">
+            <h1>Expert Module <span class="hud-counter">[ID: EXP-A551]</span></h1>
+            <div class="hud-status">Data: <span id="protocolID">--</span> | V1.2<br>SYS: Active</div>
+        </div>
+
+        <div class="hud-section-title">
+            <span>Core Protocol</span>
+            <span>Input Field</span>
+        </div>
+
+        <form id="expertForm" class="form-body">
             <div class="input-group">
-                <label>ФИО КЛИЕНТА</label>
+                <span class="input-code">[DATA_NM]</span>
+                <label>Клиент [ФИО]</label>
                 <input type="text" id="name" placeholder="Введите полностью" required>
             </div>
 
             <div class="input-group">
-                <label>ТРАНСПОРТНОЕ СРЕДСТВО / ГОСНОМЕР</label>
-                <input type="text" id="car" placeholder="Марка, модель, номер" required>
+                <span class="input-code">[TR_REG]</span>
+                <label>ТС / Госномер</label>
+                <input type="text" id="car" placeholder="Марка, госномер" required>
             </div>
 
             <div class="input-group">
-                <label>ДАТА И ВРЕМЯ ОСМОТРА</label>
+                <span class="input-code">[DATE_X]</span>
+                <label>Назначить Осмотр [Date/Time]</label>
                 <input type="datetime-local" id="date" required>
             </div>
 
             <div class="input-group">
-                <label>КОНТАКТНЫЙ НОМЕР</label>
+                <span class="input-code">[CONT_P]</span>
+                <label>Контактный Номер</label>
                 <input type="tel" id="phone" placeholder="+7" required>
             </div>
 
-            <button type="submit" class="btn-expert">Сформировать протокол</button>
+            <button type="submit" class="btn-hud-action">
+                Transmit Protocol
+                <div class="btn-flicker"></div>
+            </button>
         </form>
-    </div>
 
-    <div class="footer-note">
-        OFFICIAL DISPATCHER NOTIFICATION SYSTEM
+        <div class="hud-footer">
+            <div class="footer-item"><span class="icon-small"></span> SYSTEM TRACE: Standby</div>
+            <div class="footer-item">STATUS: Waiting for Data</div>
+            <div class="footer-item"><span class="icon-small"></span> TARGET: dispatcher@irishka_0923</div>
+            <div class="footer-item">CORE: ONLINE</div>
+        </div>
     </div>
 </div>
 
 <script>
-    // Генерация случайного ID протокола для солидности
-    document.getElementById('protocolID').innerText = 'EXP-' + Math.floor(Math.random() * 9000 + 1000);
+    // Генерация случайного ID протокола при загрузке
+    const generatedID = 'EXP-P-' + Math.floor(Math.random() * 9000 + 1000);
+    document.getElementById('protocolID').innerText = generatedID;
+    const headerCounter = document.querySelector('.hud-counter');
+    if (headerCounter) headerCounter.innerText = `[ID: ${generatedID}]`;
 
     document.getElementById('expertForm').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -206,30 +337,35 @@
         const car = document.getElementById('car').value;
         const dateRaw = document.getElementById('date').value;
         const phone = document.getElementById('phone').value;
-        const pID = document.getElementById('protocolID').innerText;
+        const pID = generatedID;
 
-        const date = new Date(dateRaw).toLocaleString('ru-RU', {
-            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
-        });
+        // Форматирование даты в технический вид
+        const dateObj = new Date(dateRaw);
+        const day = String(dateObj.getDate()).padStart(2, '0');
+        const month = String(dateObj.getMonth() + 1).padStart(2, '0');
+        const year = dateObj.getFullYear();
+        const hours = String(dateObj.getHours()).padStart(2, '0');
+        const minutes = String(dateObj.getMinutes()).padStart(2, '0');
+        const techDate = `${day}/${month}/${year} ${hours}:${minutes}`;
 
-        // Текст сообщения
+        // Текст сообщения (максимально информативный для Иришки)
         const text = `⚠️ СФОРМИРОВАН ПРОТОКОЛ ОСМОТРА: ${pID}%0A%0A` +
-                     `👤 Клиент: ${name}%0A` +
-                     `🚗 Авто: ${car}%0A` +
-                     `📅 Назначен осмотр: ${date}%0A` +
-                     `📞 Тел: ${phone}%0A%0A` +
-                     `Ирина, подтвердите запись звонком. Данные внесены в базу.`;
+                     `👤 КЛИЕНТ: ${name}%0A` +
+                     `🚗 АВТО: ${car}%0A` +
+                     `📅 НАЗНАЧЕН ОСМОТР: ${techDate}%0A` +
+                     `📞 ТЕЛ: ${phone}%0A%0A` +
+                     `Передай в отдел подтверждения звонком. Данные внесены в базу эксперта.`;
 
         const tgLink = `https://t.me/Irishka_0923?text=${text}`;
 
-        // Эффект нажатия
+        // Эффект отправки на кнопке
         const btn = e.submitter;
-        btn.innerText = "РЕГИСТРАЦИЯ...";
+        btn.innerText = "TRANSMITTING...";
         
         setTimeout(() => {
             window.location.href = tgLink;
-            btn.innerText = "Сформировать протокол";
-        }, 600);
+            setTimeout(() => btn.innerText = "Transmit Protocol", 500);
+        }, 800);
     });
 </script>
 

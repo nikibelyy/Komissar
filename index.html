@@ -2,210 +2,234 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Expert CRM | Аварийный Комиссар</title>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>EXPERT | Аварийный Комиссар</title>
+    <link href="https://fonts.googleapis.com/css2?family=SF+Pro+Display:wght@300;400;600&family=JetBrains+Mono:wght@400&display=swap" rel="stylesheet">
     <style>
         :root {
-            --bg-color: #000000;
-            --card-bg: rgba(28, 28, 30, 0.7);
-            --accent-color: #3e64ff;
-            --text-main: #ffffff;
-            --text-secondary: #8e8e93;
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --bg-main: #0a0a0c;
+            --panel-bg: #141417;
+            --accent: #007AFF; /* Apple Blue */
+            --border: #2c2c2e;
+            --text-primary: #f5f5f7;
+            --text-secondary: #86868b;
+            --input-bg: #1c1c1e;
         }
 
         body {
             margin: 0;
-            font-family: 'Inter', sans-serif;
-            background-color: var(--bg-color);
-            background-image: radial-gradient(circle at top right, #1c1c1e, #000000);
-            color: var(--text-main);
+            padding: 0;
+            background-color: var(--bg-main);
+            color: var(--text-primary);
+            font-family: 'SF Pro Display', -apple-system, BlinkMacSystemFont, sans-serif;
             display: flex;
             justify-content: center;
-            align-items: center;
             min-height: 100vh;
-            overflow-x: hidden;
         }
 
-        .app-container {
+        .app-wrapper {
             width: 100%;
-            max-width: 500px;
-            padding: 20px;
+            max-width: 480px;
+            padding: 24px;
             box-sizing: border-box;
         }
 
-        .glass-card {
-            background: var(--card-bg);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            padding: 30px;
-            box-shadow: 0 25px 50px rgba(0,0,0,0.5);
+        /* Шапка в стиле Expert */
+        .expert-header {
+            border-left: 3px solid var(--accent);
+            padding-left: 15px;
+            margin-bottom: 40px;
+            margin-top: 20px;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 30px;
-        }
-
-        .header h1 {
-            font-size: 24px;
+        .expert-header h1 {
+            font-size: 22px;
             font-weight: 600;
-            letter-spacing: -0.5px;
+            letter-spacing: 1px;
             margin: 0;
+            text-transform: uppercase;
         }
 
-        .header p {
+        .expert-header .status {
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 11px;
+            color: var(--accent);
+            margin-top: 5px;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .status::before {
+            content: "";
+            width: 8px;
+            height: 8px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: inline-block;
+            box-shadow: 0 0 8px var(--accent);
+        }
+
+        /* Карточка формы */
+        .expert-panel {
+            background: var(--panel-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 24px;
+        }
+
+        .form-section-title {
+            font-size: 10px;
+            font-weight: 700;
             color: var(--text-secondary);
-            font-size: 14px;
-            margin-top: 8px;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            margin-bottom: 20px;
+            display: block;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 8px;
         }
 
-        .form-group {
-            margin-bottom: 20px;
+        .input-group {
+            margin-bottom: 24px;
         }
 
         label {
             display: block;
-            font-size: 12px;
-            text-transform: uppercase;
-            letter-spacing: 1px;
+            font-size: 13px;
             color: var(--text-secondary);
             margin-bottom: 8px;
-            margin-left: 4px;
         }
 
-        input, select, textarea {
+        input, select {
             width: 100%;
-            background: rgba(255, 255, 255, 0.05);
-            border: 1px solid var(--glass-border);
-            border-radius: 12px;
+            background: var(--input-bg);
+            border: 1px solid var(--border);
+            border-radius: 8px;
             padding: 14px;
             color: white;
             font-size: 16px;
             box-sizing: border-box;
             outline: none;
-            transition: all 0.3s ease;
+            transition: border-color 0.2s;
         }
 
         input:focus {
-            border-color: var(--accent-color);
-            background: rgba(255, 255, 255, 0.1);
+            border-color: var(--accent);
         }
 
-        .btn-submit {
+        /* Кнопка */
+        .btn-expert {
             width: 100%;
-            background: var(--text-main);
-            color: black;
+            background: var(--accent);
+            color: white;
             border: none;
-            padding: 16px;
-            border-radius: 12px;
-            font-size: 16px;
+            padding: 18px;
+            border-radius: 8px;
+            font-size: 14px;
             font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
             cursor: pointer;
-            margin-top: 20px;
-            transition: transform 0.2s active;
+            transition: all 0.2s;
+            margin-top: 10px;
         }
 
-        .btn-submit:active {
-            transform: scale(0.98);
+        .btn-expert:active {
+            transform: scale(0.97);
+            background: #0056b3;
         }
 
-        /* Анимация появления */
-        .fade-in {
-            animation: fadeIn 0.8s ease-out;
+        .footer-note {
+            text-align: center;
+            font-size: 11px;
+            color: var(--text-secondary);
+            margin-top: 30px;
+            font-family: 'JetBrains Mono', monospace;
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .tesla-logo {
-            width: 40px;
-            margin-bottom: 15px;
-            filter: invert(1);
+        /* Идентификатор протокола */
+        #protocolID {
+            color: var(--text-primary);
         }
     </style>
 </head>
 <body>
 
-<div class="app-container fade-in">
-    <div class="glass-card">
-        <div class="header">
-            <div style="font-size: 32px; margin-bottom: 10px;">◈</div>
-            <h1>EXPERT CONTROL</h1>
-            <p>Регистрация осмотра и фиксация данных</p>
-        </div>
+<div class="app-wrapper">
+    <div class="expert-header">
+        <h1>Expert Protocol</h1>
+        <div class="status">SYSTEM ONLINE | ID: <span id="protocolID"></span></div>
+    </div>
 
-        <form id="crmForm">
-            <div class="form-group">
-                <label>ФИО Клиента</label>
-                <input type="text" id="clientName" placeholder="Иван Иванов" required>
+    <div class="expert-panel">
+        <span class="form-section-title">Данные экспертизы</span>
+        
+        <form id="expertForm">
+            <div class="input-group">
+                <label>ФИО КЛИЕНТА</label>
+                <input type="text" id="name" placeholder="Введите полностью" required>
             </div>
 
-            <div class="form-group">
-                <label>Автомобиль и Госномер</label>
-                <input type="text" id="carInfo" placeholder="Tesla Model 3 | A000AA" required>
+            <div class="input-group">
+                <label>ТРАНСПОРТНОЕ СРЕДСТВО / ГОСНОМЕР</label>
+                <input type="text" id="car" placeholder="Марка, модель, номер" required>
             </div>
 
-            <div class="form-group">
-                <label>Дата и время осмотра</label>
-                <input type="datetime-local" id="visitDate" required>
+            <div class="input-group">
+                <label>ДАТА И ВРЕМЯ ОСМОТРА</label>
+                <input type="datetime-local" id="date" required>
             </div>
 
-            <div class="form-group">
-                <label>Контактный телефон</label>
-                <input type="tel" id="clientPhone" placeholder="+7 (___) ___-__-__" required>
+            <div class="input-group">
+                <label>КОНТАКТНЫЙ НОМЕР</label>
+                <input type="tel" id="phone" placeholder="+7" required>
             </div>
 
-            <button type="submit" class="btn-submit">ПОДТВЕРДИТЬ ЗАПИСЬ</button>
+            <button type="submit" class="btn-expert">Сформировать протокол</button>
         </form>
+    </div>
+
+    <div class="footer-note">
+        OFFICIAL DISPATCHER NOTIFICATION SYSTEM
     </div>
 </div>
 
 <script>
-    document.getElementById('crmForm').addEventListener('submit', function(e) {
+    // Генерация случайного ID протокола для солидности
+    document.getElementById('protocolID').innerText = 'EXP-' + Math.floor(Math.random() * 9000 + 1000);
+
+    document.getElementById('expertForm').addEventListener('submit', function(e) {
         e.preventDefault();
 
-        // Сбор данных
-        const name = document.getElementById('clientName').value;
-        const car = document.getElementById('carInfo').value;
-        const dateRaw = document.getElementById('visitDate').value;
-        const phone = document.getElementById('clientPhone').value;
+        const name = document.getElementById('name').value;
+        const car = document.getElementById('car').value;
+        const dateRaw = document.getElementById('date').value;
+        const phone = document.getElementById('phone').value;
+        const pID = document.getElementById('protocolID').innerText;
 
-        // Форматирование даты
         const date = new Date(dateRaw).toLocaleString('ru-RU', {
-            day: 'numeric',
-            month: 'long',
-            year: 'numeric',
-            hour: '2-digit',
-            minute: '2-digit'
+            day: '2-digit', month: '2-digit', year: 'numeric', hour: '2-digit', minute: '2-digit'
         });
 
-        // Текст сообщения для Иришки
-        const message = `НОВАЯ ЗАПИСЬ НА ОСМОТР%0A%0A` +
-            `👤 Клиент: ${name}%0A` +
-            `🚗 Авто: ${car}%0A` +
-            `📅 Дата осмотра: ${date}%0A` +
-            `📞 Телефон: ${phone}%0A%0A` +
-            `Иришка, пожалуйста, позвони клиенту для подтверждения.`;
+        // Текст сообщения
+        const text = `⚠️ СФОРМИРОВАН ПРОТОКОЛ ОСМОТРА: ${pID}%0A%0A` +
+                     `👤 Клиент: ${name}%0A` +
+                     `🚗 Авто: ${car}%0A` +
+                     `📅 Назначен осмотр: ${date}%0A` +
+                     `📞 Тел: ${phone}%0A%0A` +
+                     `Ирина, подтвердите запись звонком. Данные внесены в базу.`;
 
-        // Ссылка на Telegram (открывает чат с готовым текстом)
-        const telegramUrl = `https://t.me/Irishka_0923?text=${message}`;
+        const tgLink = `https://t.me/Irishka_0923?text=${text}`;
 
-        // Эффект нажатия и переход
+        // Эффект нажатия
         const btn = e.submitter;
-        btn.innerText = "ОТПРАВКА...";
-        btn.style.opacity = "0.7";
-
+        btn.innerText = "РЕГИСТРАЦИЯ...";
+        
         setTimeout(() => {
-            window.location.href = telegramUrl;
-            btn.innerText = "ПОДТВЕРДИТЬ ЗАПИСЬ";
-            btn.style.opacity = "1";
-        }, 800);
+            window.location.href = tgLink;
+            btn.innerText = "Сформировать протокол";
+        }, 600);
     });
 </script>
 

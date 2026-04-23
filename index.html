@@ -1,86 +1,137 @@
-import { useState } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+```html
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-export default function App() {
-  const [entries, setEntries] = useState([]);
-  const [plate, setPlate] = useState("");
-  const [comment, setComment] = useState("");
+<title>CRM Notes</title>
 
-  const addEntry = () => {
-    if (!plate) return;
-    setEntries([
-      { id: Date.now(), plate, comment },
-      ...entries,
-    ]);
-    setPlate("");
-    setComment("");
-  };
+<!-- iOS PWA -->
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black">
+<meta name="apple-mobile-web-app-title" content="CRM">
 
-  const removeEntry = (id) => {
-    setEntries(entries.filter((e) => e.id !== id));
-  };
-
-  return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 to-black text-white p-4">
-      <motion.h1
-        initial={{ opacity: 0, y: -20 }}
-        animate={{ opacity: 1, y: 0 }}
-        className="text-3xl font-bold mb-6 text-center"
-      >
-        CRM GAI Notes
-      </motion.h1>
-
-      <Card className="mb-6 bg-white/10 backdrop-blur-xl border-none">
-        <CardContent className="p-4 space-y-3">
-          <Input
-            placeholder="Гос номер"
-            value={plate}
-            onChange={(e) => setPlate(e.target.value)}
-            className="bg-black/40 border-none"
-          />
-          <Input
-            placeholder="Комментарий"
-            value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            className="bg-black/40 border-none"
-          />
-          <Button onClick={addEntry} className="w-full">
-            Добавить
-          </Button>
-        </CardContent>
-      </Card>
-
-      <div className="space-y-3">
-        <AnimatePresence>
-          {entries.map((e) => (
-            <motion.div
-              key={e.id}
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, x: 100 }}
-              transition={{ duration: 0.3 }}
-            >
-              <Card className="bg-white/10 backdrop-blur-xl border-none">
-                <CardContent className="p-4 flex justify-between items-center">
-                  <div>
-                    <div className="font-semibold">{e.plate}</div>
-                    <div className="text-sm opacity-70">{e.comment}</div>
-                  </div>
-                  <Button
-                    variant="destructive"
-                    onClick={() => removeEntry(e.id)}
-                  >
-                    ✕
-                  </Button>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </AnimatePresence>
-      </div>
-    </div>
-  );
+<style>
+body {
+  margin: 0;
+  font-family: -apple-system, sans-serif;
+  background: linear-gradient(135deg,#0f0f0f,#000);
+  color: white;
 }
+
+.container {
+  padding: 16px;
+}
+
+.card {
+  background: rgba(255,255,255,0.1);
+  backdrop-filter: blur(12px);
+  border-radius: 16px;
+  padding: 16px;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+}
+
+input {
+  width: 100%;
+  padding: 12px;
+  margin-bottom: 10px;
+  border-radius: 10px;
+  border: none;
+  background: rgba(0,0,0,0.5);
+  color: white;
+}
+
+button {
+  width: 100%;
+  padding: 12px;
+  border-radius: 10px;
+  border: none;
+  background: white;
+  color: black;
+  font-weight: bold;
+}
+
+.delete {
+  width: auto;
+  background: red;
+  color: white;
+  padding: 8px;
+}
+</style>
+</head>
+
+<body>
+
+<div class="container">
+  <h2 style="text-align:center;">CRM Notes</h2>
+
+  <div class="card" style="flex-direction:column;">
+    <input id="plate" placeholder="Гос номер">
+    <input id="comment" placeholder="Комментарий">
+    <button onclick="addEntry()">Добавить</button>
+  </div>
+
+  <div id="list"></div>
+</div>
+
+<script>
+let entries = JSON.parse(localStorage.getItem("crm") || "[]");
+
+function save() {
+  localStorage.setItem("crm", JSON.stringify(entries));
+}
+
+function render() {
+  const list = document.getElementById("list");
+  list.innerHTML = "";
+
+  entries.forEach(e => {
+    const div = document.createElement("div");
+    div.className = "card";
+
+    div.innerHTML = `
+      <div>
+        <b>${e.plate}</b>
+        <div style="opacity:0.7">${e.comment}</div>
+      </div>
+      <button class="delete" onclick="removeEntry(${e.id})">✕</button>
+    `;
+
+    list.appendChild(div);
+  });
+}
+
+function addEntry() {
+  const plate = document.getElementById("plate").value;
+  const comment = document.getElementById("comment").value;
+
+  if (!plate) return;
+
+  entries.unshift({
+    id: Date.now(),
+    plate,
+    comment
+  });
+
+  document.getElementById("plate").value = "";
+  document.getElementById("comment").value = "";
+
+  save();
+  render();
+}
+
+function removeEntry(id) {
+  entries = entries.filter(e => e.id !== id);
+  save();
+  render();
+}
+
+render();
+</script>
+
+</body>
+</html>
+```

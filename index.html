@@ -3,339 +3,110 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FitMaster AI — Персональный тренер и диетолог</title>
-    
-    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
-    
+    <title>Аварком Никита — Воронеж</title>
     <style>
-        /* CSS СТИЛИ */
-        :root {
-            --primary: #00ff88; /* Неоновый зеленый */
-            --primary-hover: #00cc6e;
-            --bg-dark: #0f172a; /* Глубокий синий */
-            --card-bg: #1e293b;
-            --text-main: #f8fafc;
-            --text-dim: #94a3b8;
-        }
-
-        * {
+        body {
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
-        }
-
-        body {
-            background-color: var(--bg-dark);
-            color: var(--text-main);
-            line-height: 1.6;
-            overflow-x: hidden;
-        }
-
-        /* Навигация */
-        header {
-            position: fixed;
-            top: 0;
-            width: 100%;
-            padding: 20px 5%;
-            background: rgba(15, 23, 42, 0.95);
-            backdrop-filter: blur(10px);
-            z-index: 1000;
-            border-bottom: 1px solid rgba(255,255,255,0.1);
-        }
-
-        nav {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: #000;
+            color: #fff;
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            max-width: 1200px;
-            margin: 0 auto;
-        }
-
-        .logo {
-            font-size: 1.5rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-        }
-
-        .logo span { color: var(--primary); }
-
-        .nav-links {
-            display: flex;
-            list-style: none;
-            gap: 30px;
-        }
-
-        .nav-links a {
-            color: var(--text-main);
-            text-decoration: none;
-            font-weight: 500;
-            transition: 0.3s;
-        }
-
-        .nav-links a:hover { color: var(--primary); }
-
-        /* Главный экран */
-        .hero {
-            height: 100vh;
-            display: flex;
-            align-items: center;
             justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .vcard {
+            width: 100%;
+            max-width: 400px;
+            padding: 30px;
             text-align: center;
-            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
-                        url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1920&q=80');
-            background-size: cover;
-            background-position: center;
-            padding: 0 20px;
+            background: linear-gradient(145deg, #1a1a1a, #000);
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(255, 215, 0, 0.1);
         }
-
-        .hero-content h1 {
-            font-size: clamp(2.5rem, 8vw, 4.5rem);
-            line-height: 1.1;
-            margin-bottom: 20px;
-        }
-
-        .hero-content p {
-            font-size: 1.2rem;
-            color: var(--text-dim);
-            max-width: 700px;
-            margin: 0 auto 40px;
-        }
-
-        /* Кнопки */
-        .btn {
+        .status {
             display: inline-block;
-            padding: 18px 35px;
-            background: var(--primary);
+            background: #28a745;
+            color: #fff;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+        }
+        h1 {
+            font-size: 28px;
+            margin: 10px 0;
+            color: #ffd700; /* Золотой/Желтый акцент */
+        }
+        .subtitle {
+            font-size: 16px;
+            color: #aaa;
+            margin-bottom: 30px;
+        }
+        .services {
+            text-align: left;
+            background: #111;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+        }
+        .services-item {
+            margin: 10px 0;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+        }
+        .services-item::before {
+            content: "✓";
+            color: #ffd700;
+            margin-right: 10px;
+            font-weight: bold;
+        }
+        .call-btn {
+            display: block;
+            background: #ffd700;
             color: #000;
             text-decoration: none;
+            padding: 18px;
             border-radius: 50px;
-            font-weight: 700;
-            text-transform: uppercase;
-            font-size: 0.9rem;
-            transition: all 0.3s ease;
-            border: none;
-            cursor: pointer;
-            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
+            font-size: 20px;
+            font-weight: bold;
+            transition: transform 0.2s;
+            box-shadow: 0 5px 15px rgba(255, 215, 0, 0.3);
         }
-
-        .btn:hover {
-            transform: translateY(-3px);
-            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.4);
-            background: var(--primary-hover);
+        .call-btn:active {
+            transform: scale(0.95);
         }
-
-        /* Особенности */
-        .features {
-            padding: 100px 5%;
-            max-width: 1200px;
-            margin: 0 auto;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-            gap: 30px;
-        }
-
-        .card {
-            background: var(--card-bg);
-            padding: 40px;
-            border-radius: 24px;
-            border: 1px solid rgba(255,255,255,0.05);
-            transition: 0.4s;
-        }
-
-        .card:hover {
-            transform: translateY(-10px);
-            border-color: var(--primary);
-        }
-
-        .card h3 {
-            font-size: 1.5rem;
-            margin-bottom: 15px;
-            color: var(--primary);
-        }
-
-        /* Секция Формы */
-        .order-section {
-            padding: 100px 5%;
-            background: #161e2d;
-        }
-
-        .form-container {
-            max-width: 800px;
-            margin: 0 auto;
-            background: var(--card-bg);
-            padding: 50px;
-            border-radius: 30px;
-            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
-        }
-
-        .form-container h2 {
-            text-align: center;
-            font-size: 2.5rem;
-            margin-bottom: 40px;
-        }
-
-        .input-group {
-            margin-bottom: 25px;
-        }
-
-        label {
-            display: block;
-            margin-bottom: 10px;
-            font-size: 0.9rem;
-            color: var(--text-dim);
-        }
-
-        input, select, textarea {
-            width: 100%;
-            padding: 15px;
-            background: var(--bg-dark);
-            border: 1px solid #334155;
-            border-radius: 12px;
-            color: white;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.3s;
-        }
-
-        input:focus, textarea:focus {
-            border-color: var(--primary);
-        }
-
-        /* Футер */
-        footer {
-            padding: 50px 5%;
-            text-align: center;
-            border-top: 1px solid rgba(255,255,255,0.05);
-            color: var(--text-dim);
-        }
-
-        /* Адаптивность */
-        @media (max-width: 768px) {
-            .nav-links { display: none; }
-            .form-container { padding: 30px 20px; }
-            .hero-content h1 { font-size: 2.8rem; }
+        .whatsapp-btn {
+            display: inline-block;
+            margin-top: 20px;
+            color: #25d366;
+            text-decoration: none;
+            font-size: 14px;
         }
     </style>
 </head>
 <body>
 
-    <header>
-        <nav>
-            <div class="logo">FIT<span>PRO</span></div>
-            <ul class="nav-links">
-                <li><a href="#about">О методе</a></li>
-                <li><a href="#features">Услуги</a></li>
-                <li><a href="#plan">Мой план</a></li>
-            </ul>
-        </nav>
-    </header>
+<div class="vcard">
+    <div class="status">● На связи 24/7</div>
+    <h1>АВАРКОМ НИКИТА</h1>
+    <div class="subtitle">Воронеж и область</div>
 
-    <section class="hero">
-        <div class="hero-content" data-aos="fade-up">
-            <h1>Твой личный AI-наставник</h1>
-            <p>Стань лучшей версией себя. Индивидуальный план тренировок, расчет КБЖУ и мотивация в твоем кармане 24/7.</p>
-            <a href="#plan" class="btn">Начать трансформацию</a>
-        </div>
-    </section>
+    <div class="services">
+        <div class="services-item">Оформление ДТП по Европротоколу</div>
+        <div class="services-item">Независимая фотофиксация</div>
+        <div class="services-item">Помощь при разногласиях</div>
+        <div class="services-item">Юридическая поддержка (Суды)</div>
+    </div>
 
-    <section id="features" class="features">
-        <div class="card" data-aos="fade-right">
-            <h3>Программа тренировок</h3>
-            <p>План упражнений на основе ваших целей и доступного оборудования — для дома или тренажерного зала.</p>
-        </div>
-        <div class="card" data-aos="fade-up" data-aos-delay="100">
-            <h3>Умная диетология</h3>
-            <p>Рацион питания, адаптированный под ваш образ жизни. Вкусные рецепты без жестких ограничений.</p>
-        </div>
-        <div class="card" data-aos="fade-left" data-aos-delay="200">
-            <h3>Анализ прогресса</h3>
-            <p>Корректировка плана каждую неделю на основе ваших результатов и самочувствия.</p>
-        </div>
-    </section>
+    <a href="tel:+79518703934" class="call-btn">ВЫЗВАТЬ НА МЕСТО</a>
+    
+    <a href="https://wa.me/79518703934" class="whatsapp-btn">Написать в WhatsApp</a>
+</div>
 
-    <section id="plan" class="order-section">
-        <div class="form-container" data-aos="zoom-in">
-            <h2>Анкета здоровья</h2>
-            <form id="coachForm">
-                <div class="input-group">
-                    <label>Ваша главная цель</label>
-                    <select required>
-                        <option value="">Выберите цель...</option>
-                        <option>Сбросить лишний вес</option>
-                        <option>Набрать мышечную массу</option>
-                        <option>Поддерживать активность</option>
-                        <option>Улучшить выносливость</option>
-                    </select>
-                </div>
-                
-                <div class="input-group">
-                    <label>Текущий уровень подготовки</label>
-                    <select required>
-                        <option>Новичок (0 опыта)</option>
-                        <option>Любитель (редкие занятия)</option>
-                        <option>Атлет (регулярный тренинг)</option>
-                    </select>
-                </div>
-
-                <div class="input-group">
-                    <label>Доступное оборудование</label>
-                    <textarea rows="3" placeholder="Напр: Гантели, турник или только собственный вес"></textarea>
-                </div>
-
-                <div class="input-group">
-                    <label>Особенности графика (свободное время)</label>
-                    <input type="text" placeholder="Напр: 3 раза в неделю по вечерам">
-                </div>
-
-                <button type="submit" class="btn" style="width: 100%;">Получить план и поддержку</button>
-            </form>
-        </div>
-    </section>
-
-    <footer>
-        <p>&copy; 2024 FitPro Coaching. Все права защищены.</p>
-    </footer>
-
-    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
-    <script>
-        // Активация анимаций
-        AOS.init({
-            duration: 1000,
-            once: true,
-            offset: 100
-        });
-
-        // Логика формы
-        document.getElementById('coachForm').addEventListener('submit', function(e) {
-            e.preventDefault();
-            const btn = this.querySelector('button');
-            const originalText = btn.innerText;
-            
-            btn.innerText = 'Анализируем данные...';
-            btn.disabled = true;
-            btn.style.opacity = '0.7';
-
-            // Имитация работы AI/Тренера
-            setTimeout(() => {
-                alert('Данные приняты! Ваш наставник подготовит план в течение часа и свяжется с вами по указанным контактам.');
-                btn.innerText = originalText;
-                btn.disabled = false;
-                btn.style.opacity = '1';
-                this.reset();
-            }, 2500);
-        });
-
-        // Плавный скролл для навигации
-        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
-            anchor.addEventListener('click', function (e) {
-                e.preventDefault();
-                document.querySelector(this.getAttribute('href')).scrollIntoView({
-                    behavior: 'smooth'
-                });
-            });
-        });
-    </script>
 </body>
 </html>

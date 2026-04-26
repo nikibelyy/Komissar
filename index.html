@@ -3,125 +3,339 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GIBDD Registry</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&display=swap" rel="stylesheet">
-    <link rel="manifest" href="data:application/json;base64,ewogICJuYW1lIjogIkdJQkREIFJlZ2lzdHJ5IiwKICAic2hvcnRfbmFtZSI6ICJSZWdpc3RyeSIsCiAgInN0YXJ0X3VybCI6ICIuIiwKICAiZGlzcGxheSI6ICJzdGFuZGFsb25lIiwKICAiYmFja2dyb3VuZF9jb2xvciI6ICIjZjNmNGY2IiwKICAidGhlbWVfY29sb3IiOiAiIzI1NjNmZSIsCiAgImljb25zIjogW3sgInNyYyI6ICJodHRwczovL2Nkbi1pY29ucy1wbmcuZmxhdGljb24uY29tLzUxMi8yOTkxLzI5OTExMjQucG5nIiwgInR5cGUiOiAiaW1hZ2UvcG5nIiwgInNpemVzIjogIjUxMng1MTIiIH1dCn0=">
+    <title>FitMaster AI — Персональный тренер и диетолог</title>
+    
+    <link href="https://unpkg.com/aos@2.3.1/dist/aos.css" rel="stylesheet">
     
     <style>
-        body { font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
-        .glass-card { background: rgba(255, 255, 255, 0.8); backdrop-filter: blur(10px); }
-        .ios-shadow { box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.1), 0 8px 10px -6px rgba(0, 0, 0, 0.05); }
+        /* CSS СТИЛИ */
+        :root {
+            --primary: #00ff88; /* Неоновый зеленый */
+            --primary-hover: #00cc6e;
+            --bg-dark: #0f172a; /* Глубокий синий */
+            --card-bg: #1e293b;
+            --text-main: #f8fafc;
+            --text-dim: #94a3b8;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Навигация */
+        header {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            padding: 20px 5%;
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            z-index: 1000;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+        }
+
+        .logo span { color: var(--primary); }
+
+        .nav-links {
+            display: flex;
+            list-style: none;
+            gap: 30px;
+        }
+
+        .nav-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            font-weight: 500;
+            transition: 0.3s;
+        }
+
+        .nav-links a:hover { color: var(--primary); }
+
+        /* Главный экран */
+        .hero {
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), 
+                        url('https://images.unsplash.com/photo-1517836357463-d25dfeac3438?auto=format&fit=crop&w=1920&q=80');
+            background-size: cover;
+            background-position: center;
+            padding: 0 20px;
+        }
+
+        .hero-content h1 {
+            font-size: clamp(2.5rem, 8vw, 4.5rem);
+            line-height: 1.1;
+            margin-bottom: 20px;
+        }
+
+        .hero-content p {
+            font-size: 1.2rem;
+            color: var(--text-dim);
+            max-width: 700px;
+            margin: 0 auto 40px;
+        }
+
+        /* Кнопки */
+        .btn {
+            display: inline-block;
+            padding: 18px 35px;
+            background: var(--primary);
+            color: #000;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 700;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+            border: none;
+            cursor: pointer;
+            box-shadow: 0 10px 20px rgba(0, 255, 136, 0.2);
+        }
+
+        .btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 30px rgba(0, 255, 136, 0.4);
+            background: var(--primary-hover);
+        }
+
+        /* Особенности */
+        .features {
+            padding: 100px 5%;
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 30px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            padding: 40px;
+            border-radius: 24px;
+            border: 1px solid rgba(255,255,255,0.05);
+            transition: 0.4s;
+        }
+
+        .card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+        }
+
+        .card h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+            color: var(--primary);
+        }
+
+        /* Секция Формы */
+        .order-section {
+            padding: 100px 5%;
+            background: #161e2d;
+        }
+
+        .form-container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: var(--card-bg);
+            padding: 50px;
+            border-radius: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.3);
+        }
+
+        .form-container h2 {
+            text-align: center;
+            font-size: 2.5rem;
+            margin-bottom: 40px;
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-size: 0.9rem;
+            color: var(--text-dim);
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 15px;
+            background: var(--bg-dark);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            font-size: 1rem;
+            outline: none;
+            transition: 0.3s;
+        }
+
+        input:focus, textarea:focus {
+            border-color: var(--primary);
+        }
+
+        /* Футер */
+        footer {
+            padding: 50px 5%;
+            text-align: center;
+            border-top: 1px solid rgba(255,255,255,0.05);
+            color: var(--text-dim);
+        }
+
+        /* Адаптивность */
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .form-container { padding: 30px 20px; }
+            .hero-content h1 { font-size: 2.8rem; }
+        }
     </style>
 </head>
-<body class="bg-slate-50 min-h-screen pb-20">
+<body>
 
-    <header class="sticky top-0 z-50 glass-card border-b border-slate-200 px-6 py-4">
-        <div class="max-w-md mx-auto flex justify-between items-center">
-            <h1 class="text-xl font-bold text-slate-800">Реестр ГАИ</h1>
-            <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs font-bold">
-                ID
-            </div>
-        </div>
+    <header>
+        <nav>
+            <div class="logo">FIT<span>PRO</span></div>
+            <ul class="nav-links">
+                <li><a href="#about">О методе</a></li>
+                <li><a href="#features">Услуги</a></li>
+                <li><a href="#plan">Мой план</a></li>
+            </ul>
+        </nav>
     </header>
 
-    <main class="max-w-md mx-auto p-6 space-y-6">
-        <section class="bg-white rounded-3xl p-6 ios-shadow border border-slate-100">
-            <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider mb-4">Новая запись</h2>
-            <div class="space-y-4">
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 ml-1 mb-1">Госномер</label>
-                    <input type="text" id="plateInput" placeholder="А 000 АА 00" 
-                        class="w-full bg-slate-100 border-none rounded-2xl px-4 py-3 text-lg font-bold tracking-widest focus:ring-2 focus:ring-blue-500 transition-all outline-none">
-                </div>
-                <div>
-                    <label class="block text-xs font-medium text-slate-500 ml-1 mb-1">Комментарий</label>
-                    <textarea id="commentInput" rows="2" placeholder="Опишите ситуацию..." 
-                        class="w-full bg-slate-100 border-none rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-blue-500 transition-all outline-none"></textarea>
-                </div>
-                <button onclick="addEntry()" 
-                    class="w-full bg-blue-600 hover:bg-blue-700 text-white font-semibold py-4 rounded-2xl transition-all active:scale-95 shadow-lg shadow-blue-200">
-                    Сохранить в базу
-                </button>
-            </div>
-        </section>
+    <section class="hero">
+        <div class="hero-content" data-aos="fade-up">
+            <h1>Твой личный AI-наставник</h1>
+            <p>Стань лучшей версией себя. Индивидуальный план тренировок, расчет КБЖУ и мотивация в твоем кармане 24/7.</p>
+            <a href="#plan" class="btn">Начать трансформацию</a>
+        </div>
+    </section>
 
-        <section>
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-sm font-semibold text-slate-400 uppercase tracking-wider">История записей</h2>
-                <span id="count" class="text-xs font-bold bg-slate-200 px-2 py-1 rounded-full text-slate-600">0</span>
-            </div>
-            <div id="entryList" class="space-y-3">
+    <section id="features" class="features">
+        <div class="card" data-aos="fade-right">
+            <h3>Программа тренировок</h3>
+            <p>План упражнений на основе ваших целей и доступного оборудования — для дома или тренажерного зала.</p>
+        </div>
+        <div class="card" data-aos="fade-up" data-aos-delay="100">
+            <h3>Умная диетология</h3>
+            <p>Рацион питания, адаптированный под ваш образ жизни. Вкусные рецепты без жестких ограничений.</p>
+        </div>
+        <div class="card" data-aos="fade-left" data-aos-delay="200">
+            <h3>Анализ прогресса</h3>
+            <p>Корректировка плана каждую неделю на основе ваших результатов и самочувствия.</p>
+        </div>
+    </section>
+
+    <section id="plan" class="order-section">
+        <div class="form-container" data-aos="zoom-in">
+            <h2>Анкета здоровья</h2>
+            <form id="coachForm">
+                <div class="input-group">
+                    <label>Ваша главная цель</label>
+                    <select required>
+                        <option value="">Выберите цель...</option>
+                        <option>Сбросить лишний вес</option>
+                        <option>Набрать мышечную массу</option>
+                        <option>Поддерживать активность</option>
+                        <option>Улучшить выносливость</option>
+                    </select>
                 </div>
-        </section>
-    </main>
+                
+                <div class="input-group">
+                    <label>Текущий уровень подготовки</label>
+                    <select required>
+                        <option>Новичок (0 опыта)</option>
+                        <option>Любитель (редкие занятия)</option>
+                        <option>Атлет (регулярный тренинг)</option>
+                    </select>
+                </div>
 
-    <nav class="fixed bottom-0 left-0 right-0 glass-card border-t border-slate-200 py-3 px-10 flex justify-around items-center">
-        <button class="text-blue-600"><svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20"><path d="M10.707 2.293a1 1 0 00-1.414 0l-7 7a1 1 0 001.414 1.414L4 10.414V17a1 1 0 001 1h2a1 1 0 001-1v-2a1 1 0 011-1h2a1 1 0 011 1v2a1 1 0 001 1h2a1 1 0 001-1v-6.586l.293.293a1 1 0 001.414-1.414l-7-7z"></path></svg></button>
-        <button class="text-slate-400" onclick="alert('Функция поиска в разработке')"><svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"></path></svg></button>
-    </nav>
+                <div class="input-group">
+                    <label>Доступное оборудование</label>
+                    <textarea rows="3" placeholder="Напр: Гантели, турник или только собственный вес"></textarea>
+                </div>
 
+                <div class="input-group">
+                    <label>Особенности графика (свободное время)</label>
+                    <input type="text" placeholder="Напр: 3 раза в неделю по вечерам">
+                </div>
+
+                <button type="submit" class="btn" style="width: 100%;">Получить план и поддержку</button>
+            </form>
+        </div>
+    </section>
+
+    <footer>
+        <p>&copy; 2024 FitPro Coaching. Все права защищены.</p>
+    </footer>
+
+    <script src="https://unpkg.com/aos@2.3.1/dist/aos.js"></script>
     <script>
-        // Сохранение данных в LocalStorage, чтобы ничего не пропадало
-        let entries = JSON.parse(localStorage.getItem('gibdd_db')) || [];
+        // Активация анимаций
+        AOS.init({
+            duration: 1000,
+            once: true,
+            offset: 100
+        });
 
-        function renderEntries() {
-            const list = document.getElementById('entryList');
-            const count = document.getElementById('count');
-            list.innerHTML = '';
-            count.innerText = entries.length;
+        // Логика формы
+        document.getElementById('coachForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const btn = this.querySelector('button');
+            const originalText = btn.innerText;
+            
+            btn.innerText = 'Анализируем данные...';
+            btn.disabled = true;
+            btn.style.opacity = '0.7';
 
-            entries.slice().reverse().forEach((entry, index) => {
-                const div = document.createElement('div');
-                div.className = 'bg-white p-4 rounded-2xl border border-slate-100 ios-shadow animate-fade-in-up';
-                div.innerHTML = `
-                    <div class="flex justify-between items-start mb-2">
-                        <span class="text-lg font-black tracking-tighter text-slate-800">${entry.plate.toUpperCase()}</span>
-                        <span class="text-[10px] text-slate-400">${entry.date}</span>
-                    </div>
-                    <p class="text-sm text-slate-600 leading-relaxed">${entry.comment}</p>
-                    <button onclick="deleteEntry(${entries.length - 1 - index})" class="mt-3 text-xs text-red-400 font-medium">Удалить</button>
-                `;
-                list.appendChild(div);
+            // Имитация работы AI/Тренера
+            setTimeout(() => {
+                alert('Данные приняты! Ваш наставник подготовит план в течение часа и свяжется с вами по указанным контактам.');
+                btn.innerText = originalText;
+                btn.disabled = false;
+                btn.style.opacity = '1';
+                this.reset();
+            }, 2500);
+        });
+
+        // Плавный скролл для навигации
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
             });
-            localStorage.setItem('gibdd_db', JSON.stringify(entries));
-        }
-
-        function addEntry() {
-            const plate = document.getElementById('plateInput').value;
-            const comment = document.getElementById('commentInput').value;
-
-            if (!plate || !comment) return alert('Заполните все поля');
-
-            const newEntry = {
-                plate: plate,
-                comment: comment,
-                date: new Date().toLocaleString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' })
-            };
-
-            entries.push(newEntry);
-            renderEntries();
-
-            // Очистка полей
-            document.getElementById('plateInput').value = '';
-            document.getElementById('commentInput').value = '';
-        }
-
-        function deleteEntry(index) {
-            if(confirm('Удалить запись?')) {
-                entries.splice(index, 1);
-                renderEntries();
-            }
-        }
-
-        // Регистрация Service Worker для PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js').catch(() => {
-                console.log("Service Worker не зарегистрирован (нужен HTTPS или localhost)");
-            });
-        }
-
-        renderEntries();
+        });
     </script>
 </body>
 </html>

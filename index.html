@@ -2,172 +2,189 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>MBD 136</title>
     <!-- Официальный скрипт Telegram WebApp -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #090d16;
-            --card-bg: rgba(22, 28, 45, 0.4);
-            --card-hover: rgba(22, 28, 45, 0.7);
-            --accent-color: #4f46e5;
-            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
-            --text-main: #f8fafc;
-            --text-muted: #94a3b8;
-            --border-color: rgba(255, 255, 255, 0.06);
-            --border-active: rgba(99, 102, 241, 0.4);
+            --bg-color: #030303;
+            --surface-color: rgba(20, 20, 22, 0.6);
+            --surface-hover: rgba(30, 30, 35, 0.8);
+            --border-light: rgba(255, 255, 255, 0.08);
+            --border-active: rgba(255, 255, 255, 0.4);
+            --text-primary: #ffffff;
+            --text-secondary: #8a8a93;
+            --accent-glow: rgba(255, 255, 255, 0.1);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+            -webkit-tap-highlight-color: transparent;
         }
 
         body {
             background-color: var(--bg-color);
-            color: var(--text-main);
+            color: var(--text-primary);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
-            justify-content: space-between;
             overflow-x: hidden;
             position: relative;
         }
 
-        body::before {
-            content: '';
+        /* Премиальный фоновый свет (Ambient Glow) */
+        .ambient-light {
             position: fixed;
-            top: -10%;
+            top: -20vh;
             left: 50%;
             transform: translateX(-50%);
-            width: 80%;
-            height: 400px;
-            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
+            width: 100vw;
+            height: 50vh;
+            background: radial-gradient(ellipse at top, rgba(70, 70, 85, 0.2) 0%, transparent 70%);
+            filter: blur(60px);
             pointer-events: none;
             z-index: 1;
+            animation: pulseGlow 8s infinite alternate ease-in-out;
         }
 
         .container {
             position: relative;
             z-index: 2;
-            max-width: 460px;
+            max-width: 480px;
             width: 100%;
             margin: 0 auto;
-            padding: 28px 20px;
+            padding: 40px 20px 30px;
             display: flex;
             flex-direction: column;
         }
 
+        /* Минималистичный текстовый хэдер */
         .header {
             text-align: center;
-            margin-bottom: 36px;
-            animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
-        }
-
-        .logo-box {
-            display: inline-flex;
-            align-items: center;
-            justify-content: center;
-            width: 64px;
-            height: 64px;
-            background: rgba(255, 255, 255, 0.03);
-            border: 1px solid var(--border-color);
-            border-radius: 18px;
-            margin-bottom: 16px;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-        }
-
-        .logo-icon {
-            font-size: 28px;
+            margin-bottom: 40px;
+            animation: fadeSlideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .title {
-            font-size: 24px;
+            font-size: 32px;
             font-weight: 800;
-            letter-spacing: -0.5px;
-            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+            letter-spacing: 4px;
+            text-transform: uppercase;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+            position: relative;
+            display: inline-block;
+        }
+
+        /* Маленькая акцентная точка у заголовка */
+        .title::after {
+            content: '';
+            position: absolute;
+            top: 6px;
+            right: -12px;
+            width: 6px;
+            height: 6px;
+            background-color: #fff;
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
         }
 
         .subtitle {
             font-size: 13px;
-            color: var(--text-muted);
-            margin-top: 6px;
+            color: var(--text-secondary);
             font-weight: 400;
+            letter-spacing: 0.5px;
         }
 
+        /* Сетка карточек */
         .search-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            gap: 12px;
-            margin-bottom: 24px;
-            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
+            gap: 16px;
+            margin-bottom: 30px;
+            animation: fadeSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s backwards;
         }
 
         .card {
-            background: var(--card-bg);
-            border: 1px solid var(--border-color);
-            border-radius: 20px;
-            padding: 20px;
+            background: var(--surface-color);
+            border: 1px solid var(--border-light);
+            border-radius: 24px;
+            padding: 24px 20px;
             text-align: left;
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
             cursor: pointer;
-            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
             position: relative;
+            overflow: hidden;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
         }
 
         .card:hover {
-            background: var(--card-hover);
-            border-color: rgba(255, 255, 255, 0.12);
-            transform: translateY(-2px);
+            background: var(--surface-hover);
+            transform: translateY(-4px);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
         }
 
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        /* Активное состояние */
         .card.active {
+            background: rgba(25, 25, 30, 0.8);
             border-color: var(--border-active);
-            background: rgba(99, 102, 241, 0.08);
-            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.15), inset 0 0 0 1px rgba(99, 102, 241, 0.2);
-            transform: scale(0.98);
+            box-shadow: 0 0 0 1px var(--border-active), 0 15px 40px rgba(0, 0, 0, 0.5);
+            transform: translateY(-2px) scale(0.98);
         }
 
+        /* Векторные иконки (SVG) */
         .card-icon {
-            font-size: 24px;
-            margin-bottom: 14px;
-            display: inline-block;
-            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+            width: 28px;
+            height: 28px;
+            margin-bottom: 16px;
+            color: var(--text-primary);
+            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
-        
+
         .card.active .card-icon {
             transform: scale(1.15);
         }
 
         .card-title {
-            font-size: 14px;
+            font-size: 15px;
             font-weight: 600;
-            color: var(--text-main);
-            letter-spacing: -0.2px;
+            color: var(--text-primary);
+            margin-bottom: 6px;
+            letter-spacing: -0.3px;
         }
 
         .card-desc {
-            font-size: 11px;
-            color: var(--text-muted);
-            margin-top: 6px;
+            font-size: 12px;
+            color: var(--text-secondary);
             line-height: 1.4;
         }
 
-        /* Интерактивный блок с инпутом и кнопкой запуска */
+        /* Динамический блок */
         .dynamic-action-block {
             display: none; 
             opacity: 0;
-            transform: translateY(15px);
-            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+            transform: translateY(20px);
+            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
         .dynamic-action-block.show {
@@ -177,111 +194,138 @@
         }
 
         .input-box {
-            margin-bottom: 12px;
+            position: relative;
+            margin-bottom: 16px;
         }
 
         .input-box input {
             width: 100%;
-            background: rgba(13, 18, 30, 0.7);
-            border: 1px solid var(--border-color);
-            padding: 18px;
-            border-radius: 18px;
+            background: transparent;
+            border: 1px solid var(--border-light);
+            padding: 20px 24px;
+            border-radius: 20px;
             color: #fff;
-            font-size: 15px;
+            font-size: 16px;
             outline: none;
             transition: all 0.3s ease;
-            text-align: center;
             backdrop-filter: blur(10px);
+            -webkit-backdrop-filter: blur(10px);
+        }
+
+        .input-box input::placeholder {
+            color: #55555c;
         }
 
         .input-box input:focus {
-            border-color: rgba(99, 102, 241, 0.5);
-            background: rgba(13, 18, 30, 0.9);
-            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+            border-color: rgba(255, 255, 255, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
         }
 
+        /* Премиальная белая кнопка */
         .main-btn {
-            background: var(--accent-gradient);
-            color: #ffffff;
+            background: #ffffff;
+            color: #000000;
             border: none;
-            padding: 18px 24px;
-            font-size: 15px;
-            font-weight: 600;
-            border-radius: 18px;
+            padding: 20px;
+            font-size: 16px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            border-radius: 20px;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
-            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
         }
 
-        .main-btn:hover {
-            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.45);
-            transform: translateY(-1px);
+        .main-btn:active {
+            transform: scale(0.97);
+            background: #e0e0e0;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-20px); filter: blur(5px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        /* Анимации */
+        @keyframes fadeSlideDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
-            to { opacity: 1; transform: translateY(0); filter: blur(0); }
+        @keyframes fadeSlideUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        @keyframes pulseGlow {
+            0% { opacity: 0.6; transform: translateX(-50%) scale(1); }
+            100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
         }
     </style>
 </head>
 <body>
 
+    <div class="ambient-light"></div>
+
     <div class="container">
         <div class="header">
-            <div class="logo-box">
-                <div class="logo-icon">🔮</div>
-            </div>
             <h1 class="title">MBD 136</h1>
-            <p class="subtitle">Выберите категорию для начала поиска</p>
+            <p class="subtitle">Система защищенного поиска данных</p>
         </div>
 
         <div class="search-grid">
-            <div class="card" onclick="selectType(this, 'Номер телефона', 'Введите номер телефона...')">
-                <div class="card-icon">📱</div>
+            <!-- Карточка 1 -->
+            <div class="card" onclick="selectType(this, 'Номер телефона', 'Введите номер (+7...)')">
+                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
+                </svg>
                 <div class="card-title">Телефон</div>
-                <div class="card-desc">Поиск связанных аккаунтов, объявлений и тегов</div>
+                <div class="card-desc">Аккаунты, объявления и цифровые следы</div>
             </div>
 
-            <div class="card" onclick="selectType(this, 'Номер авто', 'Введите госномер авто...')">
-                <div class="card-icon">🚗</div>
+            <!-- Карточка 2 -->
+            <div class="card" onclick="selectType(this, 'Номер авто', 'Введите госномер...')">
+                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
+                </svg>
                 <div class="card-title">Автомобиль</div>
-                <div class="card-desc">Проверка владельца, СТС и истории штрафов</div>
+                <div class="card-desc">Владелец, СТС, штрафы и полная история</div>
             </div>
 
-            <div class="card" onclick="selectType(this, 'ФИО / Паспорт', 'Введите ФИО или серию/номер...')">
-                <div class="card-icon">👤</div>
-                <div class="card-title">ФИО / Паспорт</div>
-                <div class="card-desc">Поиск имущества, задолженностей и связей</div>
+            <!-- Карточка 3 -->
+            <div class="card" onclick="selectType(this, 'ФИО / Паспорт', 'Введите ФИО или паспорт...')">
+                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
+                </svg>
+                <div class="card-title">ФИО / Документ</div>
+                <div class="card-desc">Имущество, суды, задолженности и связи</div>
             </div>
 
-            <div class="card" onclick="selectType(this, 'Соцсети / Email', 'Введите юзернейм или почту...')">
-                <div class="card-icon">🌐</div>
+            <!-- Карточка 4 -->
+            <div class="card" onclick="selectType(this, 'Соцсети / Email', 'Введите username или email...')">
+                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
+                </svg>
                 <div class="card-title">Аккаунты</div>
-                <div class="card-desc">Анализ утечек паролей и цифрового следа</div>
+                <div class="card-desc">Анализ утечек баз данных и паролей</div>
             </div>
         </div>
 
-        <!-- Появляется только после выбора карточки -->
+        <!-- Динамический блок -->
         <div class="dynamic-action-block" id="actionBlock">
             <div class="input-box">
-                <input type="text" id="targetInput" placeholder="">
+                <input type="text" id="targetInput" placeholder="" autocomplete="off">
             </div>
-            <button class="main-btn" onclick="startSearch()">Отправить запрос</button>
+            <button class="main-btn" onclick="startSearch()">Инициализировать поиск</button>
         </div>
     </div>
 
     <script>
         let selectedCategory = "";
         let tg = window.Telegram ? window.Telegram.WebApp : null;
+        
         if (tg) {
             tg.ready();
             tg.expand(); 
+            // Устанавливаем цвет хэдера под дизайн
+            tg.setHeaderColor('#030303');
+            tg.setBackgroundColor('#030303');
         }
 
         function selectType(element, category, placeholder) {
@@ -296,9 +340,12 @@
             const targetInput = document.getElementById('targetInput');
             
             actionBlock.style.display = 'block';
+            
+            // Небольшая задержка для срабатывания CSS transition
             setTimeout(() => { actionBlock.classList.add('show'); }, 10);
             
             targetInput.placeholder = placeholder;
+            targetInput.value = '';
             targetInput.focus();
         }
 
@@ -307,10 +354,17 @@
 
             if (!selectedCategory || !inputVal) {
                 if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
+                
+                // Эффект тряски при ошибке ввода
+                const inputbox = document.querySelector('.input-box');
+                inputbox.style.transform = 'translateX(-10px)';
+                setTimeout(() => inputbox.style.transform = 'translateX(10px)', 50);
+                setTimeout(() => inputbox.style.transform = 'translateX(-10px)', 100);
+                setTimeout(() => inputbox.style.transform = 'translateX(0)', 150);
                 return;
             }
 
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
 
             const resultData = {
                 category: selectedCategory,
@@ -320,7 +374,7 @@
             if (tg) {
                 tg.sendData(JSON.stringify(resultData));
             } else {
-                alert("Отправлено: " + JSON.stringify(resultData));
+                alert("Данные подготовлены к отправке: " + JSON.stringify(resultData));
             }
         }
     </script>

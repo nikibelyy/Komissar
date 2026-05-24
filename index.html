@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSINT SEARCH</title>
+    <title>MBD 136</title>
     <!-- Официальный скрипт Telegram WebApp -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
@@ -11,7 +11,7 @@
             --bg-color: #090d16;
             --card-bg: rgba(22, 28, 45, 0.4);
             --card-hover: rgba(22, 28, 45, 0.7);
-            --accent-color: #4f46e5; /* Благородный индиго вместо кислотно-зеленого */
+            --accent-color: #4f46e5;
             --accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
             --text-main: #f8fafc;
             --text-muted: #94a3b8;
@@ -38,7 +38,6 @@
             position: relative;
         }
 
-        /* Элегантное премиальное свечение на фоне */
         body::before {
             content: '';
             position: fixed;
@@ -89,8 +88,8 @@
         }
 
         .title {
-            font-size: 22px;
-            font-weight: 700;
+            font-size: 24px;
+            font-weight: 800;
             letter-spacing: -0.5px;
             background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
@@ -104,7 +103,6 @@
             font-weight: 400;
         }
 
-        /* Современная сетка Bento */
         .search-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
@@ -132,7 +130,6 @@
             transform: translateY(-2px);
         }
 
-        /* Активное состояние (выбрано) */
         .card.active {
             border-color: var(--border-active);
             background: rgba(99, 102, 241, 0.08);
@@ -165,7 +162,7 @@
             line-height: 1.4;
         }
 
-        /* Интерактивный блок (Инпут + Кнопка) */
+        /* Интерактивный блок с инпутом и кнопкой запуска */
         .dynamic-action-block {
             display: none; 
             opacity: 0;
@@ -221,13 +218,7 @@
             box-shadow: 0 12px 30px rgba(79, 70, 229, 0.45);
             transform: translateY(-1px);
         }
-        
-        .main-btn:active {
-            transform: translateY(1px);
-            filter: brightness(0.9);
-        }
 
-        /* Анимации плавного появления элементов */
         @keyframes fadeInDown {
             from { opacity: 0; transform: translateY(-20px); filter: blur(5px); }
             to { opacity: 1; transform: translateY(0); filter: blur(0); }
@@ -244,52 +235,49 @@
     <div class="container">
         <div class="header">
             <div class="logo-box">
-                <div class="logo-icon">✨</div>
+                <div class="logo-icon">🔮</div>
             </div>
-            <h1 class="title">OSINT Search</h1>
-            <p class="subtitle">Выберите категорию для начала работы</p>
+            <h1 class="title">MBD 136</h1>
+            <p class="subtitle">Выберите категорию для начала поиска</p>
         </div>
 
-        <!-- Сетка карточек -->
         <div class="search-grid">
             <div class="card" onclick="selectType(this, 'Номер телефона', 'Введите номер телефона...')">
                 <div class="card-icon">📱</div>
                 <div class="card-title">Телефон</div>
-                <div class="card-desc">Теги, объявления, соцсети владельца</div>
+                <div class="card-desc">Поиск связанных аккаунтов, объявлений и тегов</div>
             </div>
 
             <div class="card" onclick="selectType(this, 'Номер авто', 'Введите госномер авто...')">
                 <div class="card-icon">🚗</div>
                 <div class="card-title">Автомобиль</div>
-                <div class="card-desc">Владелец, СТС, штрафы и история</div>
+                <div class="card-desc">Проверка владельца, СТС и истории штрафов</div>
             </div>
 
             <div class="card" onclick="selectType(this, 'ФИО / Паспорт', 'Введите ФИО или серию/номер...')">
                 <div class="card-icon">👤</div>
                 <div class="card-title">ФИО / Паспорт</div>
-                <div class="card-desc">Родственники, задолженности, суды</div>
+                <div class="card-desc">Поиск имущества, задолженностей и связей</div>
             </div>
 
             <div class="card" onclick="selectType(this, 'Соцсети / Email', 'Введите юзернейм или почту...')">
                 <div class="card-icon">🌐</div>
                 <div class="card-title">Аккаунты</div>
-                <div class="card-desc">Связанные профили и утечки паролей</div>
+                <div class="card-desc">Анализ утечек паролей и цифрового следа</div>
             </div>
         </div>
 
-        <!-- Появляющийся блок с инпутом и кнопкой -->
+        <!-- Появляется только после выбора карточки -->
         <div class="dynamic-action-block" id="actionBlock">
             <div class="input-box">
                 <input type="text" id="targetInput" placeholder="">
             </div>
-            <button class="main-btn" onclick="startSearch()">Начать поиск</button>
+            <button class="main-btn" onclick="startSearch()">Отправить запрос</button>
         </div>
     </div>
 
     <script>
         let selectedCategory = "";
-
-        // Инициализация Telegram WebApp
         let tg = window.Telegram ? window.Telegram.WebApp : null;
         if (tg) {
             tg.ready();
@@ -297,13 +285,9 @@
         }
 
         function selectType(element, category, placeholder) {
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('light');
-            }
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
 
-            // Убираем активные классы со всех карточек
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-            // Добавляем текущей
             element.classList.add('active');
 
             selectedCategory = category;
@@ -311,11 +295,8 @@
             const actionBlock = document.getElementById('actionBlock');
             const targetInput = document.getElementById('targetInput');
             
-            // Плавное включение и анимация появления блока
             actionBlock.style.display = 'block';
-            setTimeout(() => {
-                actionBlock.classList.add('show');
-            }, 10);
+            setTimeout(() => { actionBlock.classList.add('show'); }, 10);
             
             targetInput.placeholder = placeholder;
             targetInput.focus();
@@ -329,9 +310,7 @@
                 return;
             }
 
-            if (tg && tg.HapticFeedback) {
-                tg.HapticFeedback.impactOccurred('medium');
-            }
+            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('medium');
 
             const resultData = {
                 category: selectedCategory,
@@ -341,7 +320,7 @@
             if (tg) {
                 tg.sendData(JSON.stringify(resultData));
             } else {
-                alert("Отправлено боту: " + JSON.stringify(resultData));
+                alert("Отправлено: " + JSON.stringify(resultData));
             }
         }
     </script>

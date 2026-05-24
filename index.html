@@ -3,48 +3,51 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>OSINT SEARCH | Пробив</title>
+    <title>OSINT SEARCH</title>
+    <!-- Официальный скрипт Telegram WebApp -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <style>
         :root {
-            --bg-color: #06080c;
-            --panel-bg: rgba(15, 22, 36, 0.7);
-            --accent-color: #00ff88;
-            --accent-glow: rgba(0, 255, 136, 0.3);
-            --text-main: #f1f5f9;
-            --text-muted: #64748b;
-            --border-color: rgba(255, 255, 255, 0.08);
+            --bg-color: #090d16;
+            --card-bg: rgba(22, 28, 45, 0.4);
+            --card-hover: rgba(22, 28, 45, 0.7);
+            --accent-color: #4f46e5; /* Благородный индиго вместо кислотно-зеленого */
+            --accent-gradient: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%);
+            --text-main: #f8fafc;
+            --text-muted: #94a3b8;
+            --border-color: rgba(255, 255, 255, 0.06);
+            --border-active: rgba(99, 102, 241, 0.4);
         }
 
         * {
             box-sizing: border-box;
             margin: 0;
             padding: 0;
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
             -webkit-font-smoothing: antialiased;
         }
 
         body {
-            background: radial-gradient(circle at top, #0f172a 0%, var(--bg-color) 70%);
+            background-color: var(--bg-color);
             color: var(--text-main);
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             justify-content: space-between;
             overflow-x: hidden;
+            position: relative;
         }
 
-        /* Задний фон с технологичной сеткой */
-        .bg-grid {
+        /* Элегантное премиальное свечение на фоне */
+        body::before {
+            content: '';
             position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0, 255, 136, 0.02) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0, 255, 136, 0.02) 1px, transparent 1px);
-            background-size: 30px 30px;
+            top: -10%;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 80%;
+            height: 400px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.12) 0%, transparent 70%);
             pointer-events: none;
             z-index: 1;
         }
@@ -52,113 +55,107 @@
         .container {
             position: relative;
             z-index: 2;
-            max-width: 480px;
+            max-width: 460px;
             width: 100%;
             margin: 0 auto;
-            padding: 24px;
+            padding: 28px 20px;
             display: flex;
             flex-direction: column;
         }
 
         .header {
             text-align: center;
-            margin-top: 10px;
-            margin-bottom: 32px;
+            margin-bottom: 36px;
+            animation: fadeInDown 0.8s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .logo-box {
-            position: relative;
             display: inline-flex;
             align-items: center;
             justify-content: center;
-            width: 70px;
-            height: 70px;
-            background: rgba(0, 255, 136, 0.05);
-            border: 1px solid rgba(0, 255, 136, 0.2);
-            border-radius: 20px;
+            width: 64px;
+            height: 64px;
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid var(--border-color);
+            border-radius: 18px;
             margin-bottom: 16px;
-            box-shadow: 0 0 20px rgba(0, 255, 136, 0.1);
-            animation: pulse 3s infinite alternate;
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
         }
 
         .logo-icon {
-            font-size: 32px;
-            line-height: 1;
+            font-size: 28px;
         }
 
         .title {
-            font-size: 20px;
-            font-weight: 800;
-            letter-spacing: 3px;
-            text-transform: uppercase;
-            background: linear-gradient(135deg, #fff 0%, #a5b4fc 100%);
+            font-size: 22px;
+            font-weight: 700;
+            letter-spacing: -0.5px;
+            background: linear-gradient(180deg, #ffffff 0%, #cbd5e1 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
         .subtitle {
-            font-size: 12px;
+            font-size: 13px;
             color: var(--text-muted);
             margin-top: 6px;
-            font-weight: 500;
-            letter-spacing: 1px;
-            text-transform: uppercase;
+            font-weight: 400;
         }
 
-        /* Сетка выбора категорий */
+        /* Современная сетка Bento */
         .search-grid {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 12px;
             margin-bottom: 24px;
+            animation: fadeInUp 0.8s cubic-bezier(0.16, 1, 0.3, 1) 0.1s backwards;
         }
 
         .card {
-            background: var(--panel-bg);
+            background: var(--card-bg);
             border: 1px solid var(--border-color);
-            border-radius: 16px;
-            padding: 20px 16px;
+            border-radius: 20px;
+            padding: 20px;
             text-align: left;
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
             cursor: pointer;
-            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: all 0.4s cubic-bezier(0.16, 1, 0.3, 1);
             position: relative;
-            overflow: hidden;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.05) 0%, transparent 100%);
-            border-radius: 16px;
-            pointer-events: none;
-        }
-
-        /* Активное состояние карточки */
-        .card.active {
-            border-color: var(--accent-color);
-            background: rgba(0, 255, 136, 0.06);
-            box-shadow: 0 0 20px var(--accent-glow), inset 0 0 12px rgba(0, 255, 136, 0.1);
+        .card:hover {
+            background: var(--card-hover);
+            border-color: rgba(255, 255, 255, 0.12);
             transform: translateY(-2px);
+        }
+
+        /* Активное состояние (выбрано) */
+        .card.active {
+            border-color: var(--border-active);
+            background: rgba(99, 102, 241, 0.08);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.15), inset 0 0 0 1px rgba(99, 102, 241, 0.2);
+            transform: scale(0.98);
         }
 
         .card-icon {
             font-size: 24px;
-            margin-bottom: 12px;
+            margin-bottom: 14px;
             display: inline-block;
-            transition: transform 0.3s ease;
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
         
         .card.active .card-icon {
-            transform: scale(1.1);
+            transform: scale(1.15);
         }
 
         .card-title {
             font-size: 14px;
             font-weight: 600;
             color: var(--text-main);
+            letter-spacing: -0.2px;
         }
 
         .card-desc {
@@ -168,129 +165,124 @@
             line-height: 1.4;
         }
 
-        /* Динамический блок (Инпут + Кнопка) */
+        /* Интерактивный блок (Инпут + Кнопка) */
         .dynamic-action-block {
-            display: none; /* Скрыто до выбора карточки */
-            animation: slideUp 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+            display: none; 
+            opacity: 0;
+            transform: translateY(15px);
+            transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .dynamic-action-block.show {
+            display: block;
+            opacity: 1;
+            transform: translateY(0);
         }
 
         .input-box {
-            margin-bottom: 16px;
+            margin-bottom: 12px;
         }
 
         .input-box input {
             width: 100%;
-            background: rgba(10, 15, 26, 0.8);
+            background: rgba(13, 18, 30, 0.7);
             border: 1px solid var(--border-color);
-            padding: 16px;
-            border-radius: 14px;
+            padding: 18px;
+            border-radius: 18px;
             color: #fff;
             font-size: 15px;
             outline: none;
-            transition: all 0.25s ease;
+            transition: all 0.3s ease;
             text-align: center;
-            backdrop-filter: blur(8px);
+            backdrop-filter: blur(10px);
         }
 
         .input-box input:focus {
-            border-color: var(--accent-color);
-            box-shadow: 0 0 15px rgba(0, 255, 136, 0.15);
-            background: rgba(10, 15, 26, 0.95);
-        }
-
-        .btn-box {
-            margin-bottom: 20px;
+            border-color: rgba(99, 102, 241, 0.5);
+            background: rgba(13, 18, 30, 0.9);
+            box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
         }
 
         .main-btn {
-            background: var(--accent-color);
-            color: #020617;
+            background: var(--accent-gradient);
+            color: #ffffff;
             border: none;
-            padding: 16px 24px;
+            padding: 18px 24px;
             font-size: 15px;
-            font-weight: 700;
-            letter-spacing: 1px;
-            text-transform: uppercase;
-            border-radius: 14px;
+            font-weight: 600;
+            border-radius: 18px;
             cursor: pointer;
             width: 100%;
-            box-shadow: 0 4px 20px rgba(0, 255, 136, 0.3);
-            transition: all 0.2s ease;
+            box-shadow: 0 10px 25px rgba(79, 70, 229, 0.3);
+            transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
         }
 
         .main-btn:hover {
-            opacity: 0.95;
-            box-shadow: 0 4px 25px rgba(0, 255, 136, 0.5);
+            box-shadow: 0 12px 30px rgba(79, 70, 229, 0.45);
             transform: translateY(-1px);
         }
         
         .main-btn:active {
             transform: translateY(1px);
+            filter: brightness(0.9);
         }
 
-        /* Анимации */
-        @keyframes pulse {
-            0% { border-color: rgba(0, 255, 136, 0.2); box-shadow: 0 0 15px rgba(0, 255, 136, 0.05); }
-            100% { border-color: rgba(0, 255, 136, 0.5); box-shadow: 0 0 25px rgba(0, 255, 136, 0.2); }
+        /* Анимации плавного появления элементов */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
 
-        @keyframes slideUp {
-            0% { opacity: 0; transform: translateY(20px); }
-            100% { opacity: 1; transform: translateY(0); }
-        }
-
-        .fade-in {
-            animation: slideUp 0.6s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(20px); filter: blur(5px); }
+            to { opacity: 1; transform: translateY(0); filter: blur(0); }
         }
     </style>
 </head>
 <body>
 
-    <div class="bg-grid"></div>
-
-    <div class="container fade-in">
+    <div class="container">
         <div class="header">
             <div class="logo-box">
-                <div class="logo-icon">👁‍🗨</div>
+                <div class="logo-icon">✨</div>
             </div>
-            <h1 class="title">EYE OF GOD ENGINE</h1>
-            <p class="subtitle">Интеллектуальный поиск данных</p>
+            <h1 class="title">OSINT Search</h1>
+            <p class="subtitle">Выберите категорию для начала работы</p>
         </div>
 
+        <!-- Сетка карточек -->
         <div class="search-grid">
-            <div class="card" onclick="selectType(this, 'Номер телефона', 'Пример: +79991234567')">
+            <div class="card" onclick="selectType(this, 'Номер телефона', 'Введите номер телефона...')">
                 <div class="card-icon">📱</div>
-                <div class="card-title">Номер телефона</div>
-                <div class="card-desc">Оператор, теги, объявления, соцсети</div>
+                <div class="card-title">Телефон</div>
+                <div class="card-desc">Теги, объявления, соцсети владельца</div>
             </div>
 
-            <div class="card" onclick="selectType(this, 'Номер авто', 'Пример: А777АА777')">
+            <div class="card" onclick="selectType(this, 'Номер авто', 'Введите госномер авто...')">
                 <div class="card-icon">🚗</div>
-                <div class="card-title">Номер авто</div>
-                <div class="card-desc">Владелец, СТС/ПТС, история штрафов</div>
+                <div class="card-title">Автомобиль</div>
+                <div class="card-desc">Владелец, СТС, штрафы и история</div>
             </div>
 
-            <div class="card" onclick="selectType(this, 'ФИО / Паспорт', 'Пример: Иванов Иван Иванович')">
+            <div class="card" onclick="selectType(this, 'ФИО / Паспорт', 'Введите ФИО или серию/номер...')">
                 <div class="card-icon">👤</div>
                 <div class="card-title">ФИО / Паспорт</div>
                 <div class="card-desc">Родственники, задолженности, суды</div>
             </div>
 
-            <div class="card" onclick="selectType(this, 'Соцсети / Email', 'Пример: @username или mail@mail.ru')">
+            <div class="card" onclick="selectType(this, 'Соцсети / Email', 'Введите юзернейм или почту...')">
                 <div class="card-icon">🌐</div>
-                <div class="card-title">Соцсети / Email</div>
-                <div class="card-desc">Связанные профили, утечки паролей</div>
+                <div class="card-title">Аккаунты</div>
+                <div class="card-desc">Связанные профили и утечки паролей</div>
             </div>
         </div>
 
+        <!-- Появляющийся блок с инпутом и кнопкой -->
         <div class="dynamic-action-block" id="actionBlock">
             <div class="input-box">
-                <input type="text" id="targetInput" placeholder="Выберите тип пробива сверху">
+                <input type="text" id="targetInput" placeholder="">
             </div>
-
-            <div class="btn-box">
-                <button class="main-btn" onclick="startSearch()">Запустить Поиск</button>
-            </div>
+            <button class="main-btn" onclick="startSearch()">Начать поиск</button>
         </div>
     </div>
 
@@ -304,38 +296,36 @@
             tg.expand(); 
         }
 
-        // Логика выбора карточки
         function selectType(element, category, placeholder) {
             if (tg && tg.HapticFeedback) {
                 tg.HapticFeedback.impactOccurred('light');
             }
 
-            // Сброс активного класса
+            // Убираем активные классы со всех карточек
             document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
+            // Добавляем текущей
             element.classList.add('active');
 
             selectedCategory = category;
             
-            // Отображаем блок с инпутом и кнопкой
             const actionBlock = document.getElementById('actionBlock');
             const targetInput = document.getElementById('targetInput');
             
+            // Плавное включение и анимация появления блока
             actionBlock.style.display = 'block';
+            setTimeout(() => {
+                actionBlock.classList.add('show');
+            }, 10);
+            
             targetInput.placeholder = placeholder;
-            targetInput.value = "";
             targetInput.focus();
         }
 
-        // Отправка данных
         function startSearch() {
             const inputVal = document.getElementById('targetInput').value.trim();
 
-            if (!selectedCategory) {
-                alert('Пожалуйста, выберите категорию!');
-                return;
-            }
-            if (!inputVal) {
-                alert('Пожалуйста, введите данные для поиска!');
+            if (!selectedCategory || !inputVal) {
+                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
                 return;
             }
 
@@ -351,7 +341,7 @@
             if (tg) {
                 tg.sendData(JSON.stringify(resultData));
             } else {
-                alert("Отправка боту (тест): " + JSON.stringify(resultData));
+                alert("Отправлено боту: " + JSON.stringify(resultData));
             }
         }
     </script>

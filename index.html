@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Чудо Авто</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,500;0,700;0,900;1,900&display=swap" rel="stylesheet">
@@ -16,24 +16,82 @@
             --red-hover: #ef233c;
             --text-main: #ffffff;
             --text-muted: #8d99ae;
-            --border-line: #2b2b36;
+            --border-line: rgba(255, 255, 255, 0.05);
         }
 
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
-        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 90px; }
+        body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 110px; }
 
-        /* Шапка */
-        .header { background: var(--bg-card); padding: 20px 20px 15px; border-bottom: 1px solid var(--border-line); position: sticky; top: 0; z-index: 100; }
+        /* ИСПРАВЛЕННАЯ ШАПКА */
+        .header { 
+            background: rgba(28, 28, 33, 0.85); 
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            /* env(safe-area-inset-top) спасет от челки айфона */
+            padding: calc(15px + env(safe-area-inset-top)) 20px 15px; 
+            border-bottom: 1px solid var(--border-line); 
+            position: sticky; 
+            top: 0; 
+            z-index: 100; 
+            text-align: center; /* По центру выглядит более премиально */
+        }
         .logo-title { font-size: 26px; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: -0.5px; }
         .logo-title span { color: var(--red-main); }
-        .subtitle { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 1px; margin-top: 4px; }
+        .subtitle { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* Навигация (Нижний бар) */
-        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--bg-card); border-top: 1px solid var(--border-line); display: flex; justify-content: space-around; padding: 10px 10px 25px 10px; z-index: 1000; }
-        .nav-tab { flex: 1; display: flex; flex-direction: column; align-items: center; color: var(--text-muted); font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; transition: 0.2s; padding: 8px 0; border-radius: 8px; }
-        .nav-tab svg { width: 24px; height: 24px; fill: currentColor; margin-bottom: 4px; }
-        .nav-tab.active { color: var(--red-main); }
-        #tab-admin { display: none; } /* Скрыто для обычных юзеров */
+        /* НОВАЯ ДОРОГАЯ НАВИГАЦИЯ (Парящая панель) */
+        .nav-wrapper {
+            position: fixed;
+            bottom: calc(15px + env(safe-area-inset-bottom));
+            left: 50%;
+            transform: translateX(-50%);
+            width: 92%;
+            max-width: 400px;
+            z-index: 1000;
+        }
+        .nav { 
+            background: rgba(28, 28, 33, 0.9); 
+            backdrop-filter: blur(15px);
+            -webkit-backdrop-filter: blur(15px);
+            border: 1px solid var(--border-line); 
+            display: flex; 
+            justify-content: space-between; 
+            padding: 6px; 
+            border-radius: 20px; 
+            box-shadow: 0 10px 30px rgba(0,0,0,0.6); 
+        }
+        .nav-tab { 
+            flex: 1; 
+            display: flex; 
+            flex-direction: column; 
+            align-items: center; 
+            justify-content: center;
+            color: var(--text-muted); 
+            font-size: 10px; 
+            font-weight: 700; 
+            text-transform: uppercase; 
+            letter-spacing: 0.5px;
+            cursor: pointer; 
+            transition: all 0.3s ease; 
+            padding: 10px 0; 
+            border-radius: 14px; 
+        }
+        .nav-tab svg { 
+            width: 22px; 
+            height: 22px; 
+            fill: currentColor; 
+            margin-bottom: 4px; 
+            transition: transform 0.3s ease;
+        }
+        /* Активное состояние кнопки */
+        .nav-tab.active { 
+            color: var(--red-main); 
+            background: rgba(217, 4, 41, 0.1); /* Легкая красная заливка фона */
+        }
+        .nav-tab.active svg {
+            transform: translateY(-2px); /* Иконка чуть приподнимается */
+        }
+        #tab-admin { display: none; }
 
         /* Экраны */
         .screen { display: none; padding: 15px; animation: fadeIn 0.2s ease-out; }
@@ -41,50 +99,48 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
         /* Карточки авто */
-        .car-card { background: var(--bg-card); border-radius: 12px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-line); }
+        .car-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-line); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .img-wrap { position: relative; width: 100%; height: 230px; background: #111; }
         .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
-        
-        /* Бирки на фото */
-        .badge-bottom { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.8); backdrop-filter: blur(5px); color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 6px; text-transform: uppercase; }
-        .badge-hot { position: absolute; top: 10px; right: 10px; background: var(--red-main); color: #fff; padding: 6px 10px; font-size: 11px; font-weight: 900; border-radius: 6px; text-transform: uppercase; }
+        .badge-bottom { position: absolute; bottom: 10px; left: 10px; background: rgba(0,0,0,0.7); backdrop-filter: blur(5px); -webkit-backdrop-filter: blur(5px); color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 700; border-radius: 8px; text-transform: uppercase; }
+        .badge-hot { position: absolute; top: 10px; right: 10px; background: var(--red-main); color: #fff; padding: 6px 10px; font-size: 11px; font-weight: 900; border-radius: 8px; text-transform: uppercase; }
 
         .car-info { padding: 16px; }
         .car-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
         .car-specs { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; font-weight: 500; }
         
         /* Блок цен */
-        .price-block { display: flex; align-items: flex-end; justify-content: space-between; background: var(--bg-input); padding: 12px; border-radius: 8px; margin-bottom: 16px; border-left: 4px solid var(--red-main); }
+        .price-block { display: flex; align-items: flex-end; justify-content: space-between; background: var(--bg-input); padding: 12px 15px; border-radius: 12px; margin-bottom: 16px; border-left: 4px solid var(--red-main); }
         .price-main { font-size: 22px; font-weight: 900; color: #fff; }
         .price-market { font-size: 12px; color: var(--text-muted); text-decoration: line-through; text-align: right; margin-bottom: 2px; }
-        .profit { font-size: 11px; color: #fff; font-weight: 700; background: #2a8a3a; padding: 3px 6px; border-radius: 4px; display: inline-block; }
+        .profit { font-size: 11px; color: #fff; font-weight: 700; background: #2a8a3a; padding: 4px 8px; border-radius: 6px; display: inline-block; }
 
         /* Кнопки */
-        .btn { display: block; width: 100%; background: var(--red-main); color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; text-transform: uppercase; padding: 16px; border: none; border-radius: 8px; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.2s; }
+        .btn { display: block; width: 100%; background: var(--red-main); color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; text-transform: uppercase; padding: 16px; border: none; border-radius: 12px; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.2s; }
         .btn:active { background: var(--red-hover); transform: scale(0.98); }
-        .btn-outline { background: transparent; border: 2px solid var(--border-line); color: var(--text-main); margin-top: 10px; }
+        .btn-outline { background: transparent; border: 1px solid var(--text-muted); color: var(--text-main); margin-top: 10px; }
         .btn-outline:active { background: var(--bg-input); }
 
         /* Инпуты форм */
         .form-group { margin-bottom: 16px; }
-        .form-group label { display: block; font-size: 12px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; }
-        .input { width: 100%; background: var(--bg-input); border: 1px solid var(--border-line); border-radius: 8px; padding: 14px; color: #fff; font-size: 16px; font-weight: 500; outline: none; transition: 0.2s; }
-        .input:focus { border-color: var(--red-main); }
+        .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .input { width: 100%; background: var(--bg-input); border: 1px solid transparent; border-radius: 12px; padding: 16px; color: #fff; font-size: 15px; font-weight: 500; outline: none; transition: 0.2s; }
+        .input:focus { border-color: var(--red-main); background: #1f1f25; }
 
         /* Пустые состояния */
-        .empty-state { text-align: center; padding: 60px 20px; }
+        .empty-state { text-align: center; padding: 80px 20px; }
         .empty-state h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
         .empty-state p { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
 
         /* Админка - Заявки */
-        .req-card { background: var(--bg-card); border: 1px solid var(--border-line); padding: 16px; border-radius: 8px; margin-bottom: 12px; border-left: 4px solid #ffb703; }
+        .req-card { background: var(--bg-card); border: 1px solid var(--border-line); padding: 16px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #ffb703; }
     </style>
 </head>
 <body>
 
     <div class="header">
         <div class="logo-title">ЧУДО <span>АВТО</span></div>
-        <div class="subtitle">Выкуп • Низ рынка</div>
+        <div class="subtitle">Открытый склад • Низ рынка</div>
     </div>
 
     <div id="scr-catalog" class="screen active">
@@ -129,7 +185,7 @@
     <div id="scr-admin" class="screen">
         <h2 style="font-size: 24px; font-weight: 900; margin-bottom: 20px; color: var(--red-main);">ПАНЕЛЬ ПЕРЕКУПА</h2>
         
-        <div style="background: var(--bg-card); padding: 16px; border-radius: 8px; border: 1px solid var(--border-line); margin-bottom: 30px;">
+        <div style="background: var(--bg-card); padding: 20px; border-radius: 16px; border: 1px solid var(--border-line); margin-bottom: 30px;">
             <h4 style="margin-bottom: 16px; font-size: 14px; text-transform: uppercase;">Пополнить склад</h4>
             <form onsubmit="addCar(event)">
                 <div class="form-group"><input type="text" id="adm-title" class="input" placeholder="Авто (BMW M5 F90, 2021)" required></div>
@@ -137,7 +193,7 @@
                 <div class="form-group"><input type="text" id="adm-meta" class="input" placeholder="Характеристики (Пробег, ДТП)" required></div>
                 <div class="form-group"><input type="number" id="adm-price" class="input" placeholder="Цена со скидкой (₽)" required></div>
                 <div class="form-group"><input type="number" id="adm-market" class="input" placeholder="Средняя по рынку (₽)" required></div>
-                <button type="submit" class="btn">Опубликовать</button>
+                <button type="submit" class="btn">Опубликовать лот</button>
             </form>
         </div>
 
@@ -145,15 +201,17 @@
         <div id="admin-requests"></div>
     </div>
 
-    <div class="nav">
-        <div class="nav-tab active" onclick="switchTab('catalog')">
-            <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>В наличии
-        </div>
-        <div class="nav-tab" onclick="switchTab('sell')">
-            <svg viewBox="0 0 24 24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z"/></svg>Оценка авто
-        </div>
-        <div class="nav-tab" id="tab-admin" onclick="switchTab('admin')">
-            <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.8 1.4 2.8 2.8 0 1.4-1.4 2.8-2.8 2.8-1.4 0-2.8-1.4-2.8-2.8C9.2 8.4 10.6 7 12 7z"/></svg>Управление
+    <div class="nav-wrapper">
+        <div class="nav">
+            <div class="nav-tab active" onclick="switchTab('catalog')">
+                <svg viewBox="0 0 24 24"><path d="M3 3h8v8H3zm10 0h8v8h-8zM3 13h8v8H3zm10 0h8v8h-8z"/></svg>В наличии
+            </div>
+            <div class="nav-tab" onclick="switchTab('sell')">
+                <svg viewBox="0 0 24 24"><path d="M12 22C6.477 22 2 17.523 2 12S6.477 2 12 2s10 4.477 10 10-4.477 10-10 10zm-1-11v6h2v-6h-2zm0-4v2h2V7h-2z"/></svg>Оценка авто
+            </div>
+            <div class="nav-tab" id="tab-admin" onclick="switchTab('admin')">
+                <svg viewBox="0 0 24 24"><path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm0 6c1.4 0 2.8 1.4 2.8 2.8 0 1.4-1.4 2.8-2.8 2.8-1.4 0-2.8-1.4-2.8-2.8C9.2 8.4 10.6 7 12 7z"/></svg>Управление
+            </div>
         </div>
     </div>
 
@@ -162,19 +220,22 @@
         tg.expand();
         tg.ready();
 
-        // ⚠️ ВПИШИ СВОЙ ТЕЛЕГРАМ ID! (Иначе не увидишь админку)
+        // Делаем так, чтобы сам Телеграм перекрасил свою верхнюю рамку под цвет нашего фона
+        try {
+            tg.setHeaderColor('#0f0f11');
+            tg.setBackgroundColor('#0f0f11');
+        } catch(e) { console.log("Telegram API Theme Error", e); }
+
+        // ⚠️ ВПИШИ СВОЙ ТЕЛЕГРАМ ID!
         const ADMIN_ID = 123456789; 
 
-        // Проверка прав
         const userTgId = tg.initDataUnsafe?.user?.id;
         if (userTgId === ADMIN_ID) {
             document.getElementById('tab-admin').style.display = 'flex';
         }
 
-        // URL ТВОЕГО БЭКЕНДА (Например https://my-chudo-auto.com)
         const API_URL = window.location.origin;
 
-        // Переключение вкладок
         function switchTab(screen) {
             document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
             document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
@@ -182,7 +243,6 @@
             event.currentTarget.classList.add('active');
         }
 
-        // Загрузка авто
         async function loadCatalog() {
             try {
                 const res = await fetch(`${API_URL}/api/cars`);
@@ -196,7 +256,7 @@
 
                 cars.forEach((car) => {
                     const profit = car.market_price - car.price;
-                    const formatPrice = (p) => p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " "); // Красивые пробелы в цифрах
+                    const formatPrice = (p) => p.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
                     
                     const card = document.createElement('div');
                     card.className = 'car-card';
@@ -235,7 +295,6 @@
             tg.close();
         }
 
-        // Добавление тачки (Для админа)
         async function addCar(e) {
             e.preventDefault();
             const data = {
@@ -257,7 +316,6 @@
             loadCatalog();
         }
 
-        // Отправка на выкуп (От клиента)
         async function sendBuyback(e) {
             e.preventDefault();
             const data = {
@@ -275,7 +333,6 @@
             loadAdminRequests();
         }
 
-        // Загрузка заявок для админа
         async function loadAdminRequests() {
             if (userTgId !== ADMIN_ID) return;
             try {

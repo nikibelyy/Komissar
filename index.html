@@ -2,381 +2,155 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>MBD 136</title>
-    <!-- Официальный скрипт Telegram WebApp -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Перекуп Симулятор</title>
+    <!-- Подключаем SDK Телеграма -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <!-- Tailwind CSS для быстрого и красивого дизайна -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        :root {
-            --bg-color: #030303;
-            --surface-color: rgba(20, 20, 22, 0.6);
-            --surface-hover: rgba(30, 30, 35, 0.8);
-            --border-light: rgba(255, 255, 255, 0.08);
-            --border-active: rgba(255, 255, 255, 0.4);
-            --text-primary: #ffffff;
-            --text-secondary: #8a8a93;
-            --accent-glow: rgba(255, 255, 255, 0.1);
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-            font-family: "SF Pro Display", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
-            -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        body {
-            background-color: var(--bg-color);
-            color: var(--text-primary);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            overflow-x: hidden;
-            position: relative;
-        }
-
-        /* Премиальный фоновый свет (Ambient Glow) */
-        .ambient-light {
-            position: fixed;
-            top: -20vh;
-            left: 50%;
-            transform: translateX(-50%);
-            width: 100vw;
-            height: 50vh;
-            background: radial-gradient(ellipse at top, rgba(70, 70, 85, 0.2) 0%, transparent 70%);
-            filter: blur(60px);
-            pointer-events: none;
-            z-index: 1;
-            animation: pulseGlow 8s infinite alternate ease-in-out;
-        }
-
-        .container {
-            position: relative;
-            z-index: 2;
-            max-width: 480px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 40px 20px 30px;
-            display: flex;
-            flex-direction: column;
-        }
-
-        /* Минималистичный текстовый хэдер */
-        .header {
-            text-align: center;
-            margin-bottom: 40px;
-            animation: fadeSlideDown 0.8s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .title {
-            font-size: 32px;
-            font-weight: 800;
-            letter-spacing: 4px;
-            text-transform: uppercase;
-            color: var(--text-primary);
-            margin-bottom: 8px;
-            position: relative;
-            display: inline-block;
-        }
-
-        /* Маленькая акцентная точка у заголовка */
-        .title::after {
-            content: '';
-            position: absolute;
-            top: 6px;
-            right: -12px;
-            width: 6px;
-            height: 6px;
-            background-color: #fff;
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(255, 255, 255, 0.8);
-        }
-
-        .subtitle {
-            font-size: 13px;
-            color: var(--text-secondary);
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
-        /* Сетка карточек */
-        .search-grid {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 30px;
-            animation: fadeSlideUp 0.8s cubic-bezier(0.2, 0.8, 0.2, 1) 0.1s backwards;
-        }
-
-        .card {
-            background: var(--surface-color);
-            border: 1px solid var(--border-light);
-            border-radius: 24px;
-            padding: 24px 20px;
-            text-align: left;
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-            position: relative;
-            overflow: hidden;
-        }
-
-        .card::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 0; right: 0; bottom: 0;
-            background: linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%);
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .card:hover {
-            background: var(--surface-hover);
-            transform: translateY(-4px);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-        }
-
-        .card:hover::before {
-            opacity: 1;
-        }
-
-        /* Активное состояние */
-        .card.active {
-            background: rgba(25, 25, 30, 0.8);
-            border-color: var(--border-active);
-            box-shadow: 0 0 0 1px var(--border-active), 0 15px 40px rgba(0, 0, 0, 0.5);
-            transform: translateY(-2px) scale(0.98);
-        }
-
-        /* Векторные иконки (SVG) */
-        .card-icon {
-            width: 28px;
-            height: 28px;
-            margin-bottom: 16px;
-            color: var(--text-primary);
-            transition: transform 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-        }
-
-        .card.active .card-icon {
-            transform: scale(1.15);
-        }
-
-        .card-title {
-            font-size: 15px;
-            font-weight: 600;
-            color: var(--text-primary);
-            margin-bottom: 6px;
-            letter-spacing: -0.3px;
-        }
-
-        .card-desc {
-            font-size: 12px;
-            color: var(--text-secondary);
-            line-height: 1.4;
-        }
-
-        /* Динамический блок */
-        .dynamic-action-block {
-            display: none; 
-            opacity: 0;
-            transform: translateY(20px);
-            transition: all 0.6s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .dynamic-action-block.show {
-            display: block;
-            opacity: 1;
-            transform: translateY(0);
-        }
-
-        .input-box {
-            position: relative;
-            margin-bottom: 16px;
-        }
-
-        .input-box input {
-            width: 100%;
-            background: transparent;
-            border: 1px solid var(--border-light);
-            padding: 20px 24px;
-            border-radius: 20px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.3s ease;
-            backdrop-filter: blur(10px);
-            -webkit-backdrop-filter: blur(10px);
-        }
-
-        .input-box input::placeholder {
-            color: #55555c;
-        }
-
-        .input-box input:focus {
-            border-color: rgba(255, 255, 255, 0.3);
-            background: rgba(255, 255, 255, 0.03);
-            box-shadow: 0 0 20px rgba(255, 255, 255, 0.05);
-        }
-
-        /* Премиальная белая кнопка */
-        .main-btn {
-            background: #ffffff;
-            color: #000000;
-            border: none;
-            padding: 20px;
-            font-size: 16px;
-            font-weight: 700;
-            letter-spacing: 0.5px;
-            border-radius: 20px;
-            cursor: pointer;
-            width: 100%;
-            transition: all 0.3s cubic-bezier(0.2, 0.8, 0.2, 1);
-        }
-
-        .main-btn:active {
-            transform: scale(0.97);
-            background: #e0e0e0;
-        }
-
-        /* Анимации */
-        @keyframes fadeSlideDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes fadeSlideUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        @keyframes pulseGlow {
-            0% { opacity: 0.6; transform: translateX(-50%) scale(1); }
-            100% { opacity: 1; transform: translateX(-50%) scale(1.1); }
-        }
+        body { font-family: sans-serif; }
     </style>
 </head>
-<body>
+<body class="bg-slate-900 text-white min-h-screen p-4 flex flex-col justify-between">
 
-    <div class="ambient-light"></div>
-
-    <div class="container">
-        <div class="header">
-            <h1 class="title">MBD 136</h1>
-            <p class="subtitle">Система защищенного поиска данных</p>
+    <!-- Шапка профиля -->
+    <div class="bg-slate-800 p-4 rounded-xl shadow-lg flex justify-between items-center mb-4">
+        <div>
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Ваш баланс</p>
+            <h1 id="balance" class="text-2xl font-bold text-emerald-400">150 000 ₽</h1>
         </div>
-
-        <div class="search-grid">
-            <!-- Карточка 1 -->
-            <div class="card" onclick="selectType(this, 'Номер телефона', 'Введите номер (+7...)')">
-                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"></path>
-                </svg>
-                <div class="card-title">Телефон</div>
-                <div class="card-desc">Аккаунты, объявления и цифровые следы</div>
-            </div>
-
-            <!-- Карточка 2 -->
-            <div class="card" onclick="selectType(this, 'Номер авто', 'Введите госномер...')">
-                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M13 10V3L4 14h7v7l9-11h-7z"></path>
-                </svg>
-                <div class="card-title">Автомобиль</div>
-                <div class="card-desc">Владелец, СТС, штрафы и полная история</div>
-            </div>
-
-            <!-- Карточка 3 -->
-            <div class="card" onclick="selectType(this, 'ФИО / Паспорт', 'Введите ФИО или паспорт...')">
-                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M10 6H5a2 2 0 00-2 2v9a2 2 0 002 2h14a2 2 0 002-2V8a2 2 0 00-2-2h-5m-4 0V5a2 2 0 114 0v1m-4 0a2 2 0 104 0m-5 8a2 2 0 100-4 2 2 0 000 4zm0 0c1.306 0 2.417.835 2.83 2M9 14a3.001 3.001 0 00-2.83 2M15 11h3m-3 4h2"></path>
-                </svg>
-                <div class="card-title">ФИО / Документ</div>
-                <div class="card-desc">Имущество, суды, задолженности и связи</div>
-            </div>
-
-            <!-- Карточка 4 -->
-            <div class="card" onclick="selectType(this, 'Соцсети / Email', 'Введите username или email...')">
-                <svg class="card-icon" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path>
-                </svg>
-                <div class="card-title">Аккаунты</div>
-                <div class="card-desc">Анализ утечек баз данных и паролей</div>
-            </div>
-        </div>
-
-        <!-- Динамический блок -->
-        <div class="dynamic-action-block" id="actionBlock">
-            <div class="input-box">
-                <input type="text" id="targetInput" placeholder="" autocomplete="off">
-            </div>
-            <button class="main-btn" onclick="startSearch()">Инициализировать поиск</button>
+        <div class="text-right">
+            <p class="text-xs text-slate-400 uppercase tracking-wider">Статус</p>
+            <span class="text-sm bg-amber-500 text-slate-900 font-bold px-2 py-0.5 rounded">Новичок</span>
         </div>
     </div>
 
+    <!-- Основной игровой блок -->
+    <div class="flex-grow flex flex-col justify-center items-center">
+        <!-- Карточка машины -->
+        <div class="bg-slate-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl border border-slate-700">
+            <div class="text-center">
+                <span class="text-5xl">🚗</span>
+                <h2 id="car-name" class="text-xl font-bold mt-2">ВАЗ 2107 (2004)</h2>
+                <p id="car-condition" class="text-xs text-red-400 mt-1">Состояние: Гнилые пороги, мотор троит</p>
+            </div>
+
+            <div class="mt-6 space-y-2 border-t border-slate-700 pt-4 text-sm">
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Цена покупки:</span>
+                    <span id="buy-price" class="font-bold text-slate-200">45 000 ₽</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Вложения в ремонт:</span>
+                    <span id="repair-cost" class="font-bold text-amber-400">15 000 ₽</span>
+                </div>
+                <div class="flex justify-between">
+                    <span class="text-slate-400">Рыночная цена:</span>
+                    <span id="market-price" class="font-bold text-emerald-400">85 000 ₽</span>
+                </div>
+            </div>
+
+            <!-- Кнопки действий -->
+            <div class="mt-6 space-y-2" id="action-buttons">
+                <button onclick="buyCar()" id="btn-buy" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">
+                    Купить авто
+                </button>
+                <button onclick="repairCar()" id="btn-repair" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition hidden">
+                    Скрутить пробег и подкрасить (-15 000 ₽)
+                </button>
+                <button onclick="sellCar()" id="btn-sell" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition hidden">
+                    Продать «Не бита, не крашена»
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Подвал -->
+    <div class="text-center text-xs text-slate-500 mt-4">
+        Перекуп App v1.0 • Работает внутри Telegram
+    </div>
+
+    <!-- Логика игры -->
     <script>
-        let selectedCategory = "";
-        let tg = window.Telegram ? window.Telegram.WebApp : null;
-        
-        if (tg) {
-            tg.ready();
-            tg.expand(); 
-            // Устанавливаем цвет хэдера под дизайн
-            tg.setHeaderColor('#030303');
-            tg.setBackgroundColor('#030303');
-        }
+        // Инициализация Telegram WebApp
+        const tg = window.Telegram.WebApp;
+        tg.ready();
+        tg.expand(); // Разворачиваем на весь экран
 
-        function selectType(element, category, placeholder) {
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('light');
+        // Игровое состояние
+        let balance = 150000;
+        let hasCar = false;
+        let isRepaired = false;
 
-            document.querySelectorAll('.card').forEach(c => c.classList.remove('active'));
-            element.classList.add('active');
+        const carData = {
+            name: "ВАЗ 2107 (2004)",
+            buyPrice: 45000,
+            repairCost: 15000,
+            marketPrice: 85000
+        };
 
-            selectedCategory = category;
+        function updateUI() {
+            document.getElementById('balance').innerText = balance.toLocaleString() + ' ₽';
             
-            const actionBlock = document.getElementById('actionBlock');
-            const targetInput = document.getElementById('targetInput');
-            
-            actionBlock.style.display = 'block';
-            
-            // Небольшая задержка для срабатывания CSS transition
-            setTimeout(() => { actionBlock.classList.add('show'); }, 10);
-            
-            targetInput.placeholder = placeholder;
-            targetInput.value = '';
-            targetInput.focus();
-        }
-
-        function startSearch() {
-            const inputVal = document.getElementById('targetInput').value.trim();
-
-            if (!selectedCategory || !inputVal) {
-                if (tg && tg.HapticFeedback) tg.HapticFeedback.notificationOccurred('error');
-                
-                // Эффект тряски при ошибке ввода
-                const inputbox = document.querySelector('.input-box');
-                inputbox.style.transform = 'translateX(-10px)';
-                setTimeout(() => inputbox.style.transform = 'translateX(10px)', 50);
-                setTimeout(() => inputbox.style.transform = 'translateX(-10px)', 100);
-                setTimeout(() => inputbox.style.transform = 'translateX(0)', 150);
-                return;
+            if (!hasCar) {
+                document.getElementById('car-name').innerText = carData.name;
+                document.getElementById('car-condition').innerText = "Состояние: Гнилые пороги, мотор троит";
+                document.getElementById('car-condition').className = "text-xs text-red-400 mt-1";
+                document.getElementById('btn-buy').classList.remove('hidden');
+                document.getElementById('btn-repair').classList.add('hidden');
+                document.getElementById('btn-sell').classList.add('hidden');
+            } else if (hasCar && !isRepaired) {
+                document.getElementById('car-condition').innerText = "Машина у вас в гараже. Надо бы подшаманить.";
+                document.getElementById('car-condition').className = "text-xs text-amber-400 mt-1";
+                document.getElementById('btn-buy').classList.add('hidden');
+                document.getElementById('btn-repair').classList.remove('hidden');
+                document.getElementById('btn-sell').classList.remove('hidden');
+            } else if (hasCar && isRepaired) {
+                document.getElementById('car-condition').innerText = "Вид имеет! Пробег скручен, блестит как новая.";
+                document.getElementById('car-condition').className = "text-xs text-emerald-400 mt-1";
+                document.getElementById('btn-repair').classList.add('hidden');
+                document.getElementById('btn-sell').classList.remove('hidden');
             }
+        }
 
-            if (tg && tg.HapticFeedback) tg.HapticFeedback.impactOccurred('heavy');
-
-            const resultData = {
-                category: selectedCategory,
-                value: inputVal
-            };
-
-            if (tg) {
-                tg.sendData(JSON.stringify(resultData));
+        function buyCar() {
+            if (balance >= carData.buyPrice) {
+                balance -= carData.buyPrice;
+                hasCar = true;
+                isRepaired = false;
+                updateUI();
+                tg.HapticFeedback.notificationOccurred('success');
             } else {
-                alert("Данные подготовлены к отправке: " + JSON.stringify(resultData));
+                alert("Не хватает бабок!");
             }
         }
+
+        function repairCar() {
+            if (balance >= carData.repairCost) {
+                balance -= carData.repairCost;
+                isRepaired = true;
+                updateUI();
+                tg.HapticFeedback.impactOccurred('medium');
+            } else {
+                alert("Нет денег на краску и шпатлевку!");
+            }
+        }
+
+        function sellCar() {
+            // Если починили — продаем дорого, если нет — в небольшой плюс или в ноль
+            let finalPrice = isRepaired ? carData.marketPrice : (carData.buyPrice + 5000);
+            balance += finalPrice;
+            hasCar = false;
+            isRepaired = false;
+            
+            alert(`Успешно продано за ${finalPrice.toLocaleString()} ₽!`);
+            updateUI();
+            tg.HapticFeedback.notificationOccurred('success');
+        }
+
+        // Кнопка закрытия в ТГ сверху
+        tg.BackButton.hide();
     </script>
 </body>
 </html>

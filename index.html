@@ -22,24 +22,21 @@
         * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Montserrat', sans-serif; -webkit-tap-highlight-color: transparent; }
         body { background-color: var(--bg-main); color: var(--text-main); padding-bottom: 110px; }
 
-        /* ИСПРАВЛЕННАЯ ШАПКА */
         .header { 
             background: rgba(28, 28, 33, 0.85); 
             backdrop-filter: blur(12px);
             -webkit-backdrop-filter: blur(12px);
-            /* env(safe-area-inset-top) спасет от челки айфона */
             padding: calc(15px + env(safe-area-inset-top)) 20px 15px; 
             border-bottom: 1px solid var(--border-line); 
             position: sticky; 
             top: 0; 
             z-index: 100; 
-            text-align: center; /* По центру выглядит более премиально */
+            text-align: center; 
         }
         .logo-title { font-size: 26px; font-weight: 900; font-style: italic; text-transform: uppercase; letter-spacing: -0.5px; }
         .logo-title span { color: var(--red-main); }
         .subtitle { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-top: 4px; }
 
-        /* НОВАЯ ДОРОГАЯ НАВИГАЦИЯ (Парящая панель) */
         .nav-wrapper {
             position: fixed;
             bottom: calc(15px + env(safe-area-inset-bottom));
@@ -76,29 +73,15 @@
             padding: 10px 0; 
             border-radius: 14px; 
         }
-        .nav-tab svg { 
-            width: 22px; 
-            height: 22px; 
-            fill: currentColor; 
-            margin-bottom: 4px; 
-            transition: transform 0.3s ease;
-        }
-        /* Активное состояние кнопки */
-        .nav-tab.active { 
-            color: var(--red-main); 
-            background: rgba(217, 4, 41, 0.1); /* Легкая красная заливка фона */
-        }
-        .nav-tab.active svg {
-            transform: translateY(-2px); /* Иконка чуть приподнимается */
-        }
-        #tab-admin { display: none; }
+        .nav-tab svg { width: 22px; height: 22px; fill: currentColor; margin-bottom: 4px; transition: transform 0.3s ease; }
+        .nav-tab.active { color: var(--red-main); background: rgba(217, 4, 41, 0.1); }
+        .nav-tab.active svg { transform: translateY(-2px); }
+        #tab-admin { display: none; } /* Скрыто по умолчанию */
 
-        /* Экраны */
         .screen { display: none; padding: 15px; animation: fadeIn 0.2s ease-out; }
         .screen.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-        /* Карточки авто */
         .car-card { background: var(--bg-card); border-radius: 16px; overflow: hidden; margin-bottom: 20px; border: 1px solid var(--border-line); box-shadow: 0 4px 15px rgba(0,0,0,0.2); }
         .img-wrap { position: relative; width: 100%; height: 230px; background: #111; }
         .img-wrap img { width: 100%; height: 100%; object-fit: cover; }
@@ -109,30 +92,25 @@
         .car-title { font-size: 20px; font-weight: 800; margin-bottom: 8px; line-height: 1.2; }
         .car-specs { font-size: 13px; color: var(--text-muted); margin-bottom: 15px; font-weight: 500; }
         
-        /* Блок цен */
         .price-block { display: flex; align-items: flex-end; justify-content: space-between; background: var(--bg-input); padding: 12px 15px; border-radius: 12px; margin-bottom: 16px; border-left: 4px solid var(--red-main); }
         .price-main { font-size: 22px; font-weight: 900; color: #fff; }
         .price-market { font-size: 12px; color: var(--text-muted); text-decoration: line-through; text-align: right; margin-bottom: 2px; }
         .profit { font-size: 11px; color: #fff; font-weight: 700; background: #2a8a3a; padding: 4px 8px; border-radius: 6px; display: inline-block; }
 
-        /* Кнопки */
         .btn { display: block; width: 100%; background: var(--red-main); color: #fff; font-family: 'Montserrat', sans-serif; font-weight: 800; font-size: 15px; text-transform: uppercase; padding: 16px; border: none; border-radius: 12px; cursor: pointer; text-align: center; text-decoration: none; transition: background 0.2s; }
         .btn:active { background: var(--red-hover); transform: scale(0.98); }
         .btn-outline { background: transparent; border: 1px solid var(--text-muted); color: var(--text-main); margin-top: 10px; }
         .btn-outline:active { background: var(--bg-input); }
 
-        /* Инпуты форм */
         .form-group { margin-bottom: 16px; }
         .form-group label { display: block; font-size: 11px; font-weight: 700; color: var(--text-muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
         .input { width: 100%; background: var(--bg-input); border: 1px solid transparent; border-radius: 12px; padding: 16px; color: #fff; font-size: 15px; font-weight: 500; outline: none; transition: 0.2s; }
         .input:focus { border-color: var(--red-main); background: #1f1f25; }
 
-        /* Пустые состояния */
         .empty-state { text-align: center; padding: 80px 20px; }
         .empty-state h3 { font-size: 20px; font-weight: 800; margin-bottom: 10px; }
         .empty-state p { color: var(--text-muted); font-size: 14px; line-height: 1.5; }
 
-        /* Админка - Заявки */
         .req-card { background: var(--bg-card); border: 1px solid var(--border-line); padding: 16px; border-radius: 12px; margin-bottom: 12px; border-left: 4px solid #ffb703; }
     </style>
 </head>
@@ -220,24 +198,20 @@
         tg.expand();
         tg.ready();
 
-        // Делаем так, чтобы сам Телеграм перекрасил свою верхнюю рамку под цвет нашего фона
         try {
             tg.setHeaderColor('#0f0f11');
             tg.setBackgroundColor('#0f0f11');
-        } catch(e) { console.log("Telegram API Theme Error", e); }
+        } catch(e) { console.log("Theme Error", e); }
 
-        // ⚠️ ВПИШИ СВОЙ ТЕЛЕГРАМ ID!
-        const ADMIN_ID = 7523840597; 
+        // ЖЕЛЕЗОБЕТОННАЯ ПРОВЕРКА АДМИНА
+        const ADMIN_ID = "7523840597"; // Теперь это строка
+        const userTgId = tg.initDataUnsafe?.user?.id ? String(tg.initDataUnsafe.user.id) : "unknown";
+        const isAdmin = userTgId === ADMIN_ID;
 
-        const userTgId = tg.initDataUnsafe?.user?.id;
-
-// Эта строчка покажет всплывающее окно с твоим реальным ID при входе
-alert("Система видит твой ID как: " + userTgId);
-
-// Поставили нестрогое равенство (два равно вместо трех)
-if (userTgId == ADMIN_ID) { 
-    document.getElementById('tab-admin').style.display = 'flex';
-}
+        // Если админ - показываем кнопку внизу
+        if (isAdmin) { 
+            document.getElementById('tab-admin').style.display = 'flex';
+        }
 
         const API_URL = window.location.origin;
 
@@ -287,7 +261,7 @@ if (userTgId == ADMIN_ID) {
                             </div>
 
                             <button class="btn" onclick="buyCar('${car.title}')">Связаться с продавцом</button>
-                            ${userTgId === ADMIN_ID ? `<button class="btn btn-outline" onclick="deleteCar(${car.id})">Снять с продажи (Админ)</button>` : ''}
+                            ${isAdmin ? `<button class="btn btn-outline" onclick="deleteCar(${car.id})">Снять с продажи (Админ)</button>` : ''}
                         </div>
                     `;
                     container.appendChild(card);
@@ -296,8 +270,7 @@ if (userTgId == ADMIN_ID) {
         }
 
         function buyCar(title) {
-            tg.sendData(JSON.stringify({ action: "buy", car: title }));
-            tg.close();
+            tg.showAlert(`Отлично! Чтобы купить ${title}, напиши админу в личку.`);
         }
 
         async function addCar(e) {
@@ -317,6 +290,7 @@ if (userTgId == ADMIN_ID) {
         }
 
         async function deleteCar(id) {
+            if(!confirm("Точно удалить тачку?")) return;
             await fetch(`${API_URL}/api/cars/${id}`, { method: 'DELETE' });
             loadCatalog();
         }
@@ -329,17 +303,22 @@ if (userTgId == ADMIN_ID) {
                 desc: document.getElementById('form-desc').value,
                 contact: document.getElementById('form-contact').value
             };
-            await fetch(`${API_URL}/api/buyback`, { method: 'POST', headers: {'Content-Type': 'application/json'}, body: JSON.stringify(data) });
-            tg.sendData(JSON.stringify({ action: "buyback_submitted", model: data.model, price: data.price }));
             
-            tg.showAlert("Принято. Изучим аппарат и наберем, если цена адекватная.");
+            // Отправляем на наш сервер. Сервер сам пришлет уведомление тебе в Телегу!
+            await fetch(`${API_URL}/api/buyback`, { 
+                method: 'POST', 
+                headers: {'Content-Type': 'application/json'}, 
+                body: JSON.stringify(data) 
+            });
+            
+            tg.showAlert("Принято! Данные улетели перекупу. Изучим аппарат и наберем.");
             e.target.reset();
             switchTab('catalog');
             loadAdminRequests();
         }
 
         async function loadAdminRequests() {
-            if (userTgId !== ADMIN_ID) return;
+            if (!isAdmin) return; // Обычный юзер тут останавливается
             try {
                 const res = await fetch(`${API_URL}/api/buyback`);
                 const reqs = await res.json();
@@ -355,7 +334,7 @@ if (userTgId == ADMIN_ID) {
                         <div style="font-weight:800; font-size:15px; margin: 8px 0; color:var(--text-main);">💰 ${req.price} ₽</div>
                         <div style="font-size:13px; color:var(--text-muted); margin-bottom: 8px;"><b>Инфо:</b> ${req.desc}</div>
                         <div style="font-size:13px; color:#2a8a3a; font-weight: 700;">Связь: ${req.contact}</div>
-                        <button class="btn btn-outline" style="padding:10px; font-size:12px; margin-top:12px;" onclick="deleteRequest(${req.id})">Удалить</button>
+                        <button class="btn btn-outline" style="padding:10px; font-size:12px; margin-top:12px;" onclick="deleteRequest(${req.id})">Удалить заявку</button>
                     `;
                     container.appendChild(div);
                 });
@@ -367,6 +346,7 @@ if (userTgId == ADMIN_ID) {
             loadAdminRequests();
         }
 
+        // При запуске грузим тачки
         loadCatalog();
         loadAdminRequests();
     </script>

@@ -230,9 +230,14 @@
         const ADMIN_ID = 7523840597; 
 
         const userTgId = tg.initDataUnsafe?.user?.id;
-        if (userTgId === ADMIN_ID) {
-            document.getElementById('tab-admin').style.display = 'flex';
-        }
+
+// Эта строчка покажет всплывающее окно с твоим реальным ID при входе
+alert("Система видит твой ID как: " + userTgId);
+
+// Поставили нестрогое равенство (два равно вместо трех)
+if (userTgId == ADMIN_ID) { 
+    document.getElementById('tab-admin').style.display = 'flex';
+}
 
         const API_URL = window.location.origin;
 

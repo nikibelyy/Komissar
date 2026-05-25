@@ -3,154 +3,90 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Перекуп Симулятор</title>
-    <!-- Подключаем SDK Телеграма -->
+    <title>Перекуп ЛТД</title>
+    <!-- Подключаем скрипт Телеграма -->
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
-    <!-- Tailwind CSS для быстрого и красивого дизайна -->
-    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
     <style>
-        body { font-family: sans-serif; }
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #1c1c1e;
+            color: #ffffff;
+            margin: 0;
+            padding: 15px;
+        }
+        .header {
+            text-align: center;
+            padding: 10px 0;
+            border-bottom: 1px solid #3a3a3c;
+        }
+        .header h1 { color: #34c759; margin: 0; font-size: 24px; }
+        .card {
+            background: #2c2c2e;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 15px;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
+        }
+        .card img {
+            width: 100%;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        .price { font-size: 20px; font-weight: bold; color: #34c759; margin: 10px 0 5px 0; }
+        .old-price { text-decoration: line-through; color: #8e8e93; font-size: 14px; }
+        .btn {
+            display: block;
+            width: 100%;
+            background: #34c759;
+            color: #fff;
+            text-align: center;
+            padding: 12px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            margin-top: 10px;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-sell { background: #ff9500; }
     </style>
 </head>
-<body class="bg-slate-900 text-white min-h-screen p-4 flex flex-col justify-between">
+<body>
 
-    <!-- Шапка профиля -->
-    <div class="bg-slate-800 p-4 rounded-xl shadow-lg flex justify-between items-center mb-4">
-        <div>
-            <p class="text-xs text-slate-400 uppercase tracking-wider">Ваш баланс</p>
-            <h1 id="balance" class="text-2xl font-bold text-emerald-400">150 000 ₽</h1>
-        </div>
-        <div class="text-right">
-            <p class="text-xs text-slate-400 uppercase tracking-wider">Статус</p>
-            <span class="text-sm bg-amber-500 text-slate-900 font-bold px-2 py-0.5 rounded">Новичок</span>
-        </div>
+    <div class="header">
+        <h1>ПЕРЕКУП • AUTO</h1>
+        <p style="color: #8e8e93; margin: 5px 0 0 0;">Только низ рынка 🔥</p>
     </div>
 
-    <!-- Основной игровой блок -->
-    <div class="flex-grow flex flex-col justify-center items-center">
-        <!-- Карточка машины -->
-        <div class="bg-slate-800 rounded-2xl p-6 w-full max-w-sm shadow-2xl border border-slate-700">
-            <div class="text-center">
-                <span class="text-5xl">🚗</span>
-                <h2 id="car-name" class="text-xl font-bold mt-2">ВАЗ 2107 (2004)</h2>
-                <p id="car-condition" class="text-xs text-red-400 mt-1">Состояние: Гнилые пороги, мотор троит</p>
-            </div>
-
-            <div class="mt-6 space-y-2 border-t border-slate-700 pt-4 text-sm">
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Цена покупки:</span>
-                    <span id="buy-price" class="font-bold text-slate-200">45 000 ₽</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Вложения в ремонт:</span>
-                    <span id="repair-cost" class="font-bold text-amber-400">15 000 ₽</span>
-                </div>
-                <div class="flex justify-between">
-                    <span class="text-slate-400">Рыночная цена:</span>
-                    <span id="market-price" class="font-bold text-emerald-400">85 000 ₽</span>
-                </div>
-            </div>
-
-            <!-- Кнопки действий -->
-            <div class="mt-6 space-y-2" id="action-buttons">
-                <button onclick="buyCar()" id="btn-buy" class="w-full bg-blue-600 hover:bg-blue-500 text-white font-bold py-3 rounded-xl transition">
-                    Купить авто
-                </button>
-                <button onclick="repairCar()" id="btn-repair" class="w-full bg-amber-600 hover:bg-amber-500 text-white font-bold py-3 rounded-xl transition hidden">
-                    Скрутить пробег и подкрасить (-15 000 ₽)
-                </button>
-                <button onclick="sellCar()" id="btn-sell" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white font-bold py-3 rounded-xl transition hidden">
-                    Продать «Не бита, не крашена»
-                </button>
-            </div>
-        </div>
+    <!-- Пример карточки товара -->
+    <div class="card">
+        <img src="https://via.placeholder.com/400x250" alt="BMW 5">
+        <h3>BMW 5 серии, 2019</h3>
+        <div class="old-price">Рынок: 3 800 000 ₽</div>
+        <div class="price">Наша цена: 2 950 000 ₽</div>
+        <p>Пробег: 85 000 км. Родной окрас, срочно! Юр. чистая.</p>
+        <button class="btn" onclick="buyAuto('BMW 5')">Купить / Забронировать</button>
     </div>
 
-    <!-- Подвал -->
-    <div class="text-center text-xs text-slate-500 mt-4">
-        Перекуп App v1.0 • Работает внутри Telegram
+    <!-- Кнопка для выкупа -->
+    <div style="margin-top: 25px;">
+        <button class="btn btn-sell" onclick="openSellForm()">💰 Предложить авто под выкуп</button>
     </div>
 
-    <!-- Логика игры -->
     <script>
-        // Инициализация Telegram WebApp
+        // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
-        tg.ready();
         tg.expand(); // Разворачиваем на весь экран
 
-        // Игровое состояние
-        let balance = 150000;
-        let hasCar = false;
-        let isRepaired = false;
-
-        const carData = {
-            name: "ВАЗ 2107 (2004)",
-            buyPrice: 45000,
-            repairCost: 15000,
-            marketPrice: 85000
-        };
-
-        function updateUI() {
-            document.getElementById('balance').innerText = balance.toLocaleString() + ' ₽';
-            
-            if (!hasCar) {
-                document.getElementById('car-name').innerText = carData.name;
-                document.getElementById('car-condition').innerText = "Состояние: Гнилые пороги, мотор троит";
-                document.getElementById('car-condition').className = "text-xs text-red-400 mt-1";
-                document.getElementById('btn-buy').classList.remove('hidden');
-                document.getElementById('btn-repair').classList.add('hidden');
-                document.getElementById('btn-sell').classList.add('hidden');
-            } else if (hasCar && !isRepaired) {
-                document.getElementById('car-condition').innerText = "Машина у вас в гараже. Надо бы подшаманить.";
-                document.getElementById('car-condition').className = "text-xs text-amber-400 mt-1";
-                document.getElementById('btn-buy').classList.add('hidden');
-                document.getElementById('btn-repair').classList.remove('hidden');
-                document.getElementById('btn-sell').classList.remove('hidden');
-            } else if (hasCar && isRepaired) {
-                document.getElementById('car-condition').innerText = "Вид имеет! Пробег скручен, блестит как новая.";
-                document.getElementById('car-condition').className = "text-xs text-emerald-400 mt-1";
-                document.getElementById('btn-repair').classList.add('hidden');
-                document.getElementById('btn-sell').classList.remove('hidden');
-            }
+        function buyAuto(model) {
+            tg.sendData(JSON.stringify({action: "buy", model: model}));
+            tg.close(); // Закрываем окно после действия
         }
 
-        function buyCar() {
-            if (balance >= carData.buyPrice) {
-                balance -= carData.buyPrice;
-                hasCar = true;
-                isRepaired = false;
-                updateUI();
-                tg.HapticFeedback.notificationOccurred('success');
-            } else {
-                alert("Не хватает бабок!");
-            }
+        function openSellForm() {
+            // Здесь в будущем будет переход на форму отправки данных о своей машине
+            alert("Тут откроется форма: Марка, Год, Фото, Цена");
         }
-
-        function repairCar() {
-            if (balance >= carData.repairCost) {
-                balance -= carData.repairCost;
-                isRepaired = true;
-                updateUI();
-                tg.HapticFeedback.impactOccurred('medium');
-            } else {
-                alert("Нет денег на краску и шпатлевку!");
-            }
-        }
-
-        function sellCar() {
-            // Если починили — продаем дорого, если нет — в небольшой плюс или в ноль
-            let finalPrice = isRepaired ? carData.marketPrice : (carData.buyPrice + 5000);
-            balance += finalPrice;
-            hasCar = false;
-            isRepaired = false;
-            
-            alert(`Успешно продано за ${finalPrice.toLocaleString()} ₽!`);
-            updateUI();
-            tg.HapticFeedback.notificationOccurred('success');
-        }
-
-        // Кнопка закрытия в ТГ сверху
-        tg.BackButton.hide();
     </script>
 </body>
 </html>

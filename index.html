@@ -2,91 +2,313 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Перекуп ЛТД</title>
-    <!-- Подключаем скрипт Телеграма -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Чудо Авто</title>
     <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+    
     <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background-color: #1c1c1e;
-            color: #ffffff;
-            margin: 0;
-            padding: 15px;
+        :root {
+            --bg: #050508;
+            --card: #0d0d13;
+            --input: #14141f;
+            --neon: #00ff66;
+            --neon-glow: rgba(0, 255, 102, 0.25);
+            --orange: #ff4500;
+            --text: #ffffff;
+            --muted: #6c6c7d;
         }
-        .header {
-            text-align: center;
-            padding: 10px 0;
-            border-bottom: 1px solid #3a3a3c;
-        }
-        .header h1 { color: #34c759; margin: 0; font-size: 24px; }
-        .card {
-            background: #2c2c2e;
-            border-radius: 12px;
-            padding: 15px;
-            margin-top: 15px;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3);
-        }
-        .card img {
-            width: 100%;
-            border-radius: 8px;
-            object-fit: cover;
-        }
-        .price { font-size: 20px; font-weight: bold; color: #34c759; margin: 10px 0 5px 0; }
-        .old-price { text-decoration: line-through; color: #8e8e93; font-size: 14px; }
-        .btn {
-            display: block;
-            width: 100%;
-            background: #34c759;
-            color: #fff;
-            text-align: center;
-            padding: 12px;
-            border-radius: 8px;
-            text-decoration: none;
-            font-weight: bold;
-            margin-top: 10px;
-            border: none;
-            cursor: pointer;
-        }
-        .btn-sell { background: #ff9500; }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; font-family: 'Inter', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background-color: var(--bg); color: var(--text); padding-bottom: 100px; overflow-x: hidden; }
+
+        /* Анимации */
+        @keyframes pulse { 0%, 100% { transform: scale(1); opacity: 0.8; } 50% { transform: scale(1.05); opacity: 1; } }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Шапка */
+        .header { padding: 30px 20px 20px; text-align: center; background: linear-gradient(180deg, #09090e 0%, var(--bg) 100%); border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .logo { font-family: 'Orbitron', sans-serif; font-size: 32px; font-weight: 900; letter-spacing: 3px; text-transform: uppercase; background: linear-gradient(90deg, #fff, var(--neon)); -webkit-background-clip: text; -webkit-text-fill-color: transparent; filter: drop-shadow(0 0 15px var(--neon-glow)); }
+        .tagline { font-size: 10px; text-transform: uppercase; letter-spacing: 5px; color: var(--neon); margin-top: 6px; font-weight: 700; }
+
+        /* Экраны */
+        .screen { display: none; padding: 15px; animation: slideUp 0.3s ease-out forwards; }
+        .screen.active { display: block; }
+
+        /* Пустой гараж */
+        .empty { text-align: center; padding: 80px 20px; }
+        .empty-icon { width: 80px; height: 80px; margin: 0 auto 20px; border: 2px dashed var(--neon); border-radius: 50%; display: flex; align-items: center; justify-content: center; animation: pulse 2s infinite; }
+        .empty h3 { font-size: 20px; font-weight: 800; margin-bottom: 8px; }
+        .empty p { color: var(--muted); font-size: 14px; }
+
+        /* Карточки машин */
+        .car-card { background: var(--card); border-radius: 20px; border: 1px solid rgba(255,255,255,0.03); overflow: hidden; margin-bottom: 20px; box-shadow: 0 10px 20px rgba(0,0,0,0.3); }
+        .img-container { position: relative; width: 100%; height: 220px; background: #111; }
+        .img-container img { width: 100%; height: 100%; object-fit: cover; }
+        .badge { position: absolute; top: 15px; left: 15px; background: var(--orange); color: #fff; padding: 6px 12px; font-size: 11px; font-weight: 800; border-radius: 8px; text-transform: uppercase; box-shadow: 0 4px 10px rgba(255,69,0,0.4); }
+        .car-details { padding: 20px; }
+        .car-title { font-size: 22px; font-weight: 800; margin-bottom: 5px; }
+        .car-pave { color: var(--muted); font-size: 13px; margin-bottom: 15px; }
+        .price-row { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 12px; border-radius: 14px; margin-bottom: 15px; border: 1px solid rgba(255,255,255,0.03); }
+        .price-real { font-family: 'Orbitron', sans-serif; font-size: 22px; font-weight: 900; color: var(--neon); }
+        .price-market { font-size: 12px; color: var(--muted); text-decoration: line-through; text-align: right; }
+        .benefit { font-size: 11px; color: var(--neon); font-weight: 700; background: rgba(0,255,102,0.08); padding: 2px 6px; border-radius: 4px; display: inline-block; margin-top: 2px; }
+
+        /* Кнопки */
+        .btn { display: block; width: 100%; background: var(--neon); color: #000; font-weight: 800; font-size: 16px; padding: 16px; border: none; border-radius: 14px; cursor: pointer; text-align: center; text-decoration: none; box-shadow: 0 4px 20px var(--neon-glow); transition: background 0.2s; }
+        .btn:active { background: #00cc52; transform: scale(0.99); }
+        .btn-sec { background: transparent; border: 1px solid var(--orange); color: var(--orange); box-shadow: none; margin-top: 10px; }
+        .btn-sec:active { background: rgba(255,69,0,0.1); }
+
+        /* Формы ввода */
+        .form-group { margin-bottom: 15px; }
+        .form-group label { display: block; font-size: 11px; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; font-weight: 700; letter-spacing: 1px; }
+        .input { width: 100%; background: var(--input); border: 1px solid rgba(255,255,255,0.05); border-radius: 12px; padding: 14px; color: #fff; font-size: 15px; outline: none; }
+        .input:focus { border-color: var(--neon); }
+
+        /* Заявки в админке */
+        .req-card { background: #111119; border-left: 4px solid var(--orange); padding: 15px; border-radius: 0 12px 12px 0; margin-bottom: 12px; }
+
+        /* Меню (Навигация) */
+        .nav { position: fixed; bottom: 20px; left: 20px; right: 20px; background: rgba(13,13,19,0.85); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); padding: 8px; border-radius: 20px; display: flex; justify-content: space-around; z-index: 9999; box-shadow: 0 10px 30px rgba(0,0,0,0.5); }
+        .nav-tab { display: flex; flex-direction: column; align-items: center; color: var(--muted); font-size: 10px; font-weight: 700; text-transform: uppercase; cursor: pointer; padding: 10px 20px; border-radius: 12px; transition: 0.2s; }
+        .nav-tab svg { width: 20px; height: 20px; fill: currentColor; margin-bottom: 4px; }
+        .nav-tab.active { color: var(--neon); background: rgba(0,255,102,0.06); }
+        #tab-admin { display: none; } /* Скрыто по умолчанию */
     </style>
 </head>
 <body>
 
     <div class="header">
-        <h1>ПЕРЕКУП • AUTO</h1>
-        <p style="color: #8e8e93; margin: 5px 0 0 0;">Только низ рынка 🔥</p>
+        <div class="logo">Чудо Авто</div>
+        <div class="tagline">Выкуп и Продажа / Низ Рынка</div>
     </div>
 
-    <!-- Пример карточки товара -->
-    <div class="card">
-        <img src="https://via.placeholder.com/400x250" alt="BMW 5">
-        <h3>BMW 5 серии, 2019</h3>
-        <div class="old-price">Рынок: 3 800 000 ₽</div>
-        <div class="price">Наша цена: 2 950 000 ₽</div>
-        <p>Пробег: 85 000 км. Родной окрас, срочно! Юр. чистая.</p>
-        <button class="btn" onclick="buyAuto('BMW 5')">Купить / Забронировать</button>
+    <!-- ЭКРАН 1: ВИТРИНА -->
+    <div id="scr-catalog" class="screen active">
+        <div id="catalog-list"></div>
+        <div id="catalog-empty" class="empty">
+            <div class="empty-icon">
+                <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="#00ff66" stroke-width="2"><rect x="2" y="10" width="20" height="8" rx="2"/><path d="M6 10V5a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v5"/></svg>
+            </div>
+            <h3>Машин пока нет</h3>
+            <p>Админ еще не выкатил новые чудо-варианты. Жди уведомлений!</p>
+        </div>
     </div>
 
-    <!-- Кнопка для выкупа -->
-    <div style="margin-top: 25px;">
-        <button class="btn btn-sell" onclick="openSellForm()">💰 Предложить авто под выкуп</button>
+    <!-- ЭКРАН 2: ПРЕДЛОЖИТЬ СВОЮ ТАЧКУ -->
+    <div id="scr-sell" class="screen">
+        <h2 style="font-size: 20px; margin-bottom: 5px;">Срочный выкуп</h2>
+        <p style="color: var(--muted); font-size: 13px; margin-bottom: 20px;">Деньги сразу. Опиши машину, мы свяжемся.</p>
+        
+        <form onsubmit="sendBuyback(event)">
+            <div class="form-group"><label>Марка, модель, год</label><input type="text" id="form-model" class="input" placeholder="Например: Camry 2017" required></div>
+            <div class="form-group"><label>Цена, которую хочешь (₽)</label><input type="number" id="form-price" class="input" placeholder="Например: 1500000" required></div>
+            <div class="form-group"><label>Состояние / Пробег / Косяки</label><input type="text" id="form-desc" class="input" placeholder="Битов, крашен, пробег 120к" required></div>
+            <div class="form-group"><label>Твой Telegram для связи</label><input type="text" id="form-contact" class="input" placeholder="@username" required></div>
+            <button type="submit" class="btn" style="background: var(--orange); color:#fff; box-shadow: 0 4px 20px rgba(255,69,0,0.25)">🔥 Отправить на оценку</button>
+        </form>
+    </div>
+
+    <!-- ЭКРАН 3: МОЩНАЯ АДМИНКА -->
+    <div id="scr-admin" class="screen">
+        <h2 style="font-size: 20px; margin-bottom: 20px; color: var(--neon)">Панель Чудо-Админа</h2>
+        
+        <div style="background: var(--card); padding: 15px; border-radius: 16px; margin-bottom: 25px; border: 1px solid rgba(0,255,102,0.1)">
+            <h4 style="margin-bottom: 12px; font-size: 14px; text-transform: uppercase;">Добавить тачку на витрину</h4>
+            <form onsubmit="addCar(event)">
+                <div class="form-group"><input type="text" id="adm-title" class="input" placeholder="Название (BMW 530d 2021)" required></div>
+                <div class="form-group"><input type="text" id="adm-img" class="input" placeholder="Ссылка на фото авто" required></div>
+                <div class="form-group"><input type="text" id="adm-meta" class="input" placeholder="Пробег / Владельцы (50к км, 1 хоз)" required></div>
+                <div class="form-group"><input type="number" id="adm-price" class="input" placeholder="Твоя цена (₽)" required></div>
+                <div class="form-group"><input type="number" id="adm-market" class="input" placeholder="Рыночная цена (₽)" required></div>
+                <button type="submit" class="btn">⚡ Выложить лот</button>
+            </form>
+        </div>
+
+        <h3 style="font-size: 16px; margin-bottom: 12px; text-transform: uppercase;">Заявки на выкуп от людей:</h3>
+        <div id="admin-requests"></div>
+    </div>
+
+    <!-- НАВИГАЦИЯ -->
+    <div class="nav">
+        <div class="nav-tab active" onclick="switchTab('catalog')">
+            <svg viewBox="0 0 24 24"><path d="M10 20v-6h4v6h5v-8h3L12 3 2 12h3v8z"/></svg>Витрина
+        </div>
+        <div class="nav-tab" onclick="switchTab('sell')">
+            <svg viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm1 17h-2v-2h2v2zm2.07-7.75l-.9.92C13.45 12.9 13 13.5 13 15h-2v-.5c0-1.1.45-2.1 1.17-2.83l1.24-1.26c.37-.36.59-.86.59-1.41 0-1.1-.9-2-2-2s-2 .9-2 2H7c0-2.76 2.24-5 5-5s5 2.24 5 5c0 1.04-.42 1.99-1.07 2.75z"/></svg>Сдать авто
+        </div>
+        <div class="nav-tab" id="tab-admin" onclick="switchTab('admin')">
+            <svg viewBox="0 0 24 24"><path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z"/></svg>Админка ⭐
+        </div>
     </div>
 
     <script>
-        // Инициализация Telegram Web App
         const tg = window.Telegram.WebApp;
-        tg.expand(); // Разворачиваем на весь экран
+        tg.expand();
+        tg.ready();
 
-        function buyAuto(model) {
-            tg.sendData(JSON.stringify({action: "buy", model: model}));
-            tg.close(); // Закрываем окно после действия
+        // ⚠️ ВПИШИ СВОЙ TELEGRAM ID СЮДА ЧТОБЫ АДМИНКА ОТКРЫЛАСЬ ТЕБЕ
+        const ADMIN_ID = 123456789; 
+
+        // Проверка на админа
+        const userTgId = tg.initDataUnsafe?.user?.id;
+        if (userTgId === ADMIN_ID) {
+            document.getElementById('tab-admin').style.display = 'flex';
         }
 
-        function openSellForm() {
-            // Здесь в будущем будет переход на форму отправки данных о своей машине
-            alert("Тут откроется форма: Марка, Год, Фото, Цена");
+        // Адрес бэкенда (когда запустишь сервер — укажи его URL сюда, например https://твой-домен.com)
+        const API_URL = window.location.origin; 
+
+        function switchTab(screen) {
+            document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+            document.querySelectorAll('.nav-tab').forEach(t => t.classList.remove('active'));
+            document.getElementById(`scr-${screen}`).classList.add('active');
+            event.currentTarget.classList.add('active');
         }
+
+        // Загрузка машин с сервера
+        async function loadCatalog() {
+            try {
+                const res = await fetch(`${API_URL}/api/cars`);
+                const cars = await res.json();
+                const container = document.getElementById('catalog-list');
+                const empty = document.getElementById('catalog-empty');
+                
+                container.innerHTML = '';
+                if(cars.length === 0) { empty.style.display = 'block'; return; }
+                empty.style.display = 'none';
+
+                cars.forEach((car) => {
+                    const profit = car.market_price - car.price;
+                    const card = document.createElement('div');
+                    card.className = 'car-card';
+                    card.innerHTML = `
+                        <div class="img-container">
+                            <img src="${car.img}" alt="" onerror="this.src='https://images.unsplash.com/photo-1549399542-7e3f8b79c341?w=500'">
+                            <div class="badge">🔥 Низ Рынка</div>
+                        </div>
+                        <div class="car-details">
+                            <div class="car-title">${car.title}</div>
+                            <div class="car-pave">${car.meta}</div>
+                            <div class="price-row">
+                                <div>
+                                    <span style="font-size:10px; color: var(--muted); display:block;">ЧУДО ЦЕНА</span>
+                                    <span class="price-real">${parseInt(car.price).toLocaleString()} ₽</span>
+                                </div>
+                                <div>
+                                    <div class="price-market">Рынок: ${parseInt(car.market_price).toLocaleString()} ₽</div>
+                                    <div class="benefit">Выгода ${profit.toLocaleString()} ₽</div>
+                                </div>
+                            </div>
+                            <button class="btn" onclick="buyCar('${car.title}')">📱 Забрать аппарат</button>
+                            ${userTgId === ADMIN_ID ? `<button class="btn btn-sec" onclick="deleteCar(${car.id})">Удалить лот</button>` : ''}
+                        </div>
+                    `;
+                    container.appendChild(card);
+                });
+            } catch(e) { console.log("Ошибка каталога", e); }
+        }
+
+        // Купить авто (Кнопка "Забрать аппарат")
+        function buyCar(title) {
+            tg.sendData(JSON.stringify({ action: "buy", car: title }));
+            tg.close();
+        }
+
+        // Админ добавляет машину
+        async function addCar(e) {
+            e.preventDefault();
+            const data = {
+                title: document.getElementById('adm-title').value,
+                img: document.getElementById('adm-img').value,
+                meta: document.getElementById('adm-meta').value,
+                price: parseInt(document.getElementById('adm-price').value),
+                market_price: parseInt(document.getElementById('adm-market').value)
+            };
+
+            await fetch(`${API_URL}/api/cars`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            document.getElementById('adm-title').value = '';
+            document.getElementById('adm-img').value = '';
+            document.getElementById('adm-meta').value = '';
+            document.getElementById('adm-price').value = '';
+            document.getElementById('adm-market').value = '';
+
+            tg.showAlert("Чудо-аппарат успешно добавлен на витрину!");
+            loadCatalog();
+            switchTab('catalog');
+        }
+
+        // Админ удаляет машину
+        async function deleteCar(id) {
+            await fetch(`${API_URL}/api/cars/${id}`, { method: 'DELETE' });
+            loadCatalog();
+        }
+
+        // Клиент отправляет заявку на выкуп
+        async function sendBuyback(e) {
+            e.preventDefault();
+            const data = {
+                model: document.getElementById('form-model').value,
+                price: document.getElementById('form-price').value,
+                desc: document.getElementById('form-desc').value,
+                contact: document.getElementById('form-contact').value
+            };
+
+            await fetch(`${API_URL}/api/buyback`, {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify(data)
+            });
+
+            // Отправляем сигнал боту
+            tg.sendData(JSON.stringify({ action: "buyback_submitted", model: data.model, price: data.price }));
+            
+            tg.showAlert("Заявка улетела! Если цена сочная — админ наберет в течение пары минут.");
+            e.target.reset();
+            switchTab('catalog');
+            loadAdminRequests();
+        }
+
+        // Загрузка заявок для админа
+        async function loadAdminRequests() {
+            if (userTgId !== ADMIN_ID) return;
+            try {
+                const res = await fetch(`${API_URL}/api/buyback`);
+                const reqs = await res.json();
+                const container = document.getElementById('admin-requests');
+                container.innerHTML = '';
+
+                if(reqs.length === 0) { container.innerHTML = '<p style="color:var(--muted)">Заявок пока нет</p>'; return; }
+
+                reqs.forEach(req => {
+                    const div = document.createElement('div');
+                    div.className = 'req-card';
+                    div.innerHTML = `
+                        <div style="font-weight:800; font-size:16px;">${req.model}</div>
+                        <div style="font-size:13px; margin: 4px 0; color:#ddd">💵 Цена: ${parseInt(req.price).toLocaleString()} ₽</div>
+                        <div style="font-size:12px; color:var(--muted)">Инфо: ${req.desc}</div>
+                        <div style="font-size:13px; color:#00ff66; margin-top:5px; font-weight:700">Связь: ${req.contact}</div>
+                        <button class="btn btn-sec" style="padding:6px; font-size:11px; margin-top:8px;" onclick="deleteRequest(${req.id})">Удалить заявку</button>
+                    `;
+                    container.appendChild(div);
+                });
+            } catch(e) { console.log(e); }
+        }
+
+        async function deleteRequest(id) {
+            await fetch(`${API_URL}/api/buyback/${id}`, { method: 'DELETE' });
+            loadAdminRequests();
+        }
+
+        // Старт
+        loadCatalog();
+        loadAdminRequests();
     </script>
 </body>
 </html>

@@ -1,1 +1,82 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Автосалон</title>
+    <script src="https://telegram.org/js/telegram-web-app.js"></script>
+    <style>
+        :root {
+            --bg-color: #121212;
+            --text-color: #ffffff;
+            --accent-color: #d90429; /* Агрессивный красный */
+            --card-bg: #1e1e1e;
+        }
+        body {
+            background-color: var(--bg-color); color: var(--text-color);
+            font-family: 'Arial', sans-serif; margin: 0; padding: 15px;
+        }
+        h1 { text-transform: uppercase; font-size: 22px; border-bottom: 2px solid var(--accent-color); padding-bottom: 10px; }
+        .car-card { background: var(--card-bg); border-radius: 10px; overflow: hidden; margin-bottom: 20px; box-shadow: 0 4px 10px rgba(0,0,0,0.5); }
+        .car-card img { width: 100%; height: 200px; object-fit: cover; }
+        .car-info { padding: 15px; }
+        .price { color: var(--accent-color); font-size: 20px; font-weight: bold; margin: 10px 0; }
+        button { background: var(--accent-color); color: white; border: none; padding: 12px; width: 100%; border-radius: 5px; font-weight: bold; font-size: 16px; cursor: pointer; text-transform: uppercase; }
+        .buyout-section { margin-top: 30px; background: #1a1a1a; padding: 15px; border-radius: 10px; border: 1px solid #333; }
+        input { width: 100%; padding: 10px; margin-bottom: 10px; background: #2a2a2a; border: 1px solid #444; color: white; border-radius: 5px; box-sizing: border-box;}
+    </style>
+</head>
+<body>
+    <h1>В продаже (Честные авто)</h1>
+    
+    <!-- Пример карточки (в реальности они будут подгружаться через JS из БД) -->
+    <div id="cars-list">
+        <div class="car-card">
+            <img src="https://via.placeholder.com/400x200/333/fff?text=BMW+X5" alt="Авто">
+            <div class="car-info">
+                <h3>BMW X5, 2019</h3>
+                <p>Не бит, не крашен, один владелец. Состояние сел-поехал.</p>
+                <div class="price">4 500 000 ₽</div>
+                <button onclick="tg.showAlert('Свяжитесь с менеджером в боте!')">Купить</button>
+            </div>
+        </div>
+    </div>
 
+    <!-- Блок выкупа -->
+    <div class="buyout-section">
+        <h2 style="color: var(--accent-color);">Срочный выкуп вашего авто</h2>
+        <p>Деньги сразу на карту или наличными.</p>
+        <input type="text" id="car_info" placeholder="Марка, модель, год">
+        <input type="number" id="car_price" placeholder="Желаемая цена (₽)">
+        <button onclick="sendBuyoutOffer()">Предложить авто</button>
+    </div>
+
+    <script>
+        const tg = window.Telegram.WebApp;
+        tg.expand();
+
+        function sendBuyoutOffer() {
+            const info = document.getElementById('car_info').value;
+            const price = document.getElementById('car_price').value;
+            
+            if(!info || !price) {
+                tg.showAlert("Заполните все поля!"); return;
+            }
+
+            // Отправляем на наш бэкенд
+            fetch('/api/buyout_offer', {
+                method: 'POST',
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({
+                    car_info: info,
+                    price: price,
+                    username: tg.initDataUnsafe.user?.username || "Без юзернейма",
+                    user_id: tg.initDataUnsafe.user?.id
+                })
+            }).then(() => {
+                tg.showAlert("Предложение отправлено! Ожидайте ответа.");
+            });
+        }
+    </script>
+</body>
+</html>

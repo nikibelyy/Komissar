@@ -3,8 +3,54 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Аварком Воронеж — Премиальное оформление ДТП</title>
-    <meta name="description" content="Срочный выезд и оформление ДТП по европротоколу без участия ГИБДД. Все районы Воронежа и пригород - 24/7.">
+    
+    <!-- КРИТИЧЕСКИЙ SEO БЛОК ДЛЯ ПОИСКОВИКОВ -->
+    <title>ДТП СФЕРА — Аварийные комиссары в Воронеже | Круглосуточный вызов</title>
+    <meta name="description" content="Служба аварийных комиссаров «ДТП СФЕРА» в Воронеже. Срочный выезд за 5–10 минут. Официальное оформление ДТП по европротоколу без ГИБДД, выкуп страховых дел (цессия) и юридическая помощь. Работаем круглосуточно 24/7!">
+    <meta name="keywords" content="аварийный комиссар воронеж, вызов аварийного комиссара, дтп сфера воронеж, оформить европротокол воронеж, автокомиссар круглосуточно, сфера дтп, помощь при дтп, телефон аварийных комиссаров, выезд на дтп воронеж">
+    <meta name="author" content="ДТП СФЕРА">
+    <meta name="robots" content="index, follow">
+
+    <!-- Open Graph для красивого отображения ссылки в Telegram / VK -->
+    <meta property="og:type" content="website">
+    <meta property="og:url" content="https://dtpsfera-vrn.ru"> <!-- Замените на ваш реальный домен, когда он будет -->
+    <meta property="og:title" content="ДТП СФЕРА — Аварийные комиссары в Воронеже 24/7">
+    <meta property="og:description" content="Срочный выезд автокомиссара во все районы Воронежа. Оформление ДТП без ГИБДД за 15 минут. Выплаты до 400 000 ₽.">
+    <meta property="og:image" content="https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?q=80&w=600">
+
+    <!-- Микроразметка Schema.org для Google и Яндекс (выводит компанию на картах и в топе) -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "LocalBusiness",
+      "name": "ДТП СФЕРА — Служба аварийных комиссаров",
+      "description": "Официальное оформление ДТП по европротоколу, выкуп прав требования и защита водителей в Воронеже.",
+      "url": "https://dtpsfera-vrn.ru",
+      "telephone": "+79518703934",
+      "priceRange": "₽₽",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "ул. Антонова-Овсеенко, 7",
+        "addressLocality": "Воронеж",
+        "addressRegion": "Воронежская область",
+        "postalCode": "394000",
+        "addressCountry": "RU"
+      },
+      "geo": {
+        "@type": "GeoCoordinates",
+        "latitude": "51.711843",
+        "longitude": "39.141352"
+      },
+      "openingHoursSpecification": {
+        "@type": "OpeningHoursSpecification",
+        "dayOfWeek": [
+          "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday", "Sunday"
+        ],
+        "opens": "00:00",
+        "closes": "23:59"
+      }
+    }
+    </script>
     
     <!-- Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
@@ -39,7 +85,6 @@
     <style>
         body { background-color: #050506; color: #ffffff; overflow-x: hidden; }
         
-        /* Эффект матового стекла для карточек */
         .glass-card {
             background: rgba(255, 255, 255, 0.02);
             backdrop-filter: blur(16px);
@@ -48,14 +93,12 @@
             box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
         }
         
-        /* Градиентный текст */
         .text-gradient {
             background: linear-gradient(135deg, #ff4b4b 0%, #ff0000 100%);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
         }
 
-        /* Анимация парения для иконок */
         .floating { animation: float 6s ease-in-out infinite; }
         @keyframes float {
             0% { transform: translateY(0px); }
@@ -63,7 +106,6 @@
             100% { transform: translateY(0px); }
         }
 
-        /* Неоновая кнопка */
         .btn-neon {
             position: relative;
             background: linear-gradient(135deg, #ef4444, #dc2626);
@@ -83,7 +125,6 @@
         .btn-neon:hover::before { opacity: 0.8; }
         .btn-neon:hover { transform: translateY(-2px); }
 
-        /* Фоновый блюр (цветовые пятна) */
         .bg-blob {
             position: absolute;
             filter: blur(120px);
@@ -103,11 +144,10 @@
 </head>
 <body class="antialiased selection:bg-neon selection:text-white relative">
 
-    <!-- Фоновые пятна -->
     <div class="bg-blob blob-red fixed"></div>
     <div class="bg-blob blob-blue fixed"></div>
 
-    <!-- Плавающая навигация (Glassmorphism) -->
+    <!-- Навигация -->
     <nav class="fixed w-full z-50 top-4 px-4 sm:px-6 lg:px-8 transition-all duration-300">
         <div class="max-w-7xl mx-auto glass-card rounded-full px-6 py-4 flex justify-between items-center border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
             <div class="flex items-center gap-3">
@@ -115,8 +155,8 @@
                     <i class="fa-solid fa-car-burst"></i>
                 </div>
                 <div>
-                    <span class="block font-black text-xl tracking-wide uppercase">Аварком</span>
-                    <span class="text-[10px] text-red-400 font-bold tracking-[0.2em] uppercase">Воронеж 24/7</span>
+                    <span class="block font-black text-xl tracking-wide uppercase">ДТП СФЕРА</span>
+                    <span class="text-[10px] text-red-400 font-bold tracking-[0.2em] uppercase">Служба оформления 24/7</span>
                 </div>
             </div>
             <div class="flex items-center gap-4">
@@ -131,9 +171,8 @@
         </div>
     </nav>
 
-    <!-- Главный экран -->
+    <!-- Главный экран (SEO заголовок H1) -->
     <header class="relative min-h-screen flex items-center pt-20 overflow-hidden">
-        <!-- Фоновая картинка с затемнением -->
         <div class="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1605559424843-9e4c228bf1c2?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80')] bg-cover bg-center opacity-30 mix-blend-luminosity"></div>
         <div class="absolute inset-0 bg-gradient-to-b from-darker/50 via-darker/80 to-darker"></div>
 
@@ -144,15 +183,15 @@
                       <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-red-400 opacity-75"></span>
                       <span class="relative inline-flex rounded-full h-3 w-3 bg-red-500"></span>
                     </span>
-                    ВЫЕЗД 24/7 ПО ВСЕМУ ГОРОДУ
+                    ВЫЗОВ АВТОКОМИССАРА 24/7 ПО ВОРОНЕЖУ
                 </div>
                 
-                <h1 class="text-5xl sm:text-6xl lg:text-8xl font-black text-white leading-[1.1] mb-6 uppercase tracking-tighter">
-                    Аварийные <br>комиссары <br>в <span class="text-gradient">Воронеже</span>
+                <h1 class="text-5xl sm:text-6xl lg:text-7xl font-black text-white leading-[1.1] mb-6 uppercase tracking-tighter">
+                    Аварийные комиссары <br>в Воронеже <br><span class="text-gradient">ДТП СФЕРА</span>
                 </h1>
                 
                 <p class="text-xl sm:text-2xl font-medium text-gray-400 mb-10 max-w-2xl leading-relaxed border-l-4 border-red-500 pl-6 rounded-r-2xl bg-gradient-to-r from-red-500/10 to-transparent py-2">
-                    Официальное оформление ДТП без участия ГИБДД. Срочный выезд.
+                    Профессиональное и законное оформление ДТП без участия ГИБДД. Срочный выезд автокомиссара в любой район города и пригород.
                 </p>
                 
                 <div class="flex flex-col sm:flex-row gap-5">
@@ -168,12 +207,12 @@
         </div>
     </header>
 
-    <!-- Преимущества -->
+    <!-- Преимущества (SEO заголовки H2, H3) -->
     <section class="py-24 relative z-10" id="benefits">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="text-center mb-20" data-aos="zoom-in">
-                <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tight mb-4">Почему выбирают <span class="text-gradient">нас</span></h2>
-                <p class="text-gray-400 font-medium">Безупречный сервис в стрессовой ситуации</p>
+                <h2 class="text-3xl md:text-5xl font-black uppercase tracking-tight mb-4">Услуги автокомиссаров <span class="text-gradient">ДТП СФЕРА</span></h2>
+                <p class="text-gray-400 font-medium">Безупречный юридический сервис и быстрая помощь при ДТП на дорогах Воронежа</p>
             </div>
 
             <div class="grid md:grid-cols-3 gap-8">
@@ -183,9 +222,9 @@
                     <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-red-500 to-red-800 flex items-center justify-center text-white text-3xl mb-8 floating shadow-lg shadow-red-500/30">
                         <i class="fa-solid fa-bolt"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-4">Прибытие 5–10 мин</h3>
+                    <h3 class="text-2xl font-bold text-white mb-4">Прибытие за 5–10 мин</h3>
                     <p class="text-gray-400 leading-relaxed">
-                        Дежурим во всех районах Воронежа и пригороде. Мгновенно реагируем на заявку.
+                        Экипажи службы дежурят во всех районах Воронежа и на выездах из пригорода. Мгновенная реакция на ваш вызов круглосуточно.
                     </p>
                 </div>
 
@@ -195,9 +234,9 @@
                     <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-blue-500 to-blue-800 flex items-center justify-center text-white text-3xl mb-8 floating shadow-lg shadow-blue-500/30" style="animation-delay: 0.5s;">
                         <i class="fa-solid fa-file-shield"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-4">Европротокол</h3>
+                    <h3 class="text-2xl font-bold text-white mb-4">Европротокол без ошибок</h3>
                     <p class="text-gray-400 leading-relaxed">
-                        Грамотное заполнение для страховой. Законное получение выплаты до <span class="text-white font-bold">400 000 ₽</span>.
+                        Грамотное заполнение документов для страховой компании по п. 2.6.1 ПДД РФ. Гарантированное получение выплаты до <span class="text-white font-bold">400 000 ₽</span>.
                     </p>
                 </div>
 
@@ -207,9 +246,9 @@
                     <div class="w-16 h-16 rounded-2xl bg-gradient-to-br from-green-500 to-green-800 flex items-center justify-center text-white text-3xl mb-8 floating shadow-lg shadow-green-500/30" style="animation-delay: 1s;">
                         <i class="fa-solid fa-scale-unbalanced"></i>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-4">Защита интересов</h3>
+                    <h3 class="text-2xl font-bold text-white mb-4">Юридическая защита</h3>
                     <p class="text-gray-400 leading-relaxed">
-                        Помощь в спорах, точное определение виновника, фото/видео фиксация места ДТП.
+                        Помощь в разборе сложных споров, точное определение виновника аварии, фиксация следов торможения и расположения ТС.
                     </p>
                 </div>
             </div>
@@ -220,7 +259,6 @@
     <section class="py-24 relative z-10">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
             <div class="glass-card rounded-[3rem] p-8 md:p-16 border border-red-500/20 relative overflow-hidden">
-                <!-- Неоновое свечение на фоне блока -->
                 <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-full bg-red-600/5 blur-[100px] rounded-full pointer-events-none"></div>
 
                 <div class="flex flex-col md:flex-row gap-12 relative z-10">
@@ -229,26 +267,26 @@
                         <div class="w-20 h-20 rounded-full bg-red-500/20 flex items-center justify-center text-red-500 text-4xl mb-6 shadow-[0_0_30px_rgba(239,68,68,0.3)]">
                             <i class="fa-solid fa-triangle-exclamation"></i>
                         </div>
-                        <h2 class="text-3xl font-black uppercase mb-4 leading-tight">Когда вызов ГИБДД <span class="text-red-500">обязателен</span></h2>
-                        <p class="text-gray-400 font-medium">В остальных случаях оформление происходит самостоятельно по п. 2.6.1 ПДД РФ.</p>
+                        <h2 class="text-3xl font-black uppercase mb-4 leading-tight">Когда вызов ГИБДД в Воронеже <span class="text-red-500">обязателен</span></h2>
+                        <p class="text-gray-400 font-medium">В этих ситуациях самостоятельное составление Европротокола запрещено законом РФ.</p>
                     </div>
 
                     <!-- Правая колонка -->
                     <div class="md:w-2/3 grid sm:grid-cols-2 gap-6">
                         <div class="glass-card p-6 rounded-3xl" data-aos="fade-up" data-aos-delay="100">
                             <i class="fa-solid fa-heart-pulse text-red-500 text-3xl mb-4"></i>
-                            <h4 class="font-bold text-xl mb-2">Пострадавшие</h4>
-                            <p class="text-gray-400 text-sm">Причинен вред здоровью или жизни участников движения.</p>
+                            <h4 class="font-bold text-xl mb-2">Есть пострадавшие</h4>
+                            <p class="text-gray-400 text-sm">Причинен вред здоровью, физическому состоянию или жизни кого-либо из участников.</p>
                         </div>
                         <div class="glass-card p-6 rounded-3xl" data-aos="fade-up" data-aos-delay="200">
                             <i class="fa-solid fa-wine-glass text-red-500 text-3xl mb-4"></i>
-                            <h4 class="font-bold text-xl mb-2">Опьянение</h4>
-                            <p class="text-gray-400 text-sm">Один из водителей находится в нетрезвом состоянии.</p>
+                            <h4 class="font-bold text-xl mb-2">Признаки опьянения</h4>
+                            <p class="text-gray-400 text-sm">Один из водителей проявляет неадекватное поведение или находится под алкогольным/наркотическим воздействием.</p>
                         </div>
                         <div class="glass-card p-6 rounded-3xl sm:col-span-2" data-aos="fade-up" data-aos-delay="300">
                             <i class="fa-solid fa-person-running text-red-500 text-3xl mb-4"></i>
-                            <h4 class="font-bold text-xl mb-2">Скрытие с места</h4>
-                            <p class="text-gray-400 text-sm">Второй участник ДТП покинул место происшествия.</p>
+                            <h4 class="font-bold text-xl mb-2">Один из участников скрылся</h4>
+                            <p class="text-gray-400 text-sm">Второй водитель покинул место происшествия до фиксации или отказывается подписывать документы.</p>
                         </div>
                     </div>
                 </div>
@@ -257,7 +295,7 @@
                 <div class="mt-12 bg-gradient-to-r from-red-600/20 to-transparent p-6 rounded-3xl border-l-4 border-red-500" data-aos="zoom-in">
                     <p class="text-white font-bold text-lg md:text-xl">
                         <i class="fa-solid fa-shield-halved mr-3 text-red-400"></i>
-                        Любая ошибка в европротоколе — отказ в страховой выплате. Доверьте оформление профессионалам!
+                        Любая незамеченная ошибка в бланке извещения — гарантированный отказ от страховой компании. Доверьте оформление экспертам «ДТП СФЕРА».
                     </p>
                 </div>
             </div>
@@ -270,7 +308,7 @@
             <div class="grid lg:grid-cols-2 gap-16 items-center">
                 
                 <div data-aos="fade-right">
-                    <h2 class="text-4xl font-black uppercase mb-12">Наши <span class="text-gradient">Контакты</span></h2>
+                    <h2 class="text-4xl font-black uppercase mb-12">Контакты службы <span class="text-gradient">ДТП СФЕРА</span></h2>
                     
                     <div class="space-y-8">
                         <div class="flex items-center gap-6 group">
@@ -278,7 +316,7 @@
                                 <i class="fa-solid fa-map-location-dot"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">Офис оформления</p>
+                                <p class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">Центр оформления</p>
                                 <p class="text-2xl font-bold text-white">г. Воронеж, ул. Антонова-Овсеенко, 7</p>
                             </div>
                         </div>
@@ -288,8 +326,8 @@
                                 <i class="fa-regular fa-clock"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">Режим работы</p>
-                                <p class="text-2xl font-bold text-white">24/7 Без выходных</p>
+                                <p class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">Режим работы автокомиссаров</p>
+                                <p class="text-2xl font-bold text-white">Круглосуточно 24/7, без перерывов</p>
                             </div>
                         </div>
 
@@ -298,7 +336,7 @@
                                 <i class="fa-solid fa-phone-volume"></i>
                             </div>
                             <div>
-                                <p class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">Вызов комиссара</p>
+                                <p class="text-gray-500 font-bold uppercase text-xs tracking-widest mb-1">Горячая линия экстренного вызова</p>
                                 <a href="tel:+79518703934" class="text-3xl font-black text-white hover:text-red-500 transition-colors">+7 (951) 870-39-34</a>
                             </div>
                         </div>
@@ -311,8 +349,8 @@
                         <div class="w-24 h-24 mx-auto bg-gradient-to-br from-[#2AABEE] to-[#1a85be] rounded-[2rem] flex items-center justify-center text-white text-5xl mb-8 shadow-[0_0_40px_rgba(42,171,238,0.4)] floating">
                             <i class="fa-brands fa-telegram"></i>
                         </div>
-                        <h3 class="text-3xl font-black mb-4">Связь в Telegram</h3>
-                        <p class="text-gray-400 mb-8 font-medium">Бесплатная консультация, отправка геопозиции и фото с места ДТП.</p>
+                        <h3 class="text-3xl font-black mb-4">Юрист в Telegram</h3>
+                        <p class="text-gray-400 mb-8 font-medium">Бесплатный разбор ситуации онлайн, отправка геолокации ДТП и фото повреждений автомобиля.</p>
                         
                         <a href="https://t.me/blatsphera" target="_blank" class="inline-flex items-center justify-center w-full sm:w-auto px-10 py-5 bg-[#2AABEE] hover:bg-[#1f91ce] text-white rounded-full font-bold text-xl transition-all duration-300 hover:shadow-[0_0_30px_rgba(42,171,238,0.6)] hover:-translate-y-1 gap-3">
                             Перейти в чат
@@ -324,7 +362,7 @@
             </div>
             
             <div class="mt-20 pt-8 border-t border-white/10 text-center text-gray-600 font-medium">
-                &copy; 2026 Аварком Воронеж. Все права защищены.
+                &copy; 2026 ДТП СФЕРА Воронеж. Все права защищены. Официальная служба оформления ДТП.
             </div>
         </div>
     </footer>

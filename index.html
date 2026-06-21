@@ -8,90 +8,92 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ДТП СЕРВИС">
-    <meta name="theme-color" content="#050506">
-
+    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3202/3202927.png">
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { 
-            background-color: #050506; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
-            -webkit-user-select: none; user-select: none; /* Запрет выделения, как в приложении */
-        }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
-        input, select, textarea { -webkit-appearance: none; }
+        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
+        .ios-card { background: #1c1c1e; border-radius: 20px; }
+        .btn-ios { background: #0a84ff; color: white; padding: 12px; border-radius: 12px; font-weight: 600; }
+        /* Убираем подсветку при тапе на iOS */
+        * { -webkit-tap-highlight-color: transparent; }
     </style>
 </head>
 <body class="pb-24">
 
-    <div class="sticky top-0 z-50 glass px-5 py-4 flex justify-between items-center">
-        <h1 class="text-xl font-bold">ДТП СЕРВИС</h1>
-        <button onclick="exportToCSV()" class="text-red-500 font-bold text-sm"><i class="fa-solid fa-file-csv mr-1"></i> CSV</button>
+    <header class="p-6 pb-2">
+        <h1 class="text-3xl font-bold tracking-tight">CRM Клиенты</h1>
+    </header>
+
+    <div class="px-6 grid grid-cols-2 gap-4 mb-6">
+        <div class="ios-card p-4">
+            <p class="text-gray-400 text-xs uppercase font-bold">Всего</p>
+            <p class="text-2xl font-bold" id="count-all">0</p>
+        </div>
+        <button onclick="exportExcel()" class="ios-card p-4 flex flex-col items-center justify-center border border-blue-500/30">
+            <i class="fa-solid fa-file-excel text-blue-500 text-xl mb-1"></i>
+            <span class="text-[10px] font-bold uppercase">Экспорт Excel</span>
+        </button>
     </div>
 
-    <div class="px-4 py-4 space-y-6">
-        <div class="grid grid-cols-3 gap-3">
-            <div class="glass p-3 rounded-2xl text-center"><div class="text-xl font-black" id="count-all">0</div><div class="text-[10px] text-gray-500 uppercase">Всего</div></div>
-            <div class="glass p-3 rounded-2xl text-center border border-yellow-500/20"><div class="text-xl font-black text-yellow-500" id="count-process">0</div><div class="text-[10px] text-gray-500 uppercase">В работе</div></div>
-            <div class="glass p-3 rounded-2xl text-center border border-green-500/20"><div class="text-xl font-black text-green-500" id="count-done">0</div><div class="text-[10px] text-gray-500 uppercase">Закрыто</div></div>
+    <section class="px-6 mb-8">
+        <div class="ios-card p-5 space-y-4">
+            <input type="text" id="name" placeholder="ФИО Клиента" class="w-full bg-[#2c2c2e] p-3 rounded-xl outline-none">
+            <input type="tel" id="phone" placeholder="Телефон" class="w-full bg-[#2c2c2e] p-3 rounded-xl outline-none">
+            <button onclick="saveClient()" class="w-full btn-ios text-sm">Добавить клиента</button>
         </div>
+    </section>
 
-        <div class="glass rounded-3xl p-5 space-y-3">
-            <h2 class="font-bold mb-2">Добавить клиента</h2>
-            <input type="text" id="name" placeholder="ФИО Клиента" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none focus:border-red-500">
-            <input type="tel" id="phone" placeholder="Телефон" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none focus:border-red-500">
-            <select id="status" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none">
-                <option value="new">Новый</option>
-                <option value="process">В работе</option>
-                <option value="done">Завершено</option>
-            </select>
-            <button onclick="addClient()" class="w-full bg-red-600 py-3.5 rounded-xl font-bold active:scale-95 transition">СОХРАНИТЬ</button>
-        </div>
-
-        <div id="list" class="space-y-3"></div>
-    </div>
+    <div id="clients-list" class="px-6 space-y-4"></div>
 
     <script>
-        let clients = JSON.parse(localStorage.getItem('crm_data')) || [];
+        let clients = JSON.parse(localStorage.getItem('dtp_clients')) || [];
 
-        function addClient() {
+        function saveClient() {
             const name = document.getElementById('name').value;
             const phone = document.getElementById('phone').value;
-            const status = document.getElementById('status').value;
-            if(!name || !phone) return alert("Заполните поля!");
+            if(!name || !phone) return alert('Заполните поля!');
             
-            clients.unshift({ id: Date.now(), name, phone, status, date: new Date().toLocaleDateString() });
-            localStorage.setItem('crm_data', JSON.stringify(clients));
+            const newClient = { id: Date.now(), name, phone, date: new Date().toISOString() };
+            clients.unshift(newClient);
+            localStorage.setItem('dtp_clients', JSON.stringify(clients));
             render();
-        }
-
-        function exportToCSV() {
-            let csv = "ФИО,Телефон,Статус,Дата\n";
-            clients.forEach(c => csv += `${c.name},${c.phone},${c.status},${c.date}\n`);
-            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
-            const link = document.createElement("a");
-            link.href = URL.createObjectURL(blob);
-            link.download = "clients_report.csv";
-            link.click();
+            document.getElementById('name').value = '';
+            document.getElementById('phone').value = '';
         }
 
         function render() {
-            const list = document.getElementById('list');
+            const list = document.getElementById('clients-list');
+            document.getElementById('count-all').innerText = clients.length;
             list.innerHTML = clients.map(c => `
-                <div class="glass p-4 rounded-2xl flex justify-between items-center">
+                <div class="ios-card p-4 flex justify-between items-center">
                     <div>
-                        <div class="font-bold">${c.name}</div>
-                        <div class="text-xs text-gray-400">${c.phone} • ${c.status}</div>
+                        <p class="font-bold">${c.name}</p>
+                        <p class="text-sm text-gray-400">${c.phone}</p>
                     </div>
                     <button onclick="del(${c.id})" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
                 </div>
             `).join('');
-            document.getElementById('count-all').innerText = clients.length;
-            document.getElementById('count-process').innerText = clients.filter(c => c.status === 'process').length;
-            document.getElementById('count-done').innerText = clients.filter(c => c.status === 'done').length;
         }
 
-        function del(id) { clients = clients.filter(c => c.id !== id); localStorage.setItem('crm_data', JSON.stringify(clients)); render(); }
+        function exportExcel() {
+            const month = new Date().getMonth();
+            const filtered = clients.filter(c => new Date(c.date).getMonth() === month);
+            const ws = XLSX.utils.json_to_sheet(filtered);
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Клиенты");
+            XLSX.writeFile(wb, "Клиенты_за_месяц.xlsx");
+        }
+
+        function del(id) {
+            clients = clients.filter(c => c.id !== id);
+            localStorage.setItem('dtp_clients', JSON.stringify(clients));
+            render();
+        }
+
         render();
     </script>
 </body>

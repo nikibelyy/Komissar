@@ -1,347 +1,98 @@
 <!DOCTYPE html>
-<html lang="ru" class="scroll-smooth">
+<html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ДТП СЕРВИС — CRM Система</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>ДТП СЕРВИС</title>
     
-    <meta name="theme-color" content="#ef4444">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <link rel="manifest" href="manifest.json">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3202/3202927.png">
+    <meta name="apple-mobile-web-app-title" content="ДТП СЕРВИС">
+    <meta name="theme-color" content="#050506">
 
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;600;800;900&display=swap" rel="stylesheet">
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    fontFamily: { sans: ['Montserrat', 'sans-serif'] },
-                    colors: {
-                        dark: '#0a0a0c',
-                        darker: '#050506',
-                        neon: '#ef4444',
-                        glass: 'rgba(255, 255, 255, 0.02)'
-                    }
-                }
-            }
-        }
-    </script>
+    
     <style>
-        body { background-color: #050506; color: #ffffff; overflow-x: hidden; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.02);
-            backdrop-filter: blur(16px);
-            -webkit-backdrop-filter: blur(16px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            box-shadow: 0 4px 30px rgba(0, 0, 0, 0.1);
+        body { 
+            background-color: #050506; color: #fff; font-family: -apple-system, BlinkMacSystemFont, sans-serif;
+            -webkit-user-select: none; user-select: none; /* Запрет выделения, как в приложении */
         }
-        .text-gradient {
-            background: linear-gradient(135deg, #ff4b4b 0%, #ff0000 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-        }
-        .btn-neon {
-            position: relative;
-            background: linear-gradient(135deg, #ef4444, #dc2626);
-            transition: all 0.3s ease;
-        }
-        .btn-neon:hover { transform: translateY(-1px); box-shadow: 0 0 15px rgba(239, 68, 68, 0.4); }
-        .bg-blob {
-            position: absolute; filter: blur(120px); opacity: 0.12; z-index: -1; border-radius: 50%;
-        }
-        .blob-red { top: -10%; left: -10%; width: 45vw; height: 45vw; background: #ef4444; }
-        .blob-blue { bottom: -10%; right: -10%; width: 40vw; height: 40vw; background: #3b82f6; }
-        
-        /* Стилизация скроллбара */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: #050506; }
-        ::-webkit-scrollbar-thumb { background: #222; border-radius: 3px; }
-        ::-webkit-scrollbar-thumb:hover { background: #ef4444; }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255, 255, 255, 0.05); }
+        input, select, textarea { -webkit-appearance: none; }
     </style>
 </head>
-<body class="antialiased relative min-h-screen pb-12">
+<body class="pb-24">
 
-    <div class="bg-blob blob-red fixed"></div>
-    <div class="bg-blob blob-blue fixed"></div>
+    <div class="sticky top-0 z-50 glass px-5 py-4 flex justify-between items-center">
+        <h1 class="text-xl font-bold">ДТП СЕРВИС</h1>
+        <button onclick="exportToCSV()" class="text-red-500 font-bold text-sm"><i class="fa-solid fa-file-csv mr-1"></i> CSV</button>
+    </div>
 
-    <nav class="w-full pt-4 px-4 sm:px-6 lg:px-8 mb-8">
-        <div class="max-w-7xl mx-auto glass-card rounded-3xl px-6 py-4 flex justify-between items-center border border-white/10 shadow-[0_0_30px_rgba(0,0,0,0.5)]">
-            <div class="flex items-center gap-3">
-                <div class="w-10 h-10 rounded-full bg-gradient-to-br from-red-500 to-red-700 flex items-center justify-center text-white text-lg shadow-[0_0_15px_rgba(239,68,68,0.5)]">
-                    <i class="fa-solid fa-car-burst"></i>
-                </div>
-                <div>
-                    <span class="block font-black text-lg tracking-wide uppercase">ДТП СЕРВИС</span>
-                    <span class="text-[9px] text-red-400 font-bold tracking-[0.2em] uppercase">CRM ПАНЕЛЬ v1.0</span>
-                </div>
-            </div>
-            <div class="flex items-center gap-3">
-                <button onclick="exportData()" class="text-xs bg-white/5 hover:bg-white/10 text-gray-300 px-3 py-2 rounded-xl border border-white/5 transition flex items-center gap-2">
-                    <i class="fa-solid fa-download"></i> <span class="hidden sm:inline">Бэкап</span>
-                </button>
-                <div id="pwa-badge" class="hidden text-[10px] bg-green-500/20 text-green-400 font-bold px-3 py-2 rounded-xl border border-green-500/20 flex items-center gap-1.5">
-                    <span class="w-1.5 h-1.5 rounded-full bg-green-400 animate-pulse"></span> ОФЛАЙН РЕЖИМ
-                </div>
-            </div>
-        </div>
-    </nav>
-
-    <main class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 grid lg:grid-cols-3 gap-8">
-        
-        <div class="lg:col-span-1 space-y-6">
-            
-            <div class="grid grid-cols-3 gap-3">
-                <div class="glass-card p-4 rounded-2xl text-center">
-                    <span class="block text-2xl font-black text-gradient" id="count-all">0</span>
-                    <span class="text-[10px] text-gray-400 uppercase font-semibold">Всего</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl text-center border-b-2 border-yellow-500/40">
-                    <span class="block text-2xl font-black text-yellow-400" id="count-process">0</span>
-                    <span class="text-[10px] text-gray-400 uppercase font-semibold">В работе</span>
-                </div>
-                <div class="glass-card p-4 rounded-2xl text-center border-b-2 border-green-500/40">
-                    <span class="block text-2xl font-black text-green-400" id="count-done">0</span>
-                    <span class="text-[10px] text-gray-400 uppercase font-semibold font-medium">Закрыто</span>
-                </div>
-            </div>
-
-            <div class="glass-card rounded-[2rem] p-6 border border-white/5 relative overflow-hidden">
-                <h2 id="form-title" class="text-xl font-bold uppercase mb-6 flex items-center gap-2">
-                    <i class="fa-solid fa-user-plus text-red-500"></i> Новый клиент
-                </h2>
-                
-                <form id="crm-form" onsubmit="saveClient(event)" class="space-y-4">
-                    <input type="hidden" id="client-id">
-                    
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1.5 tracking-wider">ФИО Клиента</label>
-                        <input type="text" id="client-name" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-red-500 font-medium transition" placeholder="Иванов Иван Иванович">
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1.5 tracking-wider">Телефон</label>
-                        <input type="tel" id="client-phone" required class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-red-500 font-medium transition" placeholder="+7 (999) 000-00-00">
-                    </div>
-
-                    <div class="grid grid-cols-2 gap-3">
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1.5 tracking-wider">Авто / Госномер</label>
-                            <input type="text" id="client-car" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-red-500 font-medium transition" placeholder="Toyota А001АА36">
-                        </div>
-                        <div>
-                            <label class="block text-xs font-bold text-gray-400 uppercase mb-1.5 tracking-wider">Статус дела</label>
-                            <select id="client-status" class="w-full bg-[#0a0a0c] border border-white/10 rounded-xl px-4 py-3 text-white focus:outline-none focus:border-red-500 font-bold transition">
-                                <option value="new">Новый вызов</option>
-                                <option value="process">В процессе</option>
-                                <option value="done">Завершено</option>
-                            </select>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-xs font-bold text-gray-400 uppercase mb-1.5 tracking-wider">Описание / Заметки по ДТП</label>
-                        <textarea id="client-comment" rows="3" class="w-full bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-500 focus:outline-none focus:border-red-500 font-medium transition resize-none" placeholder="Перекресток улиц..., повреждения, страховая компания..."></textarea>
-                    </div>
-
-                    <div class="pt-2 flex gap-2">
-                        <button type="submit" class="w-full btn-neon text-white py-3.5 rounded-xl font-bold text-sm tracking-wide uppercase transition">
-                            Сохранить запись
-                        </button>
-                        <button type="button" id="cancel-btn" onclick="resetForm()" class="hidden bg-white/5 hover:bg-white/10 text-white px-4 rounded-xl border border-white/5 transition">
-                            <i class="fa-solid fa-xmark"></i>
-                        </button>
-                    </div>
-                </form>
-            </div>
+    <div class="px-4 py-4 space-y-6">
+        <div class="grid grid-cols-3 gap-3">
+            <div class="glass p-3 rounded-2xl text-center"><div class="text-xl font-black" id="count-all">0</div><div class="text-[10px] text-gray-500 uppercase">Всего</div></div>
+            <div class="glass p-3 rounded-2xl text-center border border-yellow-500/20"><div class="text-xl font-black text-yellow-500" id="count-process">0</div><div class="text-[10px] text-gray-500 uppercase">В работе</div></div>
+            <div class="glass p-3 rounded-2xl text-center border border-green-500/20"><div class="text-xl font-black text-green-500" id="count-done">0</div><div class="text-[10px] text-gray-500 uppercase">Закрыто</div></div>
         </div>
 
-        <div class="lg:col-span-2 space-y-4">
-            
-            <div class="glass-card p-4 rounded-2xl flex flex-col sm:flex-row gap-3 border border-white/5">
-                <div class="relative flex-1">
-                    <i class="fa-solid fa-magnifying-glass absolute left-4 top-3.5 text-gray-500"></i>
-                    <input type="text" id="search-input" oninput="renderClients()" class="w-full bg-white/5 border border-white/10 rounded-xl pl-11 pr-4 py-2.5 text-sm text-white placeholder-gray-500 focus:outline-none focus:border-red-500 transition" placeholder="Поиск по имени, телефону, авто...">
-                </div>
-                <div class="flex gap-2">
-                    <button onclick="filterStatus('all')" id="filter-all" class="text-xs font-bold px-4 py-2.5 rounded-xl transition bg-red-500 text-white">Все</button>
-                    <button onclick="filterStatus('new')" id="filter-new" class="text-xs font-bold px-3 py-2.5 rounded-xl transition bg-white/5 text-gray-400 hover:text-white">Новые</button>
-                    <button onclick="filterStatus('process')" id="filter-process" class="text-xs font-bold px-3 py-2.5 rounded-xl transition bg-white/5 text-gray-400 hover:text-white">В работе</button>
-                    <button onclick="filterStatus('done')" id="filter-done" class="text-xs font-bold px-3 py-2.5 rounded-xl transition bg-white/5 text-gray-400 hover:text-white">Закрытые</button>
-                </div>
-            </div>
-
-            <div id="clients-list" class="space-y-4">
-                </div>
+        <div class="glass rounded-3xl p-5 space-y-3">
+            <h2 class="font-bold mb-2">Добавить клиента</h2>
+            <input type="text" id="name" placeholder="ФИО Клиента" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none focus:border-red-500">
+            <input type="tel" id="phone" placeholder="Телефон" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none focus:border-red-500">
+            <select id="status" class="w-full bg-white/5 p-3 rounded-xl border border-white/10 outline-none">
+                <option value="new">Новый</option>
+                <option value="process">В работе</option>
+                <option value="done">Завершено</option>
+            </select>
+            <button onclick="addClient()" class="w-full bg-red-600 py-3.5 rounded-xl font-bold active:scale-95 transition">СОХРАНИТЬ</button>
         </div>
-    </main>
+
+        <div id="list" class="space-y-3"></div>
+    </div>
 
     <script>
-        let clients = JSON.parse(localStorage.getItem('dtp_clients')) || [];
-        let currentFilter = 'all';
+        let clients = JSON.parse(localStorage.getItem('crm_data')) || [];
 
-        function saveClient(e) {
-            e.preventDefault();
-            const id = document.getElementById('client-id').value;
-            const name = document.getElementById('client-name').value.trim();
-            const phone = document.getElementById('client-phone').value.trim();
-            const car = document.getElementById('client-car').value.trim();
-            const status = document.getElementById('client-status').value;
-            const comment = document.getElementById('client-comment').value.trim();
-
-            if (id) {
-                // Редактирование существующего
-                clients = clients.map(c => c.id === id ? { ...c, name, phone, car, status, comment } : c);
-            } else {
-                // Создание нового
-                const newClient = {
-                    id: Date.now().toString(),
-                    date: new Date().toLocaleString('ru-RU', { day: '2-digit', month: '2-digit', hour: '2-digit', minute: '2-digit' }),
-                    name, phone, car, status, comment
-                };
-                clients.unshift(newClient);
-            }
-
-            localStorage.setItem('dtp_clients', JSON.stringify(clients));
-            resetForm();
-            renderClients();
+        function addClient() {
+            const name = document.getElementById('name').value;
+            const phone = document.getElementById('phone').value;
+            const status = document.getElementById('status').value;
+            if(!name || !phone) return alert("Заполните поля!");
+            
+            clients.unshift({ id: Date.now(), name, phone, status, date: new Date().toLocaleDateString() });
+            localStorage.setItem('crm_data', JSON.stringify(clients));
+            render();
         }
 
-        function editClient(id) {
-            const client = clients.find(c => c.id === id);
-            if (!client) return;
-
-            document.getElementById('client-id').value = client.id;
-            document.getElementById('client-name').value = client.name;
-            document.getElementById('client-phone').value = client.phone;
-            document.getElementById('client-car').value = client.car;
-            document.getElementById('client-status').value = client.status;
-            document.getElementById('client-comment').value = client.comment;
-
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-pen-to-square text-yellow-500"></i> Изменить запись`;
-            document.getElementById('cancel-btn').classList.remove('hidden');
-            window.scrollTo({ top: 0, behavior: 'smooth' });
+        function exportToCSV() {
+            let csv = "ФИО,Телефон,Статус,Дата\n";
+            clients.forEach(c => csv += `${c.name},${c.phone},${c.status},${c.date}\n`);
+            const blob = new Blob(["\ufeff" + csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement("a");
+            link.href = URL.createObjectURL(blob);
+            link.download = "clients_report.csv";
+            link.click();
         }
 
-        function deleteClient(id) {
-            if (confirm('Удалить эту запись безвозвратно?')) {
-                clients = clients.filter(c => c.id !== id);
-                localStorage.setItem('dtp_clients', JSON.stringify(clients));
-                renderClients();
-            }
-        }
-
-        function resetForm() {
-            document.getElementById('crm-form').reset();
-            document.getElementById('client-id').value = '';
-            document.getElementById('form-title').innerHTML = `<i class="fa-solid fa-user-plus text-red-500"></i> Новый клиент`;
-            document.getElementById('cancel-btn').classList.add('hidden');
-        }
-
-        function filterStatus(status) {
-            currentFilter = status;
-            ['all', 'new', 'process', 'done'].forEach(s => {
-                const btn = document.getElementById(`filter-${s}`);
-                if (s === status) {
-                    btn.className = "text-xs font-bold px-4 py-2.5 rounded-xl transition bg-red-500 text-white";
-                } else {
-                    btn.className = "text-xs font-bold px-3 py-2.5 rounded-xl transition bg-white/5 text-gray-400 hover:text-white";
-                }
-            });
-            renderClients();
-        }
-
-        function updateCounters() {
+        function render() {
+            const list = document.getElementById('list');
+            list.innerHTML = clients.map(c => `
+                <div class="glass p-4 rounded-2xl flex justify-between items-center">
+                    <div>
+                        <div class="font-bold">${c.name}</div>
+                        <div class="text-xs text-gray-400">${c.phone} • ${c.status}</div>
+                    </div>
+                    <button onclick="del(${c.id})" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+                </div>
+            `).join('');
             document.getElementById('count-all').innerText = clients.length;
             document.getElementById('count-process').innerText = clients.filter(c => c.status === 'process').length;
             document.getElementById('count-done').innerText = clients.filter(c => c.status === 'done').length;
         }
 
-        function renderClients() {
-            updateCounters();
-            const listContainer = document.getElementById('clients-list');
-            const searchQuery = document.getElementById('search-input').value.toLowerCase();
-            listContainer.innerHTML = '';
-
-            let filtered = clients;
-            if (currentFilter !== 'all') {
-                filtered = filtered.filter(c => c.status === currentFilter);
-            }
-
-            if (searchQuery) {
-                filtered = filtered.filter(c => 
-                    c.name.toLowerCase().includes(searchQuery) || 
-                    c.phone.includes(searchQuery) || 
-                    c.car.toLowerCase().includes(searchQuery) ||
-                    c.comment.toLowerCase().includes(searchQuery)
-                );
-            }
-
-            if (filtered.length === 0) {
-                listContainer.innerHTML = `
-                    <div class="glass-card p-12 rounded-[2rem] text-center text-gray-500 font-medium">
-                        <i class="fa-solid fa-folder-open text-4xl mb-3 block opacity-40"></i>
-                        Записей не обнаружено
-                    </div>`;
-                return;
-            }
-
-            filtered.forEach(client => {
-                let statusBadge = '';
-                if (client.status === 'new') statusBadge = '<span class="bg-red-500/10 text-red-400 border border-red-500/20 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Новый</span>';
-                if (client.status === 'process') statusBadge = '<span class="bg-yellow-500/10 text-yellow-400 border border-yellow-500/20 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">В работе</span>';
-                if (client.status === 'done') statusBadge = '<span class="bg-green-500/10 text-green-400 border border-green-500/20 text-[10px] font-black px-2.5 py-1 rounded-md uppercase">Закрыт</span>';
-
-                const card = document.createElement('div');
-                card.className = 'glass-card rounded-3xl p-5 border border-white/5 hover:border-white/10 transition flex flex-col md:flex-row md:items-center justify-between gap-4';
-                card.innerHTML = `
-                    <div class="space-y-2 flex-1">
-                        <div class="flex items-center gap-3 flex-wrap">
-                            <h3 class="text-lg font-bold text-white">${client.name}</h3>
-                            ${statusBadge}
-                            <span class="text-xs font-semibold text-gray-500"><i class="fa-regular fa-clock mr-1"></i>${client.date}</span>
-                        </div>
-                        <div class="grid sm:grid-cols-2 gap-x-4 gap-y-1 text-sm font-medium text-gray-400">
-                            <div><i class="fa-solid fa-phone text-red-400/80 mr-2 text-xs"></i><a href="tel:${client.phone}" class="hover:text-white transition">${client.phone}</a></div>
-                            <div><i class="fa-solid fa-car text-blue-400/80 mr-2 text-xs"></i>${client.car || '—'}</div>
-                        </div>
-                        ${client.comment ? `<p class="text-xs text-gray-500 border-l border-white/10 pl-3 mt-2 italic">${client.comment}</p>` : ''}
-                    </div>
-                    <div class="flex items-center gap-2 border-t md:border-t-0 pt-3 md:pt-0 border-white/5 justify-end">
-                        <button onclick="editClient('${client.id}')" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-yellow-500/10 text-gray-400 hover:text-yellow-400 border border-white/5 transition flex items-center justify-center">
-                            <i class="fa-solid fa-pen text-xs"></i>
-                        </button>
-                        <button onclick="deleteClient('${client.id}')" class="w-9 h-9 rounded-xl bg-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-400 border border-white/5 transition flex items-center justify-center">
-                            <i class="fa-solid fa-trash text-xs"></i>
-                        </button>
-                    </div>
-                `;
-                listContainer.appendChild(card);
-            });
-        }
-
-        function exportData() {
-            const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(clients, null, 2));
-            const downloadAnchor = document.createElement('a');
-            downloadAnchor.setAttribute("href", dataStr);
-            downloadAnchor.setAttribute("download", `dtp_service_backup_${new Date().toISOString().slice(0,10)}.json`);
-            document.body.appendChild(downloadAnchor);
-            downloadAnchor.click();
-            downloadAnchor.remove();
-        }
-
-        // Регистрация Сервис-Воркера для PWA
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('sw.js')
-                .then(() => document.getElementById('pwa-badge').classList.remove('hidden'))
-                .catch(err => console.log('SW registration failed:', err));
-        }
-
-        // Инициализация при старте
-        renderClients();
+        function del(id) { clients = clients.filter(c => c.id !== id); localStorage.setItem('crm_data', JSON.stringify(clients)); render(); }
+        render();
     </script>
 </body>
 </html>

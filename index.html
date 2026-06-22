@@ -2,7 +2,7 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ДТП СЕРВИС</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
@@ -15,80 +15,269 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        body { background-color: #000; color: #fff; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; }
-        .ios-card { background: #1c1c1e; border-radius: 20px; }
-        .btn-ios { background: #0a84ff; color: white; padding: 12px; border-radius: 12px; font-weight: 600; }
-        /* Убираем подсветку при тапе на iOS */
-        * { -webkit-tap-highlight-color: transparent; }
+        /* Базовые настройки и шрифты */
+        :root {
+            --apple-blue: #0A84FF;
+            --apple-purple: #5E5CE6;
+            --glass-bg: rgba(30, 30, 32, 0.65);
+            --glass-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        body { 
+            background-color: #000; 
+            color: #fff; 
+            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
+            overflow-x: hidden;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Анимированный фон (Aurora) */
+        .ambient-bg {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            z-index: -1;
+            overflow: hidden;
+            background: #000;
+        }
+        .ambient-blob {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.4;
+            animation: float 10s infinite ease-in-out alternate;
+        }
+        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--apple-blue); }
+        .blob-2 { bottom: 10%; right: -10%; width: 60vw; height: 60vw; background: var(--apple-purple); animation-delay: -5s; }
+
+        @keyframes float {
+            0% { transform: translate(0, 0) scale(1); }
+            100% { transform: translate(10%, 10%) scale(1.1); }
+        }
+
+        /* Glassmorphism Карточки */
+        .glass-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(24px);
+            -webkit-backdrop-filter: blur(24px);
+            border: 1px solid var(--glass-border);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        /* Поля ввода (Инпуты) */
+        .ios-input {
+            width: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 18px;
+            padding: 16px 20px;
+            color: #fff;
+            font-size: 17px;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+        .ios-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .ios-input:focus {
+            background: rgba(255, 255, 255, 0.08);
+            border-color: rgba(10, 132, 255, 0.6);
+            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+        }
+
+        /* Главная кнопка */
+        .btn-magic {
+            background: linear-gradient(135deg, var(--apple-blue), var(--apple-purple));
+            color: white;
+            padding: 16px;
+            border-radius: 18px;
+            font-weight: 600;
+            font-size: 17px;
+            box-shadow: 0 8px 24px rgba(10, 132, 255, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        .btn-magic:active {
+            transform: scale(0.96);
+            box-shadow: 0 4px 12px rgba(10, 132, 255, 0.2);
+        }
+
+        /* Анимация появления списков */
+        .list-item-enter {
+            animation: slideIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        @keyframes slideIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Кнопка удаления */
+        .delete-btn {
+            background: rgba(255, 59, 48, 0.15);
+            color: #FF3B30;
+            width: 44px;
+            height: 44px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+        }
+        .delete-btn:active {
+            background: rgba(255, 59, 48, 1);
+            color: #fff;
+            transform: scale(0.9);
+        }
     </style>
 </head>
-<body class="pb-24">
+<body class="pb-32 pt-12">
 
-    <header class="p-6 pb-2">
-        <h1 class="text-3xl font-bold tracking-tight">CRM Клиенты</h1>
+    <div class="ambient-bg">
+        <div class="ambient-blob blob-1"></div>
+        <div class="ambient-blob blob-2"></div>
+    </div>
+
+    <header class="px-6 mb-6">
+        <h1 class="text-[34px] font-bold tracking-tight text-white/90 drop-shadow-md">Клиенты</h1>
+        <p class="text-white/50 text-sm mt-1 font-medium">ДТП Сервис CRM</p>
     </header>
 
-    <div class="px-6 grid grid-cols-2 gap-4 mb-6">
-        <div class="ios-card p-4">
-            <p class="text-gray-400 text-xs uppercase font-bold">Всего</p>
-            <p class="text-2xl font-bold" id="count-all">0</p>
+    <div class="px-6 grid grid-cols-2 gap-4 mb-8">
+        <div class="glass-card p-5 flex flex-col justify-center">
+            <div class="flex items-center gap-2 mb-1">
+                <i class="fa-solid fa-users text-white/40 text-xs"></i>
+                <p class="text-white/40 text-xs uppercase font-bold tracking-wider">Всего</p>
+            </div>
+            <p class="text-3xl font-bold tracking-tight" id="count-all">0</p>
         </div>
-        <button onclick="exportExcel()" class="ios-card p-4 flex flex-col items-center justify-center border border-blue-500/30">
-            <i class="fa-solid fa-file-excel text-blue-500 text-xl mb-1"></i>
-            <span class="text-[10px] font-bold uppercase">Экспорт Excel</span>
+        
+        <button onclick="exportExcel()" class="glass-card p-5 flex flex-col items-center justify-center active:scale-95 transition-transform group">
+            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-2 group-active:bg-blue-500/40 transition-colors">
+                <i class="fa-solid fa-arrow-up-right-from-square text-blue-400 text-lg"></i>
+            </div>
+            <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400">Экспорт</span>
         </button>
     </div>
 
-    <section class="px-6 mb-8">
-        <div class="ios-card p-5 space-y-4">
-            <input type="text" id="name" placeholder="ФИО Клиента" class="w-full bg-[#2c2c2e] p-3 rounded-xl outline-none">
-            <input type="tel" id="phone" placeholder="Телефон" class="w-full bg-[#2c2c2e] p-3 rounded-xl outline-none">
-            <button onclick="saveClient()" class="w-full btn-ios text-sm">Добавить клиента</button>
+    <section class="px-6 mb-10">
+        <div class="glass-card p-5 space-y-4 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 to-purple-500/50"></div>
+            
+            <div class="space-y-3">
+                <input type="text" id="name" inputmode="text" placeholder="Имя и Фамилия" class="ios-input">
+                <input type="tel" id="phone" inputmode="tel" placeholder="+7 (999) 000-00-00" class="ios-input">
+            </div>
+            <button onclick="saveClient()" class="w-full btn-magic flex items-center justify-center gap-2 mt-2">
+                <i class="fa-solid fa-plus text-sm"></i>
+                Добавить клиента
+            </button>
         </div>
     </section>
 
-    <div id="clients-list" class="px-6 space-y-4"></div>
+    <div class="px-6 mb-4 flex items-center justify-between">
+        <h2 class="text-xl font-bold tracking-tight">Недавние</h2>
+    </div>
+    
+    <div id="clients-list" class="px-6 space-y-3">
+        </div>
 
     <script>
         let clients = JSON.parse(localStorage.getItem('dtp_clients')) || [];
 
+        // Форматирование даты
+        function formatDate(isoString) {
+            const date = new Date(isoString);
+            return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
+        }
+
         function saveClient() {
-            const name = document.getElementById('name').value;
-            const phone = document.getElementById('phone').value;
-            if(!name || !phone) return alert('Заполните поля!');
+            const nameInput = document.getElementById('name');
+            const phoneInput = document.getElementById('phone');
+            const name = nameInput.value.trim();
+            const phone = phoneInput.value.trim();
+            
+            if(!name || !phone) {
+                // Визуальная отдача при ошибке (тряска)
+                const card = nameInput.closest('.glass-card');
+                card.style.transform = 'translateX(-10px)';
+                setTimeout(() => card.style.transform = 'translateX(10px)', 50);
+                setTimeout(() => card.style.transform = 'translateX(0)', 100);
+                return;
+            }
             
             const newClient = { id: Date.now(), name, phone, date: new Date().toISOString() };
             clients.unshift(newClient);
             localStorage.setItem('dtp_clients', JSON.stringify(clients));
+            
+            nameInput.value = '';
+            phoneInput.value = '';
+            
+            // Убираем фокус с клавиатуры на iOS
+            nameInput.blur();
+            phoneInput.blur();
+            
             render();
-            document.getElementById('name').value = '';
-            document.getElementById('phone').value = '';
         }
 
         function render() {
             const list = document.getElementById('clients-list');
-            document.getElementById('count-all').innerText = clients.length;
-            list.innerHTML = clients.map(c => `
-                <div class="ios-card p-4 flex justify-between items-center">
-                    <div>
-                        <p class="font-bold">${c.name}</p>
-                        <p class="text-sm text-gray-400">${c.phone}</p>
+            
+            // Анимация счетчика
+            const countEl = document.getElementById('count-all');
+            countEl.innerText = clients.length;
+            countEl.style.transform = 'scale(1.2)';
+            setTimeout(() => countEl.style.transform = 'scale(1)', 200);
+
+            if (clients.length === 0) {
+                list.innerHTML = `<p class="text-center text-white/30 text-sm py-8">Список клиентов пуст</p>`;
+                return;
+            }
+
+            list.innerHTML = clients.map((c, index) => `
+                <div class="glass-card p-4 flex justify-between items-center list-item-enter" style="animation-delay: ${index * 0.05}s">
+                    <div class="flex items-center gap-4">
+                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/50 font-bold">
+                            ${c.name.charAt(0).toUpperCase()}
+                        </div>
+                        <div>
+                            <p class="font-bold text-[17px] tracking-tight">${c.name}</p>
+                            <div class="flex items-center gap-2 mt-0.5">
+                                <p class="text-[13px] text-blue-400">${c.phone}</p>
+                                <span class="text-white/20 text-[10px]">•</span>
+                                <p class="text-[12px] text-white/40">${formatDate(c.date)}</p>
+                            </div>
+                        </div>
                     </div>
-                    <button onclick="del(${c.id})" class="text-red-500"><i class="fa-solid fa-trash"></i></button>
+                    <button onclick="del(${c.id})" class="delete-btn">
+                        <i class="fa-solid fa-trash-can text-sm"></i>
+                    </button>
                 </div>
             `).join('');
         }
 
         function exportExcel() {
+            if (clients.length === 0) return alert('Нет данных для экспорта');
             const month = new Date().getMonth();
             const filtered = clients.filter(c => new Date(c.date).getMonth() === month);
-            const ws = XLSX.utils.json_to_sheet(filtered);
+            
+            if (filtered.length === 0) return alert('В этом месяце нет добавленных клиентов');
+
+            const ws = XLSX.utils.json_to_sheet(filtered.map(c => ({
+                'Имя': c.name,
+                'Телефон': c.phone,
+                'Дата добавления': formatDate(c.date)
+            })));
+            
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Клиенты");
             XLSX.writeFile(wb, "Клиенты_за_месяц.xlsx");
         }
 
         function del(id) {
+            // Haptic feedback (вибрация для iOS, если поддерживается)
+            if (navigator.vibrate) navigator.vibrate(50);
+            
             clients = clients.filter(c => c.id !== id);
             localStorage.setItem('dtp_clients', JSON.stringify(clients));
             render();

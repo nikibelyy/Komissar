@@ -5,11 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>ДТП СЕРВИС</title>
     
+    <!-- iOS Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ДТП СЕРВИС">
-    <link rel="apple-touch-icon" href="https://cdn-icons-png.flaticon.com/512/3202/3202927.png">
+    <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b5/1f/53/b51f536f-0c44-1d74-e4b1-ac6ed2352096/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg">
     
+    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
@@ -19,6 +21,7 @@
         :root {
             --apple-blue: #0A84FF;
             --apple-purple: #5E5CE6;
+            --apple-cyan: #32ADE6;
             --glass-bg: rgba(30, 30, 32, 0.65);
             --glass-border: rgba(255, 255, 255, 0.1);
         }
@@ -31,7 +34,7 @@
             -webkit-tap-highlight-color: transparent;
         }
 
-        /* Анимированный фон (Aurora) */
+        /* Анимированный фон (Aurora) - Улучшенный */
         .ambient-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -42,16 +45,17 @@
         .ambient-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(80px);
-            opacity: 0.4;
-            animation: float 10s infinite ease-in-out alternate;
+            filter: blur(90px);
+            opacity: 0.35;
+            animation: float 12s infinite ease-in-out alternate;
         }
-        .blob-1 { top: -10%; left: -10%; width: 50vw; height: 50vw; background: var(--apple-blue); }
-        .blob-2 { bottom: 10%; right: -10%; width: 60vw; height: 60vw; background: var(--apple-purple); animation-delay: -5s; }
+        .blob-1 { top: -10%; left: -10%; width: 55vw; height: 55vw; background: var(--apple-blue); }
+        .blob-2 { bottom: 5%; right: -10%; width: 65vw; height: 65vw; background: var(--apple-purple); animation-delay: -4s; }
+        .blob-3 { top: 40%; left: 30%; width: 40vw; height: 40vw; background: var(--apple-cyan); animation-delay: -8s; }
 
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(10%, 10%) scale(1.1); }
+            100% { transform: translate(15%, 15%) scale(1.15); }
         }
 
         /* Glassmorphism Карточки */
@@ -62,7 +66,7 @@
             border: 1px solid var(--glass-border);
             border-radius: 28px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
         }
 
         /* Поля ввода (Инпуты) */
@@ -84,7 +88,14 @@
             box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
         }
 
-        /* Главная кнопка */
+        /* Спец-инпут для номера */
+        .input-plate {
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 500;
+        }
+
+        /* Главная кнопка с бликом */
         .btn-magic {
             background: linear-gradient(135deg, var(--apple-blue), var(--apple-purple));
             color: white;
@@ -96,20 +107,42 @@
             transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
+            border: none;
+        }
+        .btn-magic::after {
+            content: '';
+            position: absolute;
+            top: 0; left: -100%; width: 50%; height: 100%;
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            transform: skewX(-20deg);
+            animation: shimmer 4s infinite;
+        }
+        @keyframes shimmer {
+            0% { left: -100%; }
+            20% { left: 200%; }
+            100% { left: 200%; }
         }
         .btn-magic:active {
             transform: scale(0.96);
             box-shadow: 0 4px 12px rgba(10, 132, 255, 0.2);
         }
 
-        /* Анимация появления списков */
-        .list-item-enter {
-            animation: slideIn 0.4s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+        /* Анимации появления */
+        .fade-in-up {
+            animation: fadeInUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             opacity: 0;
             transform: translateY(20px);
         }
-        @keyframes slideIn {
+        @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Анимация удаления (смахивание влево) */
+        .swipe-out {
+            animation: swipeOutLeft 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
+        }
+        @keyframes swipeOutLeft {
+            to { opacity: 0; transform: translateX(-100%); }
         }
 
         /* Кнопка удаления */
@@ -123,27 +156,40 @@
             align-items: center;
             justify-content: center;
             transition: all 0.2s;
+            flex-shrink: 0;
         }
         .delete-btn:active {
             background: rgba(255, 59, 48, 1);
             color: #fff;
             transform: scale(0.9);
         }
+
+        /* Стилизация плашки госномера */
+        .plate-badge {
+            background: rgba(255, 255, 255, 0.85);
+            color: #000;
+            border: 1px solid rgba(0,0,0,0.2);
+            box-shadow: inset 0 1px 2px rgba(255,255,255,1), 0 2px 4px rgba(0,0,0,0.2);
+        }
     </style>
 </head>
 <body class="pb-32 pt-12">
 
+    <!-- Анимированный задний фон -->
     <div class="ambient-bg">
         <div class="ambient-blob blob-1"></div>
         <div class="ambient-blob blob-2"></div>
+        <div class="ambient-blob blob-3"></div>
     </div>
 
-    <header class="px-6 mb-6">
+    <!-- Заголовок -->
+    <header class="px-6 mb-6 fade-in-up" style="animation-delay: 0.1s;">
         <h1 class="text-[34px] font-bold tracking-tight text-white/90 drop-shadow-md">Клиенты</h1>
         <p class="text-white/50 text-sm mt-1 font-medium">ДТП Сервис CRM</p>
     </header>
 
-    <div class="px-6 grid grid-cols-2 gap-4 mb-8">
+    <!-- Блок статистики и экспорта -->
+    <div class="px-6 grid grid-cols-2 gap-4 mb-8 fade-in-up" style="animation-delay: 0.2s;">
         <div class="glass-card p-5 flex flex-col justify-center">
             <div class="flex items-center gap-2 mb-1">
                 <i class="fa-solid fa-users text-white/40 text-xs"></i>
@@ -160,27 +206,37 @@
         </button>
     </div>
 
-    <section class="px-6 mb-10">
+    <!-- Блок добавления -->
+    <section class="px-6 mb-10 fade-in-up" style="animation-delay: 0.3s;">
         <div class="glass-card p-5 space-y-4 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 to-purple-500/50"></div>
+            <!-- Декоративный блик -->
+            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 via-cyan-400/50 to-purple-500/50"></div>
             
             <div class="space-y-3">
                 <input type="text" id="name" inputmode="text" placeholder="Имя и Фамилия" class="ios-input">
                 <input type="tel" id="phone" inputmode="tel" placeholder="+7 (999) 000-00-00" class="ios-input">
+                
+                <div class="grid grid-cols-2 gap-3">
+                    <input type="text" id="carMake" inputmode="text" placeholder="Марка авто (Toyota)" class="ios-input !text-[15px] !p-3">
+                    <input type="text" id="plate" inputmode="text" placeholder="Гос. номер" class="ios-input input-plate !text-[15px] !p-3">
+                </div>
             </div>
-            <button onclick="saveClient()" class="w-full btn-magic flex items-center justify-center gap-2 mt-2">
+            
+            <button onclick="saveClient()" class="w-full btn-magic flex items-center justify-center gap-2 mt-3">
                 <i class="fa-solid fa-plus text-sm"></i>
                 Добавить клиента
             </button>
         </div>
     </section>
 
-    <div class="px-6 mb-4 flex items-center justify-between">
+    <!-- Список клиентов -->
+    <div class="px-6 mb-4 flex items-center justify-between fade-in-up" style="animation-delay: 0.4s;">
         <h2 class="text-xl font-bold tracking-tight">Недавние</h2>
     </div>
     
     <div id="clients-list" class="px-6 space-y-3">
-        </div>
+        <!-- Карточки будут генерироваться здесь -->
+    </div>
 
     <script>
         let clients = JSON.parse(localStorage.getItem('dtp_clients')) || [];
@@ -194,28 +250,48 @@
         function saveClient() {
             const nameInput = document.getElementById('name');
             const phoneInput = document.getElementById('phone');
+            const carInput = document.getElementById('carMake');
+            const plateInput = document.getElementById('plate');
+            
             const name = nameInput.value.trim();
             const phone = phoneInput.value.trim();
+            const car = carInput.value.trim();
+            const plate = plateInput.value.trim().toUpperCase();
             
+            // Проверка только обязательных полей (Имя и телефон)
             if(!name || !phone) {
-                // Визуальная отдача при ошибке (тряска)
                 const card = nameInput.closest('.glass-card');
                 card.style.transform = 'translateX(-10px)';
                 setTimeout(() => card.style.transform = 'translateX(10px)', 50);
                 setTimeout(() => card.style.transform = 'translateX(0)', 100);
+                
+                if(!name) nameInput.focus();
+                else phoneInput.focus();
                 return;
             }
             
-            const newClient = { id: Date.now(), name, phone, date: new Date().toISOString() };
+            const newClient = { 
+                id: Date.now(), 
+                name, 
+                phone, 
+                car: car || 'Не указано', 
+                plate: plate || '—', 
+                date: new Date().toISOString() 
+            };
+            
             clients.unshift(newClient);
             localStorage.setItem('dtp_clients', JSON.stringify(clients));
             
+            // Очистка
             nameInput.value = '';
             phoneInput.value = '';
+            carInput.value = '';
+            plateInput.value = '';
             
-            // Убираем фокус с клавиатуры на iOS
             nameInput.blur();
             phoneInput.blur();
+            carInput.blur();
+            plateInput.blur();
             
             render();
         }
@@ -223,37 +299,70 @@
         function render() {
             const list = document.getElementById('clients-list');
             
-            // Анимация счетчика
             const countEl = document.getElementById('count-all');
             countEl.innerText = clients.length;
             countEl.style.transform = 'scale(1.2)';
             setTimeout(() => countEl.style.transform = 'scale(1)', 200);
 
             if (clients.length === 0) {
-                list.innerHTML = `<p class="text-center text-white/30 text-sm py-8">Список клиентов пуст</p>`;
+                list.innerHTML = `<p class="text-center text-white/30 text-sm py-8 fade-in-up">Список клиентов пуст</p>`;
                 return;
             }
 
             list.innerHTML = clients.map((c, index) => `
-                <div class="glass-card p-4 flex justify-between items-center list-item-enter" style="animation-delay: ${index * 0.05}s">
-                    <div class="flex items-center gap-4">
-                        <div class="w-10 h-10 rounded-full bg-white/10 flex items-center justify-center text-white/50 font-bold">
-                            ${c.name.charAt(0).toUpperCase()}
+                <div id="client-${c.id}" class="glass-card p-4 fade-in-up flex justify-between items-center" style="animation-delay: ${Math.min(index * 0.05, 0.5)}s">
+                    <div class="flex flex-col gap-2 w-full pr-3">
+                        <!-- Верхняя строка: Имя и Телефон -->
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center text-white font-bold flex-shrink-0 shadow-inner">
+                                ${c.name.charAt(0).toUpperCase()}
+                            </div>
+                            <div class="flex-1 min-w-0">
+                                <p class="font-bold text-[17px] tracking-tight truncate">${c.name}</p>
+                                <p class="text-[13px] text-blue-400 font-medium">${c.phone}</p>
+                            </div>
                         </div>
-                        <div>
-                            <p class="font-bold text-[17px] tracking-tight">${c.name}</p>
-                            <div class="flex items-center gap-2 mt-0.5">
-                                <p class="text-[13px] text-blue-400">${c.phone}</p>
-                                <span class="text-white/20 text-[10px]">•</span>
-                                <p class="text-[12px] text-white/40">${formatDate(c.date)}</p>
+                        
+                        <!-- Нижняя строка: Авто, Номер, Дата -->
+                        <div class="flex items-center gap-2 pl-13">
+                            <i class="fa-solid fa-car-side text-white/30 text-[11px]"></i>
+                            <span class="text-[13px] text-white/70 truncate max-w-[80px]">${c.car}</span>
+                            
+                            ${c.plate !== '—' ? `
+                                <div class="plate-badge px-2 py-0.5 rounded flex items-center gap-1 ml-1">
+                                    <span class="text-[10px] font-bold tracking-widest">${c.plate}</span>
+                                </div>
+                            ` : ''}
+                            
+                            <div class="ml-auto flex items-center gap-1.5 text-white/30">
+                                <i class="fa-regular fa-clock text-[10px]"></i>
+                                <span class="text-[11px]">${formatDate(c.date)}</span>
                             </div>
                         </div>
                     </div>
-                    <button onclick="del(${c.id})" class="delete-btn">
+                    
+                    <button onclick="animateDelete(${c.id})" class="delete-btn">
                         <i class="fa-solid fa-trash-can text-sm"></i>
                     </button>
                 </div>
             `).join('');
+        }
+
+        // Плавное удаление
+        function animateDelete(id) {
+            if (navigator.vibrate) navigator.vibrate(50);
+            
+            const card = document.getElementById(`client-${id}`);
+            if(card) {
+                card.classList.add('swipe-out'); // Запускаем CSS анимацию
+                
+                // Ждем окончания анимации (300мс) перед фактическим удалением
+                setTimeout(() => {
+                    clients = clients.filter(c => c.id !== id);
+                    localStorage.setItem('dtp_clients', JSON.stringify(clients));
+                    render();
+                }, 300);
+            }
         }
 
         function exportExcel() {
@@ -266,6 +375,8 @@
             const ws = XLSX.utils.json_to_sheet(filtered.map(c => ({
                 'Имя': c.name,
                 'Телефон': c.phone,
+                'Марка авто': c.car,
+                'Гос. номер': c.plate,
                 'Дата добавления': formatDate(c.date)
             })));
             
@@ -274,15 +385,7 @@
             XLSX.writeFile(wb, "Клиенты_за_месяц.xlsx");
         }
 
-        function del(id) {
-            // Haptic feedback (вибрация для iOS, если поддерживается)
-            if (navigator.vibrate) navigator.vibrate(50);
-            
-            clients = clients.filter(c => c.id !== id);
-            localStorage.setItem('dtp_clients', JSON.stringify(clients));
-            render();
-        }
-
+        // Инициализация
         render();
     </script>
 </body>

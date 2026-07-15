@@ -3,27 +3,25 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ДТП СЕРВИС</title>
+    <title>ДТП СЕРВИС CRM</title>
     
-    <!-- iOS Meta Tags -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ДТП СЕРВИС">
     <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b5/1f/53/b51f536f-0c44-1d74-e4b1-ac6ed2352096/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg">
     
-    <!-- Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
-        /* Базовые настройки и шрифты */
         :root {
-            --apple-blue: #0A84FF;
-            --apple-purple: #5E5CE6;
-            --apple-cyan: #32ADE6;
-            --glass-bg: rgba(30, 30, 32, 0.65);
-            --glass-border: rgba(255, 255, 255, 0.1);
+            --app-red: #FF3B30; /* Яркий iOS Красный */
+            --app-red-hover: #E03027;
+            --app-red-glow: rgba(255, 59, 48, 0.2);
+            --glass-bg: rgba(18, 18, 18, 0.75);
+            --glass-border: rgba(255, 255, 255, 0.08);
+            --glass-border-active: rgba(255, 59, 48, 0.4);
         }
         
         body { 
@@ -32,9 +30,11 @@
             font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
             overflow-x: hidden;
             -webkit-tap-highlight-color: transparent;
+            padding-bottom: calc(5rem + env(safe-area-inset-bottom));
+            padding-top: calc(2rem + env(safe-area-inset-top));
         }
 
-        /* Анимированный фон (Aurora) - Улучшенный */
+        /* Анимированный фон (Aurora) в черно-красных тонах */
         .ambient-bg {
             position: fixed;
             top: 0; left: 0; width: 100vw; height: 100vh;
@@ -45,65 +45,67 @@
         .ambient-blob {
             position: absolute;
             border-radius: 50%;
-            filter: blur(90px);
-            opacity: 0.35;
-            animation: float 12s infinite ease-in-out alternate;
+            filter: blur(100px);
+            opacity: 0.25;
+            animation: float 14s infinite ease-in-out alternate;
         }
-        .blob-1 { top: -10%; left: -10%; width: 55vw; height: 55vw; background: var(--apple-blue); }
-        .blob-2 { bottom: 5%; right: -10%; width: 65vw; height: 65vw; background: var(--apple-purple); animation-delay: -4s; }
-        .blob-3 { top: 40%; left: 30%; width: 40vw; height: 40vw; background: var(--apple-cyan); animation-delay: -8s; }
+        .blob-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: var(--app-red); }
+        .blob-2 { bottom: 5%; right: -10%; width: 70vw; height: 70vw; background: #660000; animation-delay: -4s; }
+        .blob-3 { top: 35%; left: 25%; width: 45vw; height: 45vw; background: #2b0000; animation-delay: -8s; }
 
         @keyframes float {
             0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(15%, 15%) scale(1.15); }
+            100% { transform: translate(12%, 12%) scale(1.15); }
         }
 
-        /* Glassmorphism Карточки */
+        /* Glassmorphism Карточки с красным акцентом при наведении */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(24px);
             -webkit-backdrop-filter: blur(24px);
             border: 1px solid var(--glass-border);
-            border-radius: 28px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
-            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), opacity 0.3s ease;
+            border-radius: 24px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+        .glass-card:hover {
+            border-color: var(--glass-border-active);
         }
 
         /* Поля ввода (Инпуты) */
         .ios-input {
             width: 100%;
-            background: rgba(0, 0, 0, 0.3);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            border-radius: 18px;
+            background: rgba(0, 0, 0, 0.4);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
             padding: 16px 20px;
             color: #fff;
-            font-size: 17px;
+            font-size: 16px;
             outline: none;
-            transition: all 0.3s ease;
+            transition: all 0.25s ease;
         }
-        .ios-input::placeholder { color: rgba(255, 255, 255, 0.4); }
+        .ios-input::placeholder { color: rgba(255, 255, 255, 0.35); }
         .ios-input:focus {
-            background: rgba(255, 255, 255, 0.08);
-            border-color: rgba(10, 132, 255, 0.6);
-            box-shadow: 0 0 0 4px rgba(10, 132, 255, 0.15);
+            background: rgba(255, 255, 255, 0.05);
+            border-color: rgba(255, 59, 48, 0.5);
+            box-shadow: 0 0 0 4px var(--app-red-glow);
         }
 
-        /* Спец-инпут для номера */
         .input-plate {
             text-transform: uppercase;
             letter-spacing: 1px;
-            font-weight: 500;
+            font-weight: 600;
         }
 
-        /* Главная кнопка с бликом */
+        /* Кнопка добавления */
         .btn-magic {
-            background: linear-gradient(135deg, var(--apple-blue), var(--apple-purple));
+            background: linear-gradient(135deg, var(--app-red), #990000);
             color: white;
             padding: 16px;
-            border-radius: 18px;
+            border-radius: 16px;
             font-weight: 600;
-            font-size: 17px;
-            box-shadow: 0 8px 24px rgba(10, 132, 255, 0.3);
+            font-size: 16px;
+            box-shadow: 0 8px 24px rgba(255, 59, 48, 0.25);
             transition: all 0.2s ease;
             position: relative;
             overflow: hidden;
@@ -113,135 +115,259 @@
             content: '';
             position: absolute;
             top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.3), transparent);
+            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
             transform: skewX(-20deg);
-            animation: shimmer 4s infinite;
+            animation: shimmer 5s infinite;
         }
         @keyframes shimmer {
             0% { left: -100%; }
-            20% { left: 200%; }
+            15% { left: 200%; }
             100% { left: 200%; }
         }
         .btn-magic:active {
-            transform: scale(0.96);
-            box-shadow: 0 4px 12px rgba(10, 132, 255, 0.2);
+            transform: scale(0.97);
+            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
         }
 
-        /* Анимации появления */
+        /* Кнопки быстрых действий на карточке */
+        .action-btn {
+            width: 40px;
+            height: 40px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+            font-size: 14px;
+        }
+        .action-btn:active {
+            transform: scale(0.9);
+        }
+        .call-btn {
+            background: rgba(255, 255, 255, 0.05);
+            color: #fff;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .call-btn:active {
+            background: var(--app-red);
+            border-color: var(--app-red);
+        }
+        .wa-btn {
+            background: rgba(37, 211, 102, 0.08);
+            color: #25D366;
+            border: 1px solid rgba(37, 211, 102, 0.15);
+        }
+        .wa-btn:active {
+            background: #25D366;
+            color: #fff;
+        }
+        .delete-btn {
+            background: rgba(255, 59, 48, 0.08);
+            color: var(--app-red);
+            border: 1px solid rgba(255, 59, 48, 0.15);
+        }
+        .delete-btn:active {
+            background: var(--app-red);
+            color: #fff;
+        }
+
+        /* Российский госномер стиль */
+        .plate-badge {
+            background: #f5f5f5;
+            color: #000;
+            border: 1.5px solid #111;
+            box-shadow: inset 0 1px 1px #fff, 0 2px 4px rgba(0,0,0,0.3);
+            border-radius: 4px;
+            font-family: 'Courier New', Courier, monospace;
+            padding: 1px 6px;
+            display: inline-flex;
+            align-items: center;
+        }
+
+        /* Анимации */
         .fade-in-up {
-            animation: fadeInUp 0.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+            animation: fadeInUp 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
             opacity: 0;
-            transform: translateY(20px);
+            transform: translateY(15px);
         }
         @keyframes fadeInUp {
             to { opacity: 1; transform: translateY(0); }
         }
 
-        /* Анимация удаления (смахивание влево) */
         .swipe-out {
             animation: swipeOutLeft 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
         }
         @keyframes swipeOutLeft {
             to { opacity: 0; transform: translateX(-100%); }
         }
-
-        /* Кнопка удаления */
-        .delete-btn {
-            background: rgba(255, 59, 48, 0.15);
-            color: #FF3B30;
-            width: 44px;
-            height: 44px;
-            border-radius: 14px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s;
-            flex-shrink: 0;
-        }
-        .delete-btn:active {
-            background: rgba(255, 59, 48, 1);
-            color: #fff;
-            transform: scale(0.9);
-        }
-
-        /* Стилизация плашки госномера */
-        .plate-badge {
-            background: rgba(255, 255, 255, 0.85);
-            color: #000;
-            border: 1px solid rgba(0,0,0,0.2);
-            box-shadow: inset 0 1px 2px rgba(255,255,255,1), 0 2px 4px rgba(0,0,0,0.2);
-        }
     </style>
 </head>
-<body class="pb-32 pt-12">
+<body class="max-w-md mx-auto px-4">
 
-    <!-- Анимированный задний фон -->
     <div class="ambient-bg">
         <div class="ambient-blob blob-1"></div>
         <div class="ambient-blob blob-2"></div>
         <div class="ambient-blob blob-3"></div>
     </div>
 
-    <!-- Заголовок -->
-    <header class="px-6 mb-6 fade-in-up" style="animation-delay: 0.1s;">
-        <h1 class="text-[34px] font-bold tracking-tight text-white/90 drop-shadow-md">Клиенты</h1>
-        <p class="text-white/50 text-sm mt-1 font-medium">ДТП Сервис CRM</p>
+    <header class="px-2 mb-6 mt-4 fade-in-up" style="animation-delay: 0.1s;">
+        <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-900 flex items-center justify-center shadow-lg shadow-red-600/20">
+                <i class="fa-solid fa-car-burst text-white text-lg"></i>
+            </div>
+            <div>
+                <h1 class="text-[28px] font-extrabold tracking-tight text-white/95">ДТП СЕРВИС</h1>
+                <p class="text-white/40 text-xs font-semibold uppercase tracking-widest mt-0.5">База клиентов CRM</p>
+            </div>
+        </div>
     </header>
 
-    <!-- Блок статистики и экспорта -->
-    <div class="px-6 grid grid-cols-2 gap-4 mb-8 fade-in-up" style="animation-delay: 0.2s;">
-        <div class="glass-card p-5 flex flex-col justify-center">
-            <div class="flex items-center gap-2 mb-1">
-                <i class="fa-solid fa-users text-white/40 text-xs"></i>
-                <p class="text-white/40 text-xs uppercase font-bold tracking-wider">Всего</p>
+    <div class="grid grid-cols-2 gap-3 mb-6 fade-in-up" style="animation-delay: 0.15s;">
+        <div class="glass-card p-4 flex flex-col justify-between">
+            <p class="text-white/30 text-[10px] uppercase font-bold tracking-wider mb-2">Статистика базы</p>
+            <div class="flex items-center justify-between">
+                <div>
+                    <p class="text-[9px] text-white/40 uppercase">Всего</p>
+                    <p class="text-2xl font-bold tracking-tight text-white" id="count-all">0</p>
+                </div>
+                <div class="h-8 w-[1px] bg-white/10"></div>
+                <div>
+                    <p class="text-[9px] text-red-400 uppercase">Сегодня</p>
+                    <p class="text-2xl font-bold tracking-tight text-red-500" id="count-today">0</p>
+                </div>
             </div>
-            <p class="text-3xl font-bold tracking-tight" id="count-all">0</p>
         </div>
         
-        <button onclick="exportExcel()" class="glass-card p-5 flex flex-col items-center justify-center active:scale-95 transition-transform group">
-            <div class="w-10 h-10 rounded-full bg-blue-500/20 flex items-center justify-center mb-2 group-active:bg-blue-500/40 transition-colors">
-                <i class="fa-solid fa-arrow-up-right-from-square text-blue-400 text-lg"></i>
+        <button onclick="exportExcel()" class="glass-card p-4 flex flex-col items-center justify-center active:scale-95 transition-transform group relative overflow-hidden">
+            <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div class="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center mb-1 group-active:bg-red-500/30 transition-colors border border-red-500/20">
+                <i class="fa-solid fa-arrow-up-right-from-square text-red-400 text-sm"></i>
             </div>
-            <span class="text-[11px] font-bold uppercase tracking-wider text-blue-400">Экспорт</span>
+            <span class="text-[10px] font-bold uppercase tracking-wider text-red-400">Экспорт Excel</span>
         </button>
     </div>
 
-    <!-- Блок добавления -->
-    <section class="px-6 mb-10 fade-in-up" style="animation-delay: 0.3s;">
-        <div class="glass-card p-5 space-y-4 relative overflow-hidden">
-            <!-- Декоративный блик -->
-            <div class="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-blue-500/50 via-cyan-400/50 to-purple-500/50"></div>
+    <section class="mb-6 fade-in-up" style="animation-delay: 0.2s;">
+        <div class="glass-card p-5 space-y-3 relative overflow-hidden">
+            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-600/30 via-red-500 to-red-600/30"></div>
             
             <div class="space-y-3">
-                <input type="text" id="name" inputmode="text" placeholder="Имя и Фамилия" class="ios-input">
-                <input type="tel" id="phone" inputmode="tel" placeholder="+7 (999) 000-00-00" class="ios-input">
+                <input type="text" id="name" placeholder="Имя и Фамилия" class="ios-input">
+                
+                <input type="tel" id="phone" placeholder="+7 (999) 000-00-00" class="ios-input">
                 
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="text" id="carMake" inputmode="text" placeholder="Марка авто (Toyota)" class="ios-input !text-[15px] !p-3">
-                    <input type="text" id="plate" inputmode="text" placeholder="Гос. номер" class="ios-input input-plate !text-[15px] !p-3">
+                    <input type="text" id="carMake" placeholder="Марка авто (Toyota)" class="ios-input !text-[14px] !p-3.5">
+                    <input type="text" id="plate" placeholder="Гос. номер" class="ios-input input-plate !text-[14px] !p-3.5">
                 </div>
             </div>
             
-            <button onclick="saveClient()" class="w-full btn-magic flex items-center justify-center gap-2 mt-3">
-                <i class="fa-solid fa-plus text-sm"></i>
+            <button onclick="saveClient()" class="w-full btn-magic flex items-center justify-center gap-2 mt-2">
+                <i class="fa-solid fa-user-plus text-sm"></i>
                 Добавить клиента
             </button>
         </div>
     </section>
 
-    <!-- Список клиентов -->
-    <div class="px-6 mb-4 flex items-center justify-between fade-in-up" style="animation-delay: 0.4s;">
-        <h2 class="text-xl font-bold tracking-tight">Недавние</h2>
+    <div class="mb-5 fade-in-up" style="animation-delay: 0.25s;">
+        <div class="relative">
+            <input type="text" id="search-input" oninput="render()" placeholder="Быстрый поиск клиента..." class="ios-input pl-12 pr-10 !py-3.5">
+            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-sm"></i>
+            <button onclick="clearSearch()" id="clear-search-btn" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-white/40 active:text-white">
+                <i class="fa-solid fa-circle-xmark"></i>
+            </button>
+        </div>
+    </div>
+
+    <div class="mb-3 flex items-center justify-between fade-in-up" style="animation-delay: 0.3s;">
+        <h2 class="text-md font-bold tracking-tight text-white/60 uppercase text-xs tracking-widest pl-1">Список клиентов</h2>
     </div>
     
-    <div id="clients-list" class="px-6 space-y-3">
-        <!-- Карточки будут генерироваться здесь -->
+    <div id="clients-list" class="space-y-3">
+        </div>
+
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3.5 rounded-2xl shadow-xl font-semibold text-sm transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-2.5">
+        <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
+        <span id="toast-message">Ошибка</span>
     </div>
 
     <script>
         let clients = JSON.parse(localStorage.getItem('dtp_clients')) || [];
 
-        // Форматирование даты
+        // Авто-форматирование телефона при вводе (+7 (999) 000-00-00)
+        document.getElementById('phone').addEventListener('input', function (e) {
+            let input = e.target.value.replace(/\D/g, '');
+            if (!input) {
+                e.target.value = '';
+                return;
+            }
+            if (input.startsWith('7') || input.startsWith('8')) {
+                input = input.substring(1);
+            }
+            input = input.substring(0, 10);
+            
+            let formatted = '+7';
+            if (input.length > 0) {
+                formatted += ' (' + input.substring(0, 3);
+            }
+            if (input.length >= 4) {
+                formatted += ') ' + input.substring(3, 6);
+            }
+            if (input.length >= 7) {
+                formatted += '-' + input.substring(6, 8);
+            }
+            if (input.length >= 9) {
+                formatted += '-' + input.substring(8, 10);
+            }
+            e.target.value = formatted;
+        });
+
+        // Форсирование верхнего регистра на госномере
+        document.getElementById('plate').addEventListener('input', function(e) {
+            e.target.value = e.target.value.toUpperCase();
+        });
+
+        // Красивое кастомное уведомление (Toast)
+        function showToast(message, type = 'error') {
+            const toast = document.getElementById('toast');
+            const toastMsg = document.getElementById('toast-message');
+            const toastIcon = document.getElementById('toast-icon');
+            
+            toastMsg.innerText = message;
+            
+            if (type === 'success') {
+                toast.classList.remove('bg-red-600');
+                toast.classList.add('bg-emerald-600');
+                toastIcon.className = 'fa-solid fa-circle-check';
+            } else {
+                toast.classList.remove('bg-emerald-600');
+                toast.classList.add('bg-red-600');
+                toastIcon.className = 'fa-solid fa-circle-exclamation';
+            }
+            
+            toast.classList.remove('translate-y-20', 'opacity-0');
+            toast.classList.add('translate-y-0', 'opacity-100');
+            
+            if (navigator.vibrate) navigator.vibrate([70, 40]);
+
+            setTimeout(() => {
+                toast.classList.remove('translate-y-0', 'opacity-100');
+                toast.classList.add('translate-y-20', 'opacity-0');
+            }, 3000);
+        }
+
+        // Очистить строку поиска
+        function clearSearch() {
+            document.getElementById('search-input').value = '';
+            render();
+        }
+
+        // Подсчет добавленных сегодня клиентов
+        function getTodayCount() {
+            const todayStr = new Date().toDateString();
+            return clients.filter(c => new Date(c.date).toDateString() === todayStr).length;
+        }
+
         function formatDate(isoString) {
             const date = new Date(isoString);
             return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
@@ -258,15 +384,19 @@
             const car = carInput.value.trim();
             const plate = plateInput.value.trim().toUpperCase();
             
-            // Проверка только обязательных полей (Имя и телефон)
             if(!name || !phone) {
                 const card = nameInput.closest('.glass-card');
                 card.style.transform = 'translateX(-10px)';
                 setTimeout(() => card.style.transform = 'translateX(10px)', 50);
                 setTimeout(() => card.style.transform = 'translateX(0)', 100);
                 
-                if(!name) nameInput.focus();
-                else phoneInput.focus();
+                if(!name) {
+                    nameInput.focus();
+                    showToast('Заполните поле Имя!');
+                } else {
+                    phoneInput.focus();
+                    showToast('Заполните номер телефона!');
+                }
                 return;
             }
             
@@ -282,7 +412,7 @@
             clients.unshift(newClient);
             localStorage.setItem('dtp_clients', JSON.stringify(clients));
             
-            // Очистка
+            // Сброс полей
             nameInput.value = '';
             phoneInput.value = '';
             carInput.value = '';
@@ -293,84 +423,123 @@
             carInput.blur();
             plateInput.blur();
             
+            showToast('Клиент добавлен в базу!', 'success');
             render();
         }
 
         function render() {
             const list = document.getElementById('clients-list');
-            
-            const countEl = document.getElementById('count-all');
-            countEl.innerText = clients.length;
-            countEl.style.transform = 'scale(1.2)';
-            setTimeout(() => countEl.style.transform = 'scale(1)', 200);
+            const searchInput = document.getElementById('search-input');
+            const clearBtn = document.getElementById('clear-search-btn');
+            const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-            if (clients.length === 0) {
-                list.innerHTML = `<p class="text-center text-white/30 text-sm py-8 fade-in-up">Список клиентов пуст</p>`;
+            // Управление крестиком сброса
+            if (query) {
+                clearBtn.classList.remove('hidden');
+            } else {
+                clearBtn.classList.add('hidden');
+            }
+
+            // Фильтрация
+            const filteredClients = clients.filter(c => {
+                return c.name.toLowerCase().includes(query) || 
+                       c.phone.includes(query) || 
+                       c.car.toLowerCase().includes(query) || 
+                       c.plate.toLowerCase().includes(query);
+            });
+            
+            // Обновление статистики
+            const countEl = document.getElementById('count-all');
+            const countTodayEl = document.getElementById('count-today');
+            
+            countEl.innerText = clients.length;
+            countTodayEl.innerText = getTodayCount();
+
+            if (filteredClients.length === 0) {
+                list.innerHTML = `<p class="text-center text-white/20 text-sm py-10 fade-in-up">
+                    ${query ? 'Ничего не найдено' : 'База клиентов пуста'}
+                </p>`;
                 return;
             }
 
-            list.innerHTML = clients.map((c, index) => `
-                <div id="client-${c.id}" class="glass-card p-4 fade-in-up flex justify-between items-center" style="animation-delay: ${Math.min(index * 0.05, 0.5)}s">
-                    <div class="flex flex-col gap-2 w-full pr-3">
-                        <!-- Верхняя строка: Имя и Телефон -->
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-full bg-gradient-to-br from-white/20 to-white/5 flex items-center justify-center text-white font-bold flex-shrink-0 shadow-inner">
+            list.innerHTML = filteredClients.map((c, index) => {
+                // Преобразование номера в числовую строку для ссылки в вацап
+                const rawPhone = c.phone.replace(/\D/g, '');
+                const waPhone = rawPhone.startsWith('8') ? '7' + rawPhone.slice(1) : rawPhone;
+
+                return `
+                <div id="client-${c.id}" class="glass-card p-4 fade-in-up flex flex-col gap-4" style="animation-delay: ${Math.min(index * 0.05, 0.4)}s">
+                    <div class="flex justify-between items-start">
+                        <div class="flex items-center gap-3 min-w-0">
+                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-950/40 flex items-center justify-center text-red-400 font-bold flex-shrink-0 shadow-inner border border-red-500/20">
                                 ${c.name.charAt(0).toUpperCase()}
                             </div>
-                            <div class="flex-1 min-w-0">
-                                <p class="font-bold text-[17px] tracking-tight truncate">${c.name}</p>
-                                <p class="text-[13px] text-blue-400 font-medium">${c.phone}</p>
+                            <div class="min-w-0">
+                                <p class="font-bold text-[16px] text-white truncate pr-2">${c.name}</p>
+                                <a href="tel:${c.phone}" class="text-xs text-red-400/90 font-medium hover:underline transition-all block mt-0.5">${c.phone}</a>
                             </div>
                         </div>
                         
-                        <!-- Нижняя строка: Авто, Номер, Дата -->
-                        <div class="flex items-center gap-2 pl-13">
-                            <i class="fa-solid fa-car-side text-white/30 text-[11px]"></i>
-                            <span class="text-[13px] text-white/70 truncate max-w-[80px]">${c.car}</span>
-                            
-                            ${c.plate !== '—' ? `
-                                <div class="plate-badge px-2 py-0.5 rounded flex items-center gap-1 ml-1">
-                                    <span class="text-[10px] font-bold tracking-widest">${c.plate}</span>
-                                </div>
-                            ` : ''}
-                            
-                            <div class="ml-auto flex items-center gap-1.5 text-white/30">
-                                <i class="fa-regular fa-clock text-[10px]"></i>
-                                <span class="text-[11px]">${formatDate(c.date)}</span>
-                            </div>
+                        <div class="flex items-center gap-1.5 flex-shrink-0">
+                            <a href="tel:${c.phone}" class="action-btn call-btn" title="Позвонить">
+                                <i class="fa-solid fa-phone"></i>
+                            </a>
+                            <a href="https://wa.me/${waPhone}" target="_blank" class="action-btn wa-btn" title="Написать в WhatsApp">
+                                <i class="fa-brands fa-whatsapp"></i>
+                            </a>
+                            <button onclick="animateDelete(${c.id})" class="action-btn delete-btn" title="Удалить">
+                                <i class="fa-solid fa-trash-can"></i>
+                            </button>
                         </div>
                     </div>
                     
-                    <button onclick="animateDelete(${c.id})" class="delete-btn">
-                        <i class="fa-solid fa-trash-can text-sm"></i>
-                    </button>
+                    <div class="flex items-center justify-between border-t border-white/5 pt-3 text-[12px]">
+                        <div class="flex items-center gap-2">
+                            <i class="fa-solid fa-car-side text-white/30 text-[11px]"></i>
+                            <span class="text-white/60 font-medium truncate max-w-[100px]">${c.car}</span>
+                            
+                            ${c.plate !== '—' && c.plate !== '' ? `
+                                <div class="plate-badge ml-1">
+                                    <span class="text-[9px] font-bold tracking-wider">${c.plate}</span>
+                                </div>
+                            ` : ''}
+                        </div>
+                        
+                        <div class="flex items-center gap-1.5 text-white/30">
+                            <i class="fa-regular fa-clock text-[10px]"></i>
+                            <span>${formatDate(c.date)}</span>
+                        </div>
+                    </div>
                 </div>
-            `).join('');
+                `;
+            }).join('');
         }
 
-        // Плавное удаление
+        // Анимация стильного удаления
         function animateDelete(id) {
-            if (navigator.vibrate) navigator.vibrate(50);
+            if (navigator.vibrate) navigator.vibrate(60);
             
             const card = document.getElementById(`client-${id}`);
             if(card) {
-                card.classList.add('swipe-out'); // Запускаем CSS анимацию
+                card.classList.add('swipe-out');
                 
-                // Ждем окончания анимации (300мс) перед фактическим удалением
                 setTimeout(() => {
                     clients = clients.filter(c => c.id !== id);
                     localStorage.setItem('dtp_clients', JSON.stringify(clients));
+                    showToast('Клиент удален', 'success');
                     render();
                 }, 300);
             }
         }
 
+        // Экспорт таблицы
         function exportExcel() {
-            if (clients.length === 0) return alert('Нет данных для экспорта');
+            if (clients.length === 0) return showToast('Нет данных для экспорта!');
+            
             const month = new Date().getMonth();
             const filtered = clients.filter(c => new Date(c.date).getMonth() === month);
             
-            if (filtered.length === 0) return alert('В этом месяце нет добавленных клиентов');
+            if (filtered.length === 0) return showToast('В этом месяце еще нет добавленных клиентов!');
 
             const ws = XLSX.utils.json_to_sheet(filtered.map(c => ({
                 'Имя': c.name,
@@ -382,10 +551,14 @@
             
             const wb = XLSX.utils.book_new();
             XLSX.utils.book_append_sheet(wb, ws, "Клиенты");
-            XLSX.writeFile(wb, "Клиенты_за_месяц.xlsx");
+            
+            // Название месяца в имя файла
+            const currentMonthName = new Date().toLocaleString('ru-RU', { month: 'long' });
+            XLSX.writeFile(wb, `Клиенты_ДТП_за_${currentMonthName}.xlsx`);
+            showToast('Файл скачан!', 'success');
         }
 
-        // Инициализация
+        // Старт
         render();
     </script>
 </body>

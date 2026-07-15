@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ДТП СЕРВИС CRM</title>
+    <title>ДТП СЕРВИС — Осмотры</title>
     
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
@@ -15,6 +15,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     
     <style>
+        *, ::before, ::after {
+            box-sizing: border-box;
+        }
+
         :root {
             --app-red: #FF3B30; /* Яркий iOS Красный */
             --app-red-hover: #E03027;
@@ -58,7 +62,7 @@
             100% { transform: translate(12%, 12%) scale(1.15); }
         }
 
-        /* Glassmorphism Карточки с красным акцентом при наведении */
+        /* Glassmorphism Карточки */
         .glass-card {
             background: var(--glass-bg);
             backdrop-filter: blur(24px);
@@ -75,6 +79,8 @@
         /* Поля ввода (Инпуты) */
         .ios-input {
             width: 100%;
+            max-width: 100%;
+            display: block;
             background: rgba(0, 0, 0, 0.4);
             border: 1px solid rgba(255, 255, 255, 0.06);
             border-radius: 16px;
@@ -83,6 +89,7 @@
             font-size: 16px;
             outline: none;
             transition: all 0.25s ease;
+            -webkit-appearance: none;
         }
         .ios-input::placeholder { color: rgba(255, 255, 255, 0.35); }
         .ios-input:focus {
@@ -91,13 +98,28 @@
             box-shadow: 0 0 0 4px var(--app-red-glow);
         }
 
+        /* Фикс ухода даты за поля на iPhone */
+        input[type="datetime-local"] {
+            min-height: 56px;
+            position: relative;
+        }
+        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
+            filter: invert(1);
+            opacity: 0.6;
+            position: absolute;
+            right: 16px;
+            top: 50%;
+            transform: translateY(-50%);
+            scale: 1.2;
+        }
+
         .input-plate {
             text-transform: uppercase;
             letter-spacing: 1px;
             font-weight: 600;
         }
 
-        /* Кнопка добавления */
+        /* Кнопка отправки записи */
         .btn-magic {
             background: linear-gradient(135deg, var(--app-red), #990000);
             color: white;
@@ -152,12 +174,12 @@
             background: var(--app-red);
             border-color: var(--app-red);
         }
-        .max-btn {
+        .sms-btn {
             background: rgba(255, 59, 48, 0.1);
             color: #FF3B30;
             border: 1px solid rgba(255, 59, 48, 0.25);
         }
-        .max-btn:active {
+        .sms-btn:active {
             background: #FF3B30;
             color: #fff;
         }
@@ -213,18 +235,18 @@
     <header class="px-2 mb-6 mt-4 fade-in-up" style="animation-delay: 0.1s;">
         <div class="flex items-center gap-3">
             <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-900 flex items-center justify-center shadow-lg shadow-red-600/20">
-                <i class="fa-solid fa-car-burst text-white text-lg"></i>
+                <i class="fa-solid fa-calendar-check text-white text-lg"></i>
             </div>
             <div>
                 <h1 class="text-[28px] font-extrabold tracking-tight text-white/95">ДТП СЕРВИС</h1>
-                <p class="text-white/40 text-xs font-semibold uppercase tracking-widest mt-0.5">База клиентов CRM</p>
+                <p class="text-white/40 text-xs font-semibold uppercase tracking-widest mt-0.5">Запись на осмотр</p>
             </div>
         </div>
     </header>
 
     <div class="grid grid-cols-2 gap-3 mb-6 fade-in-up" style="animation-delay: 0.15s;">
         <div class="glass-card p-4 flex flex-col justify-between">
-            <p class="text-white/30 text-[10px] uppercase font-bold tracking-wider mb-2">Статистика базы</p>
+            <p class="text-white/30 text-[10px] uppercase font-bold tracking-wider mb-2">Статистика записей</p>
             <div class="flex items-center justify-between">
                 <div>
                     <p class="text-[9px] text-white/40 uppercase">Всего</p>
@@ -252,26 +274,31 @@
             <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-600/30 via-red-500 to-red-600/30"></div>
             
             <div class="space-y-3">
-                <input type="text" id="name" placeholder="Имя и Фамилия" class="ios-input">
+                <div class="w-full">
+                    <label class="block text-[11px] uppercase font-bold tracking-wider text-white/40 mb-1.5 pl-1">Дата и время осмотра</label>
+                    <input type="datetime-local" id="inspectionDate" class="ios-input">
+                </div>
+
+                <input type="text" id="name" placeholder="ФИО клиента" class="ios-input">
                 
                 <input type="tel" id="phone" placeholder="+7 (999) 000-00-00" class="ios-input">
                 
                 <div class="grid grid-cols-2 gap-3">
-                    <input type="text" id="carMake" placeholder="Марка авто (Toyota)" class="ios-input !text-[14px] !p-3.5">
-                    <input type="text" id="plate" placeholder="Гос. номер" class="ios-input input-plate !text-[14px] !p-3.5">
+                    <input type="text" id="carMake" placeholder="Марка авто" class="ios-input !text-[14px] !p-3.5">
+                    <input type="text" id="plate" placeholder="Гос. номер авто" class="ios-input input-plate !text-[14px] !p-3.5">
                 </div>
             </div>
             
-            <button onclick="saveClient()" class="w-full btn-magic flex items-center justify-center gap-2 mt-2">
-                <i class="fa-solid fa-user-plus text-sm"></i>
-                Добавить клиента
+            <button onclick="saveAndSendSMS()" class="w-full btn-magic flex items-center justify-center gap-2 mt-2">
+                <i class="fa-solid fa-comment-sms text-sm"></i>
+                Записать на осмотр
             </button>
         </div>
     </section>
 
     <div class="mb-5 fade-in-up" style="animation-delay: 0.25s;">
         <div class="relative">
-            <input type="text" id="search-input" oninput="render()" placeholder="Быстрый поиск клиента..." class="ios-input pl-12 pr-10 !py-3.5">
+            <input type="text" id="search-input" oninput="render()" placeholder="Быстрый поиск записи..." class="ios-input pl-12 pr-10 !py-3.5">
             <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-sm"></i>
             <button onclick="clearSearch()" id="clear-search-btn" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-white/40 active:text-white">
                 <i class="fa-solid fa-circle-xmark"></i>
@@ -280,19 +307,22 @@
     </div>
 
     <div class="mb-3 flex items-center justify-between fade-in-up" style="animation-delay: 0.3s;">
-        <h2 class="text-md font-bold tracking-tight text-white/60 uppercase text-xs tracking-widest pl-1">Список клиентов</h2>
+        <h2 class="text-md font-bold tracking-tight text-white/60 uppercase text-xs tracking-widest pl-1">Предстоящие осмотры</h2>
     </div>
     
     <div id="clients-list" class="space-y-3">
         </div>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3.5 rounded-2xl shadow-xl font-semibold text-sm transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-2.5">
+    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3.5 rounded-2xl shadow-xl font-semibold text-sm transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-2.5 w-[90%] max-w-xs text-center justify-center">
         <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
         <span id="toast-message">Ошибка</span>
     </div>
 
     <script>
-        let clients = JSON.parse(localStorage.getItem('dtp_clients')) || [];
+        let inspections = JSON.parse(localStorage.getItem('dtp_inspections')) || [];
+
+        // Постоянный адрес осмотра
+        const INSPECTION_ADDRESS = "ул. Карпинского, д. 39";
 
         // Авто-форматирование телефона при вводе (+7 (999) 000-00-00)
         document.getElementById('phone').addEventListener('input', function (e) {
@@ -362,37 +392,80 @@
             render();
         }
 
-        // Подсчет добавленных сегодня клиентов
+        // Подсчет добавленных сегодня записей
         function getTodayCount() {
             const todayStr = new Date().toDateString();
-            return clients.filter(c => new Date(c.date).toDateString() === todayStr).length;
+            return inspections.filter(c => new Date(c.createdAt).toDateString() === todayStr).length;
         }
 
+        // Красивый вывод даты для интерфейса
         function formatDate(isoString) {
+            if(!isoString) return 'Не указана';
             const date = new Date(isoString);
             return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
         }
 
-        function saveClient() {
+        // Генерация строгого текста СМС БЕЗ ЭМОДЗИ И МАРКЕРОВ
+        function generateSMSText(name, dateStr, car, plate) {
+            return `Здравствуйте, ${name}! Ваша запись на осмотр автомобиля после ДТП успешно подтверждена.\n\nДата и время: ${formatDate(dateStr)}\nАвтомобиль: ${car}\nГос. номер: ${plate}\nАдрес проведения: ${INSPECTION_ADDRESS}\n\nПросим Вас приезжать к назначенному времени. Если Ваши планы изменятся, пожалуйста, сообщите нам заранее.`;
+        }
+
+        // Открытие стандартного приложения СМС на iPhone
+        function triggerAppleSMS(phone, text) {
+            const cleanPhone = phone.replace(/\D/g, '');
+            const smsUrl = `sms:+${cleanPhone}&body=${encodeURIComponent(text)}`;
+            
+            showToast('Открываем SMS...', 'success');
+            setTimeout(() => {
+                window.location.href = smsUrl;
+            }, 600);
+        }
+
+        // Логика переключения статуса приехал/нет
+        function cycleStatus(id) {
+            const index = inspections.findIndex(c => c.id === id);
+            if (index === -1) return;
+            
+            const currentStatus = inspections[index].status || 'pending';
+            let nextStatus = 'pending';
+            
+            if (currentStatus === 'pending') nextStatus = 'arrived';
+            else if (currentStatus === 'arrived') nextStatus = 'missed';
+            else if (currentStatus === 'missed') nextStatus = 'pending';
+            
+            inspections[index].status = nextStatus;
+            localStorage.setItem('dtp_inspections', JSON.stringify(inspections));
+            
+            if (navigator.vibrate) navigator.vibrate(40);
+            render();
+        }
+
+        // Логика создания записи, сохранения и отправки СМС
+        function saveAndSendSMS() {
+            const dateInput = document.getElementById('inspectionDate');
             const nameInput = document.getElementById('name');
             const phoneInput = document.getElementById('phone');
             const carInput = document.getElementById('carMake');
             const plateInput = document.getElementById('plate');
             
+            const inspectionDate = dateInput.value;
             const name = nameInput.value.trim();
             const phone = phoneInput.value.trim();
-            const car = carInput.value.trim();
-            const plate = plateInput.value.trim().toUpperCase();
+            const car = carInput.value.trim() || 'Не указана';
+            const plate = plateInput.value.trim().toUpperCase() || '—';
             
-            if(!name || !phone) {
+            if(!inspectionDate || !name || !phone) {
                 const card = nameInput.closest('.glass-card');
                 card.style.transform = 'translateX(-10px)';
                 setTimeout(() => card.style.transform = 'translateX(10px)', 50);
                 setTimeout(() => card.style.transform = 'translateX(0)', 100);
                 
-                if(!name) {
+                if(!inspectionDate) {
+                    dateInput.focus();
+                    showToast('Укажите дату осмотра!');
+                } else if(!name) {
                     nameInput.focus();
-                    showToast('Заполните поле Имя!');
+                    showToast('Заполните ФИО клиента!');
                 } else {
                     phoneInput.focus();
                     showToast('Заполните номер телефона!');
@@ -400,31 +473,44 @@
                 return;
             }
             
-            const newClient = { 
+            // Формируем новую запись для базы данных
+            const newInspection = { 
                 id: Date.now(), 
+                inspectionDate,
                 name, 
                 phone, 
-                car: car || 'Не указано', 
-                plate: plate || '—', 
-                date: new Date().toISOString() 
+                car, 
+                plate, 
+                status: 'pending',
+                createdAt: new Date().toISOString() 
             };
             
-            clients.unshift(newClient);
-            localStorage.setItem('dtp_clients', JSON.stringify(clients));
+            inspections.unshift(newInspection);
+            localStorage.setItem('dtp_inspections', JSON.stringify(inspections));
             
-            // Сброс полей
+            // Генерируем текст сообщения
+            const smsMessage = generateSMSText(name, inspectionDate, car, plate);
+
+            // Очистка полей ввода
+            dateInput.value = '';
             nameInput.value = '';
             phoneInput.value = '';
             carInput.value = '';
             plateInput.value = '';
             
-            nameInput.blur();
-            phoneInput.blur();
-            carInput.blur();
-            plateInput.blur();
-            
-            showToast('Клиент добавлен в базу!', 'success');
+            // Вызов СМС приложения
+            triggerAppleSMS(phone, smsMessage);
+
             render();
+        }
+
+        // Функция повторной отправки СМС из списка сохраненных клиентов
+        function resendSMS(id) {
+            const item = inspections.find(c => c.id === id);
+            if(!item) return;
+
+            const smsMessage = generateSMSText(item.name, item.inspectionDate, item.car, item.plate);
+            triggerAppleSMS(item.phone, smsMessage);
         }
 
         function render() {
@@ -433,49 +519,58 @@
             const clearBtn = document.getElementById('clear-search-btn');
             const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
 
-            // Управление крестиком сброса
             if (query) {
                 clearBtn.classList.remove('hidden');
             } else {
                 clearBtn.classList.add('hidden');
             }
 
-            // Фильтрация
-            const filteredClients = clients.filter(c => {
+            // Фильтрация поиска
+            const filtered = inspections.filter(c => {
                 return c.name.toLowerCase().includes(query) || 
                        c.phone.includes(query) || 
                        c.car.toLowerCase().includes(query) || 
                        c.plate.toLowerCase().includes(query);
             });
             
-            // Обновление статистики
-            const countEl = document.getElementById('count-all');
-            const countTodayEl = document.getElementById('count-today');
-            
-            countEl.innerText = clients.length;
-            countTodayEl.innerText = getTodayCount();
+            // Обновление цифр статистики
+            document.getElementById('count-all').innerText = inspections.length;
+            document.getElementById('count-today').innerText = getTodayCount();
 
-            if (filteredClients.length === 0) {
+            if (filtered.length === 0) {
                 list.innerHTML = `<p class="text-center text-white/20 text-sm py-10 fade-in-up">
-                    ${query ? 'Ничего не найдено' : 'База клиентов пуста'}
+                    ${query ? 'Ничего не найдено' : 'Записей на осмотр нет'}
                 </p>`;
                 return;
             }
 
-            list.innerHTML = filteredClients.map((c, index) => {
-                // Извлечение цифр из номера телефона
-                const rawPhone = c.phone.replace(/\D/g, '');
+            list.innerHTML = filtered.map((c, index) => {
+                // Настройка стилей для кнопки статуса
+                let statusClass = 'bg-white/5 text-white/60 border-white/10';
+                let statusIcon = 'fa-regular fa-clock';
+                let statusText = 'Ожидается';
+                
+                if (c.status === 'arrived') {
+                    statusClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
+                    statusIcon = 'fa-solid fa-circle-check';
+                    statusText = 'Приехал';
+                } else if (c.status === 'missed') {
+                    statusClass = 'bg-red-500/10 text-red-400 border-red-500/20';
+                    statusIcon = 'fa-solid fa-circle-xmark';
+                    statusText = 'Не приехал';
+                }
 
                 return `
                 <div id="client-${c.id}" class="glass-card p-4 fade-in-up flex flex-col gap-4" style="animation-delay: ${Math.min(index * 0.05, 0.4)}s">
                     <div class="flex justify-between items-start">
                         <div class="flex items-center gap-3 min-w-0">
                             <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-950/40 flex items-center justify-center text-red-400 font-bold flex-shrink-0 shadow-inner border border-red-500/20">
-                                ${c.name.charAt(0).toUpperCase()}
+                                <i class="fa-regular fa-envelope text-xs"></i>
                             </div>
                             <div class="min-w-0">
+                                <p class="text-xs text-red-400 font-bold uppercase tracking-wider mb-0.5">${formatDate(c.inspectionDate)}</p>
                                 <p class="font-bold text-[16px] text-white truncate pr-2">${c.name}</p>
-                                <a href="tel:${c.phone}" class="text-xs text-red-400/90 font-medium hover:underline transition-all block mt-0.5">${c.phone}</a>
+                                <a href="tel:${c.phone}" class="text-xs text-white/50 font-medium hover:underline transition-all block mt-0.5">${c.phone}</a>
                             </div>
                         </div>
                         
@@ -483,9 +578,9 @@
                             <a href="tel:${c.phone}" class="action-btn call-btn" title="Позвонить">
                                 <i class="fa-solid fa-phone"></i>
                             </a>
-                            <a href="https://max.ru/${rawPhone}" target="_blank" class="action-btn max-btn" title="Открыть в MAX">
-                                <i class="fa-solid fa-m"></i>
-                            </a>
+                            <button onclick="resendSMS(${c.id})" class="action-btn sms-btn" title="Отправить СМС">
+                                <i class="fa-solid fa-comment-sms"></i>
+                            </button>
                             <button onclick="animateDelete(${c.id})" class="action-btn delete-btn" title="Удалить">
                                 <i class="fa-solid fa-trash-can"></i>
                             </button>
@@ -493,9 +588,9 @@
                     </div>
                     
                     <div class="flex items-center justify-between border-t border-white/5 pt-3 text-[12px]">
-                        <div class="flex items-center gap-2">
+                        <div class="flex items-center gap-2 min-w-0">
                             <i class="fa-solid fa-car-side text-white/30 text-[11px]"></i>
-                            <span class="text-white/60 font-medium truncate max-w-[100px]">${c.car}</span>
+                            <span class="text-white/60 font-medium truncate max-w-[110px]">${c.car}</span>
                             
                             ${c.plate !== '—' && c.plate !== '' ? `
                                 <div class="plate-badge ml-1">
@@ -504,17 +599,17 @@
                             ` : ''}
                         </div>
                         
-                        <div class="flex items-center gap-1.5 text-white/30">
-                            <i class="fa-regular fa-clock text-[10px]"></i>
-                            <span>${formatDate(c.date)}</span>
-                        </div>
+                        <button onclick="cycleStatus(${c.id})" class="px-2.5 py-1 rounded-lg border text-[11px] font-semibold flex items-center gap-1.5 transition-all active:scale-95 ${statusClass}">
+                            <i class="${statusIcon} text-[10px]"></i>
+                            <span>${statusText}</span>
+                        </button>
                     </div>
                 </div>
                 `;
             }).join('');
         }
 
-        // Анимация стильного удаления
+        // Анимация удаления
         function animateDelete(id) {
             if (navigator.vibrate) navigator.vibrate(60);
             
@@ -523,41 +618,44 @@
                 card.classList.add('swipe-out');
                 
                 setTimeout(() => {
-                    clients = clients.filter(c => c.id !== id);
-                    localStorage.setItem('dtp_clients', JSON.stringify(clients));
-                    showToast('Клиент удален', 'success');
+                    inspections = inspections.filter(c => c.id !== id);
+                    localStorage.setItem('dtp_inspections', JSON.stringify(inspections));
+                    showToast('Запись удалена', 'success');
                     render();
                 }, 300);
             }
         }
 
-        // Экспорт таблицы
+        // Экспорт таблицы Excel
         function exportExcel() {
-            if (clients.length === 0) return showToast('Нет данных для экспорта!');
-            
-            const month = new Date().getMonth();
-            const filtered = clients.filter(c => new Date(c.date).getMonth() === month);
-            
-            if (filtered.length === 0) return showToast('В этом месяце еще нет добавленных клиентов!');
+            if (inspections.length === 0) return showToast('Нет данных для экспорта!');
 
-            const ws = XLSX.utils.json_to_sheet(filtered.map(c => ({
-                'Имя': c.name,
-                'Телефон': c.phone,
-                'Марка авто': c.car,
-                'Гос. номер': c.plate,
-                'Дата добавления': formatDate(c.date)
-            })));
+            const ws = XLSX.utils.json_to_sheet(inspections.map(c => {
+                let statusText = 'Ожидается';
+                if (c.status === 'arrived') statusText = 'Приехал';
+                if (c.status === 'missed') statusText = 'Не приехал';
+                
+                return {
+                    'Дата осмотра': formatDate(c.inspectionDate),
+                    'ФИО клиента': c.name,
+                    'Телефон': c.phone,
+                    'Марка авто': c.car,
+                    'Гос. номер': c.plate,
+                    'Статус': statusText,
+                    'Адрес осмотра': INSPECTION_ADDRESS,
+                    'Дата создания записи': formatDate(c.createdAt)
+                };
+            }));
             
             const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Клиенты");
+            XLSX.utils.book_append_sheet(wb, ws, "Осмотры");
             
-            // Название месяца в имя файла
             const currentMonthName = new Date().toLocaleString('ru-RU', { month: 'long' });
-            XLSX.writeFile(wb, `Клиенты_ДТП_за_${currentMonthName}.xlsx`);
-            showToast('Файл скачан!', 'success');
+            XLSX.writeFile(wb, `График_Осмотров_за_${currentMonthName}.xlsx`);
+            showToast('Файл Excel скачан!', 'success');
         }
 
-        // Старт
+        // Инициализация при старте
         render();
     </script>
 </body>

@@ -8,7 +8,7 @@
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <meta name="apple-mobile-web-app-title" content="ДТП СЕРВИС">
-    <link rel="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b5/1f/53/b51f536f-0c44-1d74-e4b1-ac6ed2352096/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg">
+    <link class="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b5/1f/53/b51f536f-0c44-1d74-e4b1-ac6ed2352096/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg">
     
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -152,13 +152,13 @@
             background: var(--app-red);
             border-color: var(--app-red);
         }
-        .wa-btn {
-            background: rgba(37, 211, 102, 0.08);
-            color: #25D366;
-            border: 1px solid rgba(37, 211, 102, 0.15);
+        .max-btn {
+            background: rgba(255, 59, 48, 0.1);
+            color: #FF3B30;
+            border: 1px solid rgba(255, 59, 48, 0.25);
         }
-        .wa-btn:active {
-            background: #25D366;
+        .max-btn:active {
+            background: #FF3B30;
             color: #fff;
         }
         .delete-btn {
@@ -463,9 +463,8 @@
             }
 
             list.innerHTML = filteredClients.map((c, index) => {
-                // Преобразование номера в числовую строку для ссылки в вацап
+                // Извлечение цифр из номера телефона
                 const rawPhone = c.phone.replace(/\D/g, '');
-                const waPhone = rawPhone.startsWith('8') ? '7' + rawPhone.slice(1) : rawPhone;
 
                 return `
                 <div id="client-${c.id}" class="glass-card p-4 fade-in-up flex flex-col gap-4" style="animation-delay: ${Math.min(index * 0.05, 0.4)}s">
@@ -484,8 +483,8 @@
                             <a href="tel:${c.phone}" class="action-btn call-btn" title="Позвонить">
                                 <i class="fa-solid fa-phone"></i>
                             </a>
-                            <a href="https://wa.me/${waPhone}" target="_blank" class="action-btn wa-btn" title="Написать в WhatsApp">
-                                <i class="fa-brands fa-whatsapp"></i>
+                            <a href="https://max.ru/${rawPhone}" target="_blank" class="action-btn max-btn" title="Открыть в MAX">
+                                <i class="fa-solid fa-m"></i>
                             </a>
                             <button onclick="animateDelete(${c.id})" class="action-btn delete-btn" title="Удалить">
                                 <i class="fa-solid fa-trash-can"></i>

@@ -1,662 +1,405 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <title>ДТП СЕРВИС — Осмотры</title>
-    
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="ДТП СЕРВИС">
-    <link class="apple-touch-icon" href="https://is1-ssl.mzstatic.com/image/thumb/Purple221/v4/b5/1f/53/b51f536f-0c44-1d74-e4b1-ac6ed2352096/AppIcon-0-0-1x_U007emarketing-0-11-0-85-220.png/512x512bb.jpg">
-    
-    <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    
-    <style>
-        *, ::before, ::after {
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#2563eb">
+  <title>Маршрутный Лист</title>
+  
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Маршрутный Лист","short_name":"Маршруты","start_url":".","display":"standalone","background_color":"#f8fafc","theme_color":"#2563eb","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/713/713311.png","sizes":"512x512","type":"image/png"}]}'>
 
-        :root {
-            --app-red: #FF3B30; /* Яркий iOS Красный */
-            --app-red-hover: #E03027;
-            --app-red-glow: rgba(255, 59, 48, 0.2);
-            --glass-bg: rgba(18, 18, 18, 0.75);
-            --glass-border: rgba(255, 255, 255, 0.08);
-            --glass-border-active: rgba(255, 59, 48, 0.4);
-        }
-        
-        body { 
-            background-color: #000; 
-            color: #fff; 
-            font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Segoe UI", Roboto, sans-serif;
-            overflow-x: hidden;
-            -webkit-tap-highlight-color: transparent;
-            padding-bottom: calc(5rem + env(safe-area-inset-bottom));
-            padding-top: calc(2rem + env(safe-area-inset-top));
-        }
+  <style>
+    :root {
+      --primary: #2563eb;
+      --primary-hover: #1d4ed8;
+      --bg: #f8fafc;
+      --card-bg: #ffffff;
+      --text: #1e293b;
+      --border: #e2e8f0;
+      --danger: #ef4444;
+    }
 
-        /* Анимированный фон (Aurora) в черно-красных тонах */
-        .ambient-bg {
-            position: fixed;
-            top: 0; left: 0; width: 100vw; height: 100vh;
-            z-index: -1;
-            overflow: hidden;
-            background: #000;
-        }
-        .ambient-blob {
-            position: absolute;
-            border-radius: 50%;
-            filter: blur(100px);
-            opacity: 0.25;
-            animation: float 14s infinite ease-in-out alternate;
-        }
-        .blob-1 { top: -10%; left: -10%; width: 60vw; height: 60vw; background: var(--app-red); }
-        .blob-2 { bottom: 5%; right: -10%; width: 70vw; height: 70vw; background: #660000; animation-delay: -4s; }
-        .blob-3 { top: 35%; left: 25%; width: 45vw; height: 45vw; background: #2b0000; animation-delay: -8s; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+    }
 
-        @keyframes float {
-            0% { transform: translate(0, 0) scale(1); }
-            100% { transform: translate(12%, 12%) scale(1.15); }
-        }
+    body {
+      background-color: var(--bg);
+      color: var(--text);
+      padding: 16px;
+      display: flex;
+      justify-content: center;
+    }
 
-        /* Glassmorphism Карточки */
-        .glass-card {
-            background: var(--glass-bg);
-            backdrop-filter: blur(24px);
-            -webkit-backdrop-filter: blur(24px);
-            border: 1px solid var(--glass-border);
-            border-radius: 24px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
-            transition: transform 0.2s cubic-bezier(0.25, 1, 0.5, 1), border-color 0.3s ease, box-shadow 0.3s ease;
-        }
-        .glass-card:hover {
-            border-color: var(--glass-border-active);
-        }
+    .container {
+      width: 100%;
+      max-width: 800px;
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
 
-        /* Поля ввода (Инпуты) */
-        .ios-input {
-            width: 100%;
-            max-width: 100%;
-            display: block;
-            background: rgba(0, 0, 0, 0.4);
-            border: 1px solid rgba(255, 255, 255, 0.06);
-            border-radius: 16px;
-            padding: 16px 20px;
-            color: #fff;
-            font-size: 16px;
-            outline: none;
-            transition: all 0.25s ease;
-            -webkit-appearance: none;
-        }
-        .ios-input::placeholder { color: rgba(255, 255, 255, 0.35); }
-        .ios-input:focus {
-            background: rgba(255, 255, 255, 0.05);
-            border-color: rgba(255, 59, 48, 0.5);
-            box-shadow: 0 0 0 4px var(--app-red-glow);
-        }
+    /* Анимации */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
 
-        /* Фикс ухода даты за поля на iPhone */
-        input[type="datetime-local"] {
-            min-height: 56px;
-            position: relative;
-        }
-        input[type="datetime-local"]::-webkit-calendar-picker-indicator {
-            filter: invert(1);
-            opacity: 0.6;
-            position: absolute;
-            right: 16px;
-            top: 50%;
-            transform: translateY(-50%);
-            scale: 1.2;
-        }
+    .animated-card {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
 
-        .input-plate {
-            text-transform: uppercase;
-            letter-spacing: 1px;
-            font-weight: 600;
-        }
+    .card {
+      background: var(--card-bg);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -2px rgba(0, 0, 0, 0.05);
+      border: 1px solid var(--border);
+    }
 
-        /* Кнопка отправки записи */
-        .btn-magic {
-            background: linear-gradient(135deg, var(--app-red), #990000);
-            color: white;
-            padding: 16px;
-            border-radius: 16px;
-            font-weight: 600;
-            font-size: 16px;
-            box-shadow: 0 8px 24px rgba(255, 59, 48, 0.25);
-            transition: all 0.2s ease;
-            position: relative;
-            overflow: hidden;
-            border: none;
-        }
-        .btn-magic::after {
-            content: '';
-            position: absolute;
-            top: 0; left: -100%; width: 50%; height: 100%;
-            background: linear-gradient(to right, transparent, rgba(255,255,255,0.25), transparent);
-            transform: skewX(-20deg);
-            animation: shimmer 5s infinite;
-        }
-        @keyframes shimmer {
-            0% { left: -100%; }
-            15% { left: 200%; }
-            100% { left: 200%; }
-        }
-        .btn-magic:active {
-            transform: scale(0.97);
-            box-shadow: 0 4px 12px rgba(255, 59, 48, 0.15);
-        }
+    h1, h2 {
+      margin-bottom: 16px;
+      color: #0f172a;
+    }
 
-        /* Кнопки быстрых действий на карточке */
-        .action-btn {
-            width: 40px;
-            height: 40px;
-            border-radius: 12px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            transition: all 0.2s ease;
-            font-size: 14px;
-        }
-        .action-btn:active {
-            transform: scale(0.9);
-        }
-        .call-btn {
-            background: rgba(255, 255, 255, 0.05);
-            color: #fff;
-            border: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        .call-btn:active {
-            background: var(--app-red);
-            border-color: var(--app-red);
-        }
-        .sms-btn {
-            background: rgba(255, 59, 48, 0.1);
-            color: #FF3B30;
-            border: 1px solid rgba(255, 59, 48, 0.25);
-        }
-        .sms-btn:active {
-            background: #FF3B30;
-            color: #fff;
-        }
-        .delete-btn {
-            background: rgba(255, 59, 48, 0.08);
-            color: var(--app-red);
-            border: 1px solid rgba(255, 59, 48, 0.15);
-        }
-        .delete-btn:active {
-            background: var(--app-red);
-            color: #fff;
-        }
+    .grid-form {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 12px;
+      margin-bottom: 16px;
+    }
 
-        /* Российский госномер стиль */
-        .plate-badge {
-            background: #f5f5f5;
-            color: #000;
-            border: 1.5px solid #111;
-            box-shadow: inset 0 1px 1px #fff, 0 2px 4px rgba(0,0,0,0.3);
-            border-radius: 4px;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 1px 6px;
-            display: inline-flex;
-            align-items: center;
-        }
+    .form-group {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
 
-        /* Анимации */
-        .fade-in-up {
-            animation: fadeInUp 0.5s cubic-bezier(0.25, 1, 0.5, 1) forwards;
-            opacity: 0;
-            transform: translateY(15px);
-        }
-        @keyframes fadeInUp {
-            to { opacity: 1; transform: translateY(0); }
-        }
+    label {
+      font-size: 0.875rem;
+      font-weight: 600;
+      color: #475569;
+    }
 
-        .swipe-out {
-            animation: swipeOutLeft 0.3s cubic-bezier(0.55, 0.085, 0.68, 0.53) forwards;
-        }
-        @keyframes swipeOutLeft {
-            to { opacity: 0; transform: translateX(-100%); }
-        }
-    </style>
+    input {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      font-size: 1rem;
+      outline: none;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+
+    input:focus {
+      border-color: var(--primary);
+      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+    }
+
+    .btn-group {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    button {
+      padding: 10px 18px;
+      font-size: 0.95rem;
+      font-weight: 600;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      transition: background-color 0.2s, transform 0.1s;
+    }
+
+    button:active {
+      transform: scale(0.98);
+    }
+
+    .btn-primary { background: var(--primary); color: white; }
+    .btn-primary:hover { background: var(--primary-hover); }
+
+    .btn-print { background: #059669; color: white; }
+    .btn-print:hover { background: #047857; }
+
+    .btn-danger { background: #fee2e2; color: var(--danger); padding: 6px 12px; }
+    .btn-danger:hover { background: #fecaca; }
+
+    /* Таблица точек */
+    .table-wrapper {
+      overflow-x: auto;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    th {
+      background-color: #f1f5f9;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+    }
+
+    .print-header {
+      display: none;
+    }
+
+    /* Настройки для ПЕЧАТИ */
+    @media print {
+      body {
+        background: white;
+        color: black;
+        padding: 0;
+      }
+
+      .no-print {
+        display: none !important;
+      }
+
+      .card {
+        box-shadow: none;
+        border: none;
+        padding: 0;
+      }
+
+      .print-header {
+        display: block;
+        margin-bottom: 20px;
+        border-bottom: 2px solid #000;
+        padding-bottom: 10px;
+      }
+
+      .print-info {
+        display: flex;
+        justify-content: space-between;
+        font-size: 1.2rem;
+        font-weight: bold;
+        margin-top: 10px;
+      }
+
+      table {
+        border: 1px solid #000;
+      }
+
+      th, td {
+        border: 1px solid #000;
+        padding: 10px;
+        color: black;
+      }
+
+      th {
+        background-color: #eee !important;
+        -webkit-print-color-adjust: exact;
+      }
+
+      .print-signature {
+        margin-top: 40px;
+        display: flex;
+        justify-content: space-between;
+      }
+    }
+  </style>
 </head>
-<body class="max-w-md mx-auto px-4">
+<body>
 
-    <div class="ambient-bg">
-        <div class="ambient-blob blob-1"></div>
-        <div class="ambient-blob blob-2"></div>
-        <div class="ambient-blob blob-3"></div>
-    </div>
-
-    <header class="px-2 mb-6 mt-4 fade-in-up" style="animation-delay: 0.1s;">
-        <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-xl bg-gradient-to-br from-red-500 to-red-900 flex items-center justify-center shadow-lg shadow-red-600/20">
-                <i class="fa-solid fa-calendar-check text-white text-lg"></i>
-            </div>
-            <div>
-                <h1 class="text-[28px] font-extrabold tracking-tight text-white/95">ДТП СЕРВИС</h1>
-                <p class="text-white/40 text-xs font-semibold uppercase tracking-widest mt-0.5">Запись на осмотр</p>
-            </div>
-        </div>
-    </header>
-
-    <div class="grid grid-cols-2 gap-3 mb-6 fade-in-up" style="animation-delay: 0.15s;">
-        <div class="glass-card p-4 flex flex-col justify-between">
-            <p class="text-white/30 text-[10px] uppercase font-bold tracking-wider mb-2">Статистика записей</p>
-            <div class="flex items-center justify-between">
-                <div>
-                    <p class="text-[9px] text-white/40 uppercase">Всего</p>
-                    <p class="text-2xl font-bold tracking-tight text-white" id="count-all">0</p>
-                </div>
-                <div class="h-8 w-[1px] bg-white/10"></div>
-                <div>
-                    <p class="text-[9px] text-red-400 uppercase">Сегодня</p>
-                    <p class="text-2xl font-bold tracking-tight text-red-500" id="count-today">0</p>
-                </div>
-            </div>
-        </div>
-        
-        <button onclick="exportExcel()" class="glass-card p-4 flex flex-col items-center justify-center active:scale-95 transition-transform group relative overflow-hidden">
-            <div class="absolute inset-0 bg-gradient-to-br from-red-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity"></div>
-            <div class="w-10 h-10 rounded-full bg-red-500/10 flex items-center justify-center mb-1 group-active:bg-red-500/30 transition-colors border border-red-500/20">
-                <i class="fa-solid fa-arrow-up-right-from-square text-red-400 text-sm"></i>
-            </div>
-            <span class="text-[10px] font-bold uppercase tracking-wider text-red-400">Экспорт Excel</span>
-        </button>
-    </div>
-
-    <section class="mb-6 fade-in-up" style="animation-delay: 0.2s;">
-        <div class="glass-card p-5 space-y-3 relative overflow-hidden">
-            <div class="absolute top-0 left-0 w-full h-[2px] bg-gradient-to-r from-red-600/30 via-red-500 to-red-600/30"></div>
-            
-            <div class="space-y-3">
-                <div class="w-full">
-                    <label class="block text-[11px] uppercase font-bold tracking-wider text-white/40 mb-1.5 pl-1">Дата и время осмотра</label>
-                    <input type="datetime-local" id="inspectionDate" class="ios-input">
-                </div>
-
-                <input type="text" id="name" placeholder="ФИО клиента" class="ios-input">
-                
-                <input type="tel" id="phone" placeholder="+7 (999) 000-00-00" class="ios-input">
-                
-                <div class="grid grid-cols-2 gap-3">
-                    <input type="text" id="carMake" placeholder="Марка авто" class="ios-input !text-[14px] !p-3.5">
-                    <input type="text" id="plate" placeholder="Гос. номер авто" class="ios-input input-plate !text-[14px] !p-3.5">
-                </div>
-            </div>
-            
-            <button onclick="saveAndSendSMS()" class="w-full btn-magic flex items-center justify-center gap-2 mt-2">
-                <i class="fa-solid fa-comment-sms text-sm"></i>
-                Записать на осмотр
-            </button>
-        </div>
-    </section>
-
-    <div class="mb-5 fade-in-up" style="animation-delay: 0.25s;">
-        <div class="relative">
-            <input type="text" id="search-input" oninput="render()" placeholder="Быстрый поиск записи..." class="ios-input pl-12 pr-10 !py-3.5">
-            <i class="fa-solid fa-magnifying-glass absolute left-4 top-1/2 -translate-y-1/2 text-white/30 text-sm"></i>
-            <button onclick="clearSearch()" id="clear-search-btn" class="hidden absolute right-4 top-1/2 -translate-y-1/2 text-white/40 active:text-white">
-                <i class="fa-solid fa-circle-xmark"></i>
-            </button>
-        </div>
-    </div>
-
-    <div class="mb-3 flex items-center justify-between fade-in-up" style="animation-delay: 0.3s;">
-        <h2 class="text-md font-bold tracking-tight text-white/60 uppercase text-xs tracking-widest pl-1">Предстоящие осмотры</h2>
-    </div>
+  <div class="container">
     
-    <div id="clients-list" class="space-y-3">
+    <div class="card animated-card no-print">
+      <h1>Маршрутизатор</h1>
+      
+      <div class="grid-form">
+        <div class="form-group">
+          <label for="driver">Фамилия водителя</label>
+          <input type="text" id="driver" placeholder="Иванов И.И.">
         </div>
+        <div class="form-group">
+          <label for="date">Дата</label>
+          <input type="date" id="date">
+        </div>
+      </div>
 
-    <div id="toast" class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-red-600 text-white px-6 py-3.5 rounded-2xl shadow-xl font-semibold text-sm transition-all duration-300 transform translate-y-20 opacity-0 z-50 flex items-center gap-2.5 w-[90%] max-w-xs text-center justify-center">
-        <i id="toast-icon" class="fa-solid fa-circle-exclamation"></i>
-        <span id="toast-message">Ошибка</span>
+      <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--border);">
+
+      <h2>Добавить точку</h2>
+      <div class="grid-form">
+        <div class="form-group" style="grid-column: span 2;">
+          <label for="pointAddress">Адрес / Наименование точки</label>
+          <input type="text" id="pointAddress" placeholder="ул. Ленина, д. 10">
+        </div>
+        <div class="form-group">
+          <label for="waybillsCount">Кол-во накладных</label>
+          <input type="number" id="waybillsCount" min="1" value="1">
+        </div>
+      </div>
+
+      <div class="btn-group">
+        <button class="btn-primary" onclick="addPoint()">+ Добавить точку</button>
+        <button class="btn-print" onclick="window.print()">🖨️ Печать маршрутного листа</button>
+      </div>
     </div>
 
-    <script>
-        let inspections = JSON.parse(localStorage.getItem('dtp_inspections')) || [];
+    <div class="card animated-card">
+      
+      <div class="print-header">
+        <h1 style="text-align: center; margin-bottom: 10px;">МАРШРУТНЫЙ ЛИСТ</h1>
+        <div class="print-info">
+          <span>Водитель: <span id="printDriverText">—</span></span>
+          <span>Дата: <span id="printDateText">—</span></span>
+        </div>
+      </div>
 
-        // Постоянный адрес осмотра
-        const INSPECTION_ADDRESS = "ул. Карпинского, д. 39";
+      <h2>Точки маршрута</h2>
+      
+      <div class="table-wrapper">
+        <table id="routeTable">
+          <thead>
+            <tr>
+              <th style="width: 50px;">№</th>
+              <th>Точка назначения</th>
+              <th style="width: 150px; text-align: center;">Накладных (шт)</th>
+              <th class="no-print" style="width: 80px;">Действие</th>
+            </tr>
+          </thead>
+          <tbody id="pointsList">
+            </tbody>
+          <tfoot>
+            <tr style="font-weight: bold; background-color: #f8fafc;">
+              <td colspan="2" style="text-align: right;">Итого накладных:</td>
+              <td id="totalWaybills" style="text-align: center;">0</td>
+              <td class="no-print"></td>
+            </tr>
+          </tfoot>
+        </table>
+      </div>
 
-        // Авто-форматирование телефона при вводе (+7 (999) 000-00-00)
-        document.getElementById('phone').addEventListener('input', function (e) {
-            let input = e.target.value.replace(/\D/g, '');
-            if (!input) {
-                e.target.value = '';
-                return;
-            }
-            if (input.startsWith('7') || input.startsWith('8')) {
-                input = input.substring(1);
-            }
-            input = input.substring(0, 10);
-            
-            let formatted = '+7';
-            if (input.length > 0) {
-                formatted += ' (' + input.substring(0, 3);
-            }
-            if (input.length >= 4) {
-                formatted += ') ' + input.substring(3, 6);
-            }
-            if (input.length >= 7) {
-                formatted += '-' + input.substring(6, 8);
-            }
-            if (input.length >= 9) {
-                formatted += '-' + input.substring(8, 10);
-            }
-            e.target.value = formatted;
+      <div class="print-signature">
+        <div>Подпись водителя: __________________</div>
+        <div>Сдал: __________________</div>
+      </div>
+    </div>
+
+  </div>
+
+  <script>
+    // Установка сегодняшней даты по умолчанию
+    document.getElementById('date').valueAsDate = new Date();
+
+    let points = [];
+
+    function updatePrintHeader() {
+      const driver = document.getElementById('driver').value || '_________________';
+      const dateVal = document.getElementById('date').value;
+      
+      let formattedDate = '_________________';
+      if (dateVal) {
+        const [year, month, day] = dateVal.split('-');
+        formattedDate = `${day}.${month}.${year}`;
+      }
+
+      document.getElementById('printDriverText').textContent = driver;
+      document.getElementById('printDateText').textContent = formattedDate;
+    }
+
+    document.getElementById('driver').addEventListener('input', updatePrintHeader);
+    document.getElementById('date').addEventListener('change', updatePrintHeader);
+
+    function addPoint() {
+      const addressInput = document.getElementById('pointAddress');
+      const waybillsInput = document.getElementById('waybillsCount');
+
+      const address = addressInput.value.trim();
+      const count = parseInt(waybillsInput.value, 10);
+
+      if (!address) {
+        alert('Пожалуйста, введите адрес или наименование точки.');
+        return;
+      }
+
+      if (isNaN(count) || count < 1) {
+        alert('Укажите корректное количество накладных.');
+        return;
+      }
+
+      points.push({ address, count });
+      
+      addressInput.value = '';
+      waybillsInput.value = '1';
+      addressInput.focus();
+
+      renderPoints();
+    }
+
+    function removePoint(index) {
+      points.splice(index, 1);
+      renderPoints();
+    }
+
+    function renderPoints() {
+      const tbody = document.getElementById('pointsList');
+      tbody.innerHTML = '';
+
+      let totalCount = 0;
+
+      points.forEach((pt, idx) => {
+        totalCount += pt.count;
+        const tr = document.createElement('tr');
+        tr.className = 'animated-card';
+        tr.innerHTML = `
+          <td>${idx + 1}</td>
+          <td>${escapeHtml(pt.address)}</td>
+          <td style="text-align: center;">${pt.count}</td>
+          <td class="no-print">
+            <button class="btn-danger" onclick="removePoint(${idx})">✕</button>
+          </td>
+        `;
+        tbody.appendChild(tr);
+      });
+
+      document.getElementById('totalWaybills').textContent = totalCount;
+      updatePrintHeader();
+    }
+
+    function escapeHtml(str) {
+      return str.replace(/[&<>"']/g, function(m) {
+        return {
+          '&': '&amp;',
+          '<': '&lt;',
+          '>': '&gt;',
+          '"': '&quot;',
+          "'": '&#039;'
+        }[m];
+      });
+    }
+
+    // Регистрация Встроенного Service Worker для PWA (работа оффлайн)
+    if ('serviceWorker' in navigator) {
+      const swCode = `
+        const CACHE_NAME = 'route-pwa-v1';
+        self.addEventListener('install', (e) => {
+          self.skipWaiting();
         });
-
-        // Форсирование верхнего регистра на госномере
-        document.getElementById('plate').addEventListener('input', function(e) {
-            e.target.value = e.target.value.toUpperCase();
+        self.addEventListener('activate', (e) => {
+          self.clients.claim();
         });
-
-        // Красивое кастомное уведомление (Toast)
-        function showToast(message, type = 'error') {
-            const toast = document.getElementById('toast');
-            const toastMsg = document.getElementById('toast-message');
-            const toastIcon = document.getElementById('toast-icon');
-            
-            toastMsg.innerText = message;
-            
-            if (type === 'success') {
-                toast.classList.remove('bg-red-600');
-                toast.classList.add('bg-emerald-600');
-                toastIcon.className = 'fa-solid fa-circle-check';
-            } else {
-                toast.classList.remove('bg-emerald-600');
-                toast.classList.add('bg-red-600');
-                toastIcon.className = 'fa-solid fa-circle-exclamation';
-            }
-            
-            toast.classList.remove('translate-y-20', 'opacity-0');
-            toast.classList.add('translate-y-0', 'opacity-100');
-            
-            if (navigator.vibrate) navigator.vibrate([70, 40]);
-
-            setTimeout(() => {
-                toast.classList.remove('translate-y-0', 'opacity-100');
-                toast.classList.add('translate-y-20', 'opacity-0');
-            }, 3000);
-        }
-
-        // Очистить строку поиска
-        function clearSearch() {
-            document.getElementById('search-input').value = '';
-            render();
-        }
-
-        // Подсчет добавленных сегодня записей
-        function getTodayCount() {
-            const todayStr = new Date().toDateString();
-            return inspections.filter(c => new Date(c.createdAt).toDateString() === todayStr).length;
-        }
-
-        // Красивый вывод даты для интерфейса
-        function formatDate(isoString) {
-            if(!isoString) return 'Не указана';
-            const date = new Date(isoString);
-            return date.toLocaleDateString('ru-RU', { day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit' });
-        }
-
-        // Генерация строгого текста СМС БЕЗ ЭМОДЗИ И МАРКЕРОВ
-        function generateSMSText(name, dateStr, car, plate) {
-            return `Здравствуйте, ${name}! Ваша запись на осмотр автомобиля после ДТП успешно подтверждена.\n\nДата и время: ${formatDate(dateStr)}\nАвтомобиль: ${car}\nГос. номер: ${plate}\nАдрес проведения: ${INSPECTION_ADDRESS}\n\nПросим Вас приезжать к назначенному времени. Если Ваши планы изменятся, пожалуйста, сообщите нам заранее.`;
-        }
-
-        // Открытие стандартного приложения СМС на iPhone
-        function triggerAppleSMS(phone, text) {
-            const cleanPhone = phone.replace(/\D/g, '');
-            const smsUrl = `sms:+${cleanPhone}&body=${encodeURIComponent(text)}`;
-            
-            showToast('Открываем SMS...', 'success');
-            setTimeout(() => {
-                window.location.href = smsUrl;
-            }, 600);
-        }
-
-        // Логика переключения статуса приехал/нет
-        function cycleStatus(id) {
-            const index = inspections.findIndex(c => c.id === id);
-            if (index === -1) return;
-            
-            const currentStatus = inspections[index].status || 'pending';
-            let nextStatus = 'pending';
-            
-            if (currentStatus === 'pending') nextStatus = 'arrived';
-            else if (currentStatus === 'arrived') nextStatus = 'missed';
-            else if (currentStatus === 'missed') nextStatus = 'pending';
-            
-            inspections[index].status = nextStatus;
-            localStorage.setItem('dtp_inspections', JSON.stringify(inspections));
-            
-            if (navigator.vibrate) navigator.vibrate(40);
-            render();
-        }
-
-        // Логика создания записи, сохранения и отправки СМС
-        function saveAndSendSMS() {
-            const dateInput = document.getElementById('inspectionDate');
-            const nameInput = document.getElementById('name');
-            const phoneInput = document.getElementById('phone');
-            const carInput = document.getElementById('carMake');
-            const plateInput = document.getElementById('plate');
-            
-            const inspectionDate = dateInput.value;
-            const name = nameInput.value.trim();
-            const phone = phoneInput.value.trim();
-            const car = carInput.value.trim() || 'Не указана';
-            const plate = plateInput.value.trim().toUpperCase() || '—';
-            
-            if(!inspectionDate || !name || !phone) {
-                const card = nameInput.closest('.glass-card');
-                card.style.transform = 'translateX(-10px)';
-                setTimeout(() => card.style.transform = 'translateX(10px)', 50);
-                setTimeout(() => card.style.transform = 'translateX(0)', 100);
-                
-                if(!inspectionDate) {
-                    dateInput.focus();
-                    showToast('Укажите дату осмотра!');
-                } else if(!name) {
-                    nameInput.focus();
-                    showToast('Заполните ФИО клиента!');
-                } else {
-                    phoneInput.focus();
-                    showToast('Заполните номер телефона!');
-                }
-                return;
-            }
-            
-            // Формируем новую запись для базы данных
-            const newInspection = { 
-                id: Date.now(), 
-                inspectionDate,
-                name, 
-                phone, 
-                car, 
-                plate, 
-                status: 'pending',
-                createdAt: new Date().toISOString() 
-            };
-            
-            inspections.unshift(newInspection);
-            localStorage.setItem('dtp_inspections', JSON.stringify(inspections));
-            
-            // Генерируем текст сообщения
-            const smsMessage = generateSMSText(name, inspectionDate, car, plate);
-
-            // Очистка полей ввода
-            dateInput.value = '';
-            nameInput.value = '';
-            phoneInput.value = '';
-            carInput.value = '';
-            plateInput.value = '';
-            
-            // Вызов СМС приложения
-            triggerAppleSMS(phone, smsMessage);
-
-            render();
-        }
-
-        // Функция повторной отправки СМС из списка сохраненных клиентов
-        function resendSMS(id) {
-            const item = inspections.find(c => c.id === id);
-            if(!item) return;
-
-            const smsMessage = generateSMSText(item.name, item.inspectionDate, item.car, item.plate);
-            triggerAppleSMS(item.phone, smsMessage);
-        }
-
-        function render() {
-            const list = document.getElementById('clients-list');
-            const searchInput = document.getElementById('search-input');
-            const clearBtn = document.getElementById('clear-search-btn');
-            const query = searchInput ? searchInput.value.trim().toLowerCase() : '';
-
-            if (query) {
-                clearBtn.classList.remove('hidden');
-            } else {
-                clearBtn.classList.add('hidden');
-            }
-
-            // Фильтрация поиска
-            const filtered = inspections.filter(c => {
-                return c.name.toLowerCase().includes(query) || 
-                       c.phone.includes(query) || 
-                       c.car.toLowerCase().includes(query) || 
-                       c.plate.toLowerCase().includes(query);
-            });
-            
-            // Обновление цифр статистики
-            document.getElementById('count-all').innerText = inspections.length;
-            document.getElementById('count-today').innerText = getTodayCount();
-
-            if (filtered.length === 0) {
-                list.innerHTML = `<p class="text-center text-white/20 text-sm py-10 fade-in-up">
-                    ${query ? 'Ничего не найдено' : 'Записей на осмотр нет'}
-                </p>`;
-                return;
-            }
-
-            list.innerHTML = filtered.map((c, index) => {
-                // Настройка стилей для кнопки статуса
-                let statusClass = 'bg-white/5 text-white/60 border-white/10';
-                let statusIcon = 'fa-regular fa-clock';
-                let statusText = 'Ожидается';
-                
-                if (c.status === 'arrived') {
-                    statusClass = 'bg-emerald-500/10 text-emerald-400 border-emerald-500/20';
-                    statusIcon = 'fa-solid fa-circle-check';
-                    statusText = 'Приехал';
-                } else if (c.status === 'missed') {
-                    statusClass = 'bg-red-500/10 text-red-400 border-red-500/20';
-                    statusIcon = 'fa-solid fa-circle-xmark';
-                    statusText = 'Не приехал';
-                }
-
-                return `
-                <div id="client-${c.id}" class="glass-card p-4 fade-in-up flex flex-col gap-4" style="animation-delay: ${Math.min(index * 0.05, 0.4)}s">
-                    <div class="flex justify-between items-start">
-                        <div class="flex items-center gap-3 min-w-0">
-                            <div class="w-11 h-11 rounded-2xl bg-gradient-to-br from-red-500/20 to-red-950/40 flex items-center justify-center text-red-400 font-bold flex-shrink-0 shadow-inner border border-red-500/20">
-                                <i class="fa-regular fa-envelope text-xs"></i>
-                            </div>
-                            <div class="min-w-0">
-                                <p class="text-xs text-red-400 font-bold uppercase tracking-wider mb-0.5">${formatDate(c.inspectionDate)}</p>
-                                <p class="font-bold text-[16px] text-white truncate pr-2">${c.name}</p>
-                                <a href="tel:${c.phone}" class="text-xs text-white/50 font-medium hover:underline transition-all block mt-0.5">${c.phone}</a>
-                            </div>
-                        </div>
-                        
-                        <div class="flex items-center gap-1.5 flex-shrink-0">
-                            <a href="tel:${c.phone}" class="action-btn call-btn" title="Позвонить">
-                                <i class="fa-solid fa-phone"></i>
-                            </a>
-                            <button onclick="resendSMS(${c.id})" class="action-btn sms-btn" title="Отправить СМС">
-                                <i class="fa-solid fa-comment-sms"></i>
-                            </button>
-                            <button onclick="animateDelete(${c.id})" class="action-btn delete-btn" title="Удалить">
-                                <i class="fa-solid fa-trash-can"></i>
-                            </button>
-                        </div>
-                    </div>
-                    
-                    <div class="flex items-center justify-between border-t border-white/5 pt-3 text-[12px]">
-                        <div class="flex items-center gap-2 min-w-0">
-                            <i class="fa-solid fa-car-side text-white/30 text-[11px]"></i>
-                            <span class="text-white/60 font-medium truncate max-w-[110px]">${c.car}</span>
-                            
-                            ${c.plate !== '—' && c.plate !== '' ? `
-                                <div class="plate-badge ml-1">
-                                    <span class="text-[9px] font-bold tracking-wider">${c.plate}</span>
-                                </div>
-                            ` : ''}
-                        </div>
-                        
-                        <button onclick="cycleStatus(${c.id})" class="px-2.5 py-1 rounded-lg border text-[11px] font-semibold flex items-center gap-1.5 transition-all active:scale-95 ${statusClass}">
-                            <i class="${statusIcon} text-[10px]"></i>
-                            <span>${statusText}</span>
-                        </button>
-                    </div>
-                </div>
-                `;
-            }).join('');
-        }
-
-        // Анимация удаления
-        function animateDelete(id) {
-            if (navigator.vibrate) navigator.vibrate(60);
-            
-            const card = document.getElementById(`client-${id}`);
-            if(card) {
-                card.classList.add('swipe-out');
-                
-                setTimeout(() => {
-                    inspections = inspections.filter(c => c.id !== id);
-                    localStorage.setItem('dtp_inspections', JSON.stringify(inspections));
-                    showToast('Запись удалена', 'success');
-                    render();
-                }, 300);
-            }
-        }
-
-        // Экспорт таблицы Excel
-        function exportExcel() {
-            if (inspections.length === 0) return showToast('Нет данных для экспорта!');
-
-            const ws = XLSX.utils.json_to_sheet(inspections.map(c => {
-                let statusText = 'Ожидается';
-                if (c.status === 'arrived') statusText = 'Приехал';
-                if (c.status === 'missed') statusText = 'Не приехал';
-                
-                return {
-                    'Дата осмотра': formatDate(c.inspectionDate),
-                    'ФИО клиента': c.name,
-                    'Телефон': c.phone,
-                    'Марка авто': c.car,
-                    'Гос. номер': c.plate,
-                    'Статус': statusText,
-                    'Адрес осмотра': INSPECTION_ADDRESS,
-                    'Дата создания записи': formatDate(c.createdAt)
-                };
-            }));
-            
-            const wb = XLSX.utils.book_new();
-            XLSX.utils.book_append_sheet(wb, ws, "Осмотры");
-            
-            const currentMonthName = new Date().toLocaleString('ru-RU', { month: 'long' });
-            XLSX.writeFile(wb, `График_Осмотров_за_${currentMonthName}.xlsx`);
-            showToast('Файл Excel скачан!', 'success');
-        }
-
-        // Инициализация при старте
-        render();
-    </script>
+        self.addEventListener('fetch', (e) => {
+          e.respondWith(fetch(e.request).catch(() => caches.match(e.request)));
+        });
+      `;
+      const blob = new Blob([swCode], { type: 'application/javascript' });
+      const swUrl = URL.createObjectURL(blob);
+      navigator.serviceWorker.register(swUrl).catch(() => {});
+    }
+  </script>
 </body>
 </html>

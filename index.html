@@ -3,71 +3,86 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#2563eb">
+  <meta name="theme-color" content="#4f46e5">
   <title>Маршрутный Лист</title>
   
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Маршрутный Лист","short_name":"Маршруты","start_url":".","display":"standalone","background_color":"#f8fafc","theme_color":"#2563eb","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/713/713311.png","sizes":"512x512","type":"image/png"}]}'>
+  <link rel="manifest" href='data:application/manifest+json,{"name":"Маршрутный Лист","short_name":"Маршруты","start_url":".","display":"standalone","background_color":"#f3f4f6","theme_color":"#4f46e5","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/713/713311.png","sizes":"512x512","type":"image/png"}]}'>
 
   <style>
     :root {
-      --primary: #2563eb;
-      --bg: #f8fafc;
+      --primary: #4f46e5;
+      --primary-hover: #4338ca;
+      --bg: #f3f4f6;
       --card-bg: #ffffff;
-      --text: #1e293b;
-      --border: #e2e8f0;
+      --text: #1f2937;
+      --text-muted: #6b7280;
+      --border: #e5e7eb;
       --danger: #ef4444;
+      --danger-hover: #dc2626;
+      --success: #10b981;
+      --success-hover: #059669;
     }
 
     * {
       box-sizing: border-box;
       margin: 0;
       padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+      font-family: 'Segoe UI', Roboto, -apple-system, sans-serif;
     }
 
     body {
-      background-color: var(--bg);
+      background: linear-gradient(135deg, #eef2ff 0%, #f3f4f6 100%);
       color: var(--text);
-      padding: 16px;
+      padding: 24px 12px;
       display: flex;
       justify-content: center;
+      min-height: 100vh;
     }
 
     .container {
       width: 100%;
-      max-width: 900px;
+      max-width: 1100px;
       display: flex;
       flex-direction: column;
-      gap: 20px;
+      gap: 24px;
     }
 
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(8px); }
+    /* Анимации */
+    @keyframes slideDown {
+      from { opacity: 0; transform: translateY(-12px); }
       to { opacity: 1; transform: translateY(0); }
     }
 
-    .animated-card {
-      animation: fadeIn 0.25s ease-out forwards;
+    @keyframes popIn {
+      0% { opacity: 0; transform: scale(0.96); }
+      100% { opacity: 1; transform: scale(1); }
     }
 
     .card {
       background: var(--card-bg);
-      padding: 20px;
-      border-radius: 12px;
-      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-      border: 1px solid var(--border);
+      padding: 24px;
+      border-radius: 16px;
+      box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.01);
+      border: 1px solid rgba(255, 255, 255, 0.8);
+      animation: popIn 0.3s ease-out forwards;
     }
 
-    h1, h2 {
-      margin-bottom: 16px;
-      color: #0f172a;
+    h1 {
+      font-size: 1.5rem;
+      font-weight: 700;
+      color: #111827;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
     }
 
-    .grid-form {
+    /* Колоночная верстка формы */
+    .form-columns {
       display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 12px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 16px;
+      margin-bottom: 20px;
     }
 
     .form-group {
@@ -77,72 +92,142 @@
     }
 
     label {
-      font-size: 0.875rem;
+      font-size: 0.85rem;
       font-weight: 600;
-      color: #475569;
+      color: var(--text-muted);
+      text-transform: uppercase;
+      letter-spacing: 0.03em;
     }
 
     input, select {
-      padding: 10px 12px;
+      padding: 12px 14px;
       border: 1px solid var(--border);
-      border-radius: 8px;
-      font-size: 1rem;
+      border-radius: 10px;
+      font-size: 0.95rem;
       outline: none;
-      background-color: #fff;
+      background-color: #fafafa;
+      transition: all 0.2s ease;
+      width: 100%;
     }
 
     input:focus, select:focus {
       border-color: var(--primary);
-      box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      background-color: #fff;
+      box-shadow: 0 0 0 4px rgba(79, 70, 229, 0.12);
     }
 
     .btn-group {
       display: flex;
-      gap: 10px;
+      gap: 12px;
+      margin-top: 8px;
       flex-wrap: wrap;
     }
 
     button {
-      padding: 10px 18px;
+      padding: 12px 22px;
       font-size: 0.95rem;
       font-weight: 600;
       border: none;
-      border-radius: 8px;
+      border-radius: 10px;
       cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      transition: all 0.2s ease;
     }
 
     .btn-primary { background: var(--primary); color: white; }
-    .btn-print { background: #059669; color: white; }
-    .btn-danger { background: #fee2e2; color: var(--danger); padding: 6px 12px; }
+    .btn-primary:hover { background: var(--primary-hover); transform: translateY(-1px); }
 
+    .btn-print { background: var(--success); color: white; }
+    .btn-print:hover { background: var(--success-hover); transform: translateY(-1px); }
+
+    .btn-danger { 
+      background: #fee2e2; 
+      color: var(--danger); 
+      padding: 6px 10px; 
+      border-radius: 6px;
+    }
+    .btn-danger:hover { background: #fca5a5; }
+
+    /* Таблица столбиками */
     .table-wrapper {
       overflow-x: auto;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      margin-top: 12px;
     }
 
     table {
       width: 100%;
       border-collapse: collapse;
-      margin-top: 10px;
-    }
-
-    th, td {
+      background: #fff;
       text-align: left;
-      padding: 10px;
-      border-bottom: 1px solid var(--border);
-      font-size: 0.95rem;
     }
 
     th {
-      background-color: #f1f5f9;
-      font-size: 0.85rem;
+      background-color: #f9fafb;
+      padding: 14px 16px;
+      font-size: 0.8rem;
+      font-weight: 700;
       text-transform: uppercase;
+      color: var(--text-muted);
+      border-bottom: 1px solid var(--border);
+    }
+
+    td {
+      padding: 14px 16px;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.95rem;
+      vertical-align: middle;
+    }
+
+    tbody tr {
+      transition: background-color 0.15s ease;
+      animation: slideDown 0.25s ease-out forwards;
+    }
+
+    tbody tr:hover {
+      background-color: #f9fafb;
+    }
+
+    /* Бэджи категорий */
+    .badge-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 4px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 3px 8px;
+      background: #e0e7ff;
+      color: #3730a3;
+      border-radius: 6px;
+      font-size: 0.8rem;
+      font-weight: 600;
+    }
+
+    .zone-tag {
+      font-weight: 700;
+      color: var(--primary);
     }
 
     .print-header, .print-signature {
       display: none;
     }
 
-    /* Настройки печати */
+    /* Адаптивность для мобильных */
+    @media (max-width: 640px) {
+      body { padding: 12px 6px; }
+      .card { padding: 16px; }
+      .form-columns { grid-template-columns: 1fr; }
+      .btn-group { flex-direction: column; }
+      button { width: 100%; }
+    }
+
+    /* Стили печати */
     @media print {
       body {
         background: white;
@@ -164,7 +249,7 @@
         display: block;
         margin-bottom: 20px;
         border-bottom: 2px solid #000;
-        padding-bottom: 10px;
+        padding-bottom: 12px;
       }
 
       .print-info {
@@ -181,13 +266,20 @@
 
       th, td {
         border: 1px solid #000;
-        padding: 8px;
+        padding: 8px 10px;
         color: black;
       }
 
       th {
         background-color: #eee !important;
         -webkit-print-color-adjust: exact;
+      }
+
+      .badge {
+        background: none;
+        color: black;
+        border: 1px solid #ccc;
+        padding: 1px 4px;
       }
 
       .print-signature {
@@ -202,92 +294,93 @@
 
   <div class="container">
     
-    <div class="card animated-card no-print">
-      <h1>Маршрутизатор</h1>
-      
-      <div class="grid-form">
+    <div class="card no-print">
+      <h1>🚚 Информация о рейсе</h1>
+      <div class="form-columns">
         <div class="form-group">
-          <label for="driver">Фамилия водителя</label>
-          <input type="text" id="driver" placeholder="Иванов И.И.">
+          <label for="driver">Водитель</label>
+          <input type="text" id="driver" placeholder="Введите фамилию...">
         </div>
         <div class="form-group">
           <label for="date">Дата</label>
           <input type="date" id="date">
         </div>
       </div>
+    </div>
 
-      <hr style="margin: 16px 0; border: none; border-top: 1px solid var(--border);">
-
-      <h2>Добавить точку в маршрут</h2>
-      <form onsubmit="event.preventDefault(); addPoint();" class="grid-form">
+    <div class="card no-print">
+      <h1>📍 Добавить точку в маршрут</h1>
+      <form onsubmit="event.preventDefault(); addOrUpdatePoint();">
         
-        <div class="form-group">
-          <label for="routeZone">Маршрут / Зона</label>
-          <select id="routeZone">
-            <option value="Центр">Центр</option>
-            <option value="2 Север">2 Север</option>
-            <option value="2 Левых">2 Левых</option>
-            <option value="Юго-Западный">Юго-Западный</option>
-          </select>
+        <div class="form-columns">
+          <div class="form-group">
+            <label for="routeZone">Маршрут / Зона</label>
+            <select id="routeZone">
+              <option value="Центр">Центр</option>
+              <option value="2 Север">2 Север</option>
+              <option value="2 Левых">2 Левых</option>
+              <option value="Юго-Западный">Юго-Западный</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="pointAddress">Адрес / Наименование точки</label>
+            <input type="text" id="pointAddress" placeholder="Магазин №15 / ул. Ленина 12">
+          </div>
+
+          <div class="form-group">
+            <label for="productType">Категория товара</label>
+            <select id="productType">
+              <option value="Индейка">Индейка</option>
+              <option value="Консервы">Консервы</option>
+              <option value="Курица">Курица</option>
+              <option value="Деликатесы">Деликатесы</option>
+              <option value="Заморозка">Заморозка</option>
+              <option value="Яйца">Яйца</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label for="waybillsCount">Кол-во накладных</label>
+            <input type="number" id="waybillsCount" min="1" value="1">
+          </div>
         </div>
 
-        <div class="form-group">
-          <label for="productType">Товар / Продукция</label>
-          <select id="productType">
-            <option value="Индейка">Индейка</option>
-            <option value="Консервы">Консервы</option>
-            <option value="Курица">Курица</option>
-            <option value="Деликатесы">Деликатесы</option>
-            <option value="Заморозка">Заморозка</option>
-            <option value="Яйца">Яйца</option>
-          </select>
-        </div>
-
-        <div class="form-group">
-          <label for="pointAddress">Адрес / Точка</label>
-          <input type="text" id="pointAddress" placeholder="Магазин №5 / ул. Ленина 10">
-        </div>
-
-        <div class="form-group">
-          <label for="waybillsCount">Накладных (шт)</label>
-          <input type="number" id="waybillsCount" min="1" value="1">
-        </div>
-
-        <div class="btn-group" style="grid-column: 1 / -1; margin-top: 8px;">
-          <button type="submit" class="btn-primary">+ Добавить в лист</button>
-          <button type="button" class="btn-print" onclick="printPage()">🖨️ Печать / Сохранить PDF</button>
+        <div class="btn-group">
+          <button type="submit" class="btn-primary">➕ Добавить / Объединить точку</button>
+          <button type="button" class="btn-print" onclick="printPage()">🖨️ Печать / PDF</button>
         </div>
       </form>
     </div>
 
-    <div class="card animated-card">
+    <div class="card">
       <div class="print-header">
-        <h1 style="text-align: center; margin-bottom: 10px;">МАРШРУТНЫЙ ЛИСТ</h1>
+        <h1 style="text-align: center; margin-bottom: 10px; justify-content: center;">МАРШРУТНЫЙ ЛИСТ</h1>
         <div class="print-info">
           <span>Водитель: <span id="printDriverText">—</span></span>
           <span>Дата: <span id="printDateText">—</span></span>
         </div>
       </div>
 
-      <h2>Маршрутные точки</h2>
+      <h1 class="no-print" style="font-size: 1.2rem; margin-bottom: 12px;">Сформированный маршрут</h1>
       
       <div class="table-wrapper">
         <table id="routeTable">
           <thead>
             <tr>
-              <th style="width: 40px;">№</th>
-              <th>Маршрут</th>
-              <th>Продукция</th>
+              <th style="width: 45px;">№</th>
+              <th style="width: 140px;">Маршрут</th>
               <th>Точка назначения</th>
-              <th style="width: 100px; text-align: center;">Накладных</th>
-              <th class="no-print" style="width: 60px;"></th>
+              <th>Продукция в точке</th>
+              <th style="width: 110px; text-align: center;">Накладных</th>
+              <th class="no-print" style="width: 50px;"></th>
             </tr>
           </thead>
           <tbody id="pointsList"></tbody>
           <tfoot>
-            <tr style="font-weight: bold; background-color: #f8fafc;">
-              <td colspan="4" style="text-align: right;">Итого накладных:</td>
-              <td id="totalWaybills" style="text-align: center;">0</td>
+            <tr style="font-weight: bold; background-color: #f9fafb;">
+              <td colspan="4" style="text-align: right; padding: 12px;">Всего накладных:</td>
+              <td id="totalWaybills" style="text-align: center; font-size: 1.1rem; color: var(--primary);">0</td>
               <td class="no-print"></td>
             </tr>
           </tfoot>
@@ -320,17 +413,17 @@
       document.getElementById('printDateText').textContent = formattedDate;
     }
 
-    function addPoint() {
+    function addOrUpdatePoint() {
       const zone = document.getElementById('routeZone').value;
-      const product = document.getElementById('productType').value;
       const addressInput = document.getElementById('pointAddress');
+      const product = document.getElementById('productType').value;
       const waybillsInput = document.getElementById('waybillsCount');
 
       const address = addressInput.value.trim();
       const count = parseInt(waybillsInput.value, 10);
 
       if (!address) {
-        alert('Укажите адрес или название точки.');
+        alert('Укажите наименование или адрес точки.');
         return;
       }
 
@@ -339,7 +432,28 @@
         return;
       }
 
-      points.push({ zone, product, address, count });
+      // Проверка на дубликаты (группировка по совпадению Зоны и Адреса)
+      const existingPointIndex = points.findIndex(
+        p => p.zone.toLowerCase() === zone.toLowerCase() && p.address.toLowerCase() === address.toLowerCase()
+      );
+
+      if (existingPointIndex !== -1) {
+        // Если точка уже существует, увеличиваем число накладных
+        points[existingPointIndex].count += count;
+        // Добавляем категорию товара, если её ещё нет для этой точки
+        if (!points[existingPointIndex].products.includes(product)) {
+          points[existingPointIndex].products.push(product);
+        }
+      } else {
+        // Создаём новую точку
+        points.push({
+          zone: zone,
+          address: address,
+          products: [product],
+          count: count
+        });
+      }
+
       addressInput.value = '';
       waybillsInput.value = '1';
       addressInput.focus();
@@ -360,15 +474,19 @@
       points.forEach((pt, idx) => {
         totalCount += pt.count;
         const tr = document.createElement('tr');
-        tr.className = 'animated-card';
+        
+        const productsBadges = pt.products
+          .map(p => `<span class="badge">${escapeHtml(p)}</span>`)
+          .join(' ');
+
         tr.innerHTML = `
-          <td>${idx + 1}</td>
-          <td><b>${escapeHtml(pt.zone)}</b></td>
-          <td>${escapeHtml(pt.product)}</td>
-          <td>${escapeHtml(pt.address)}</td>
-          <td style="text-align: center;">${pt.count}</td>
+          <td><b>${idx + 1}</b></td>
+          <td><span class="zone-tag">${escapeHtml(pt.zone)}</span></td>
+          <td><b>${escapeHtml(pt.address)}</b></td>
+          <td><div class="badge-container">${productsBadges}</div></td>
+          <td style="text-align: center; font-weight: bold;">${pt.count}</td>
           <td class="no-print">
-            <button type="button" class="btn-danger" onclick="removePoint(${idx})">✕</button>
+            <button type="button" class="btn-danger" onclick="removePoint(${idx})" title="Удалить точку">✕</button>
           </td>
         `;
         tbody.appendChild(tr);
@@ -389,7 +507,7 @@
       });
     }
 
-    // PWA Service Worker
+    // Регистрация PWA Service Worker
     if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
       try {
         const swCode = `

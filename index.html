@@ -1,657 +1,88 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <meta name="theme-color" content="#3b82f6">
-  <title>Маршруты и Накладные</title>
-  
-  <link rel="manifest" href='data:application/manifest+json,{"name":"Логистика Маршрутов","short_name":"Маршруты","start_url":".","display":"standalone","background_color":"#0f172a","theme_color":"#3b82f6","icons":[{"src":"https://cdn-icons-png.flaticon.com/512/713/713311.png","sizes":"512x512","type":"image/png"}]}'>
-
-  <style>
-    :root {
-      --primary: #3b82f6;
-      --primary-hover: #2563eb;
-      --primary-glow: rgba(59, 130, 246, 0.3);
-      --accent: #8b5cf6;
-      --bg: #0f172a;
-      --card-bg: rgba(30, 41, 59, 0.7);
-      --card-border: rgba(255, 255, 255, 0.08);
-      --text: #f8fafc;
-      --text-muted: #94a3b8;
-      --border: #334155;
-      --danger: #ef4444;
-      --danger-hover: #dc2626;
-      --success: #10b981;
-      --success-hover: #059669;
-      --glass-bg: rgba(15, 23, 42, 0.75);
-    }
-
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-      -webkit-tap-highlight-color: transparent;
-    }
-
-    body {
-      background: #0f172a;
-      background-image: 
-        radial-gradient(at 0% 0%, rgba(59, 130, 246, 0.15) 0px, transparent 50%),
-        radial-gradient(at 100% 100%, rgba(139, 92, 246, 0.15) 0px, transparent 50%);
-      background-attachment: fixed;
-      color: var(--text);
-      padding: 20px 12px;
-      display: flex;
-      justify-content: center;
-      min-height: 100vh;
-    }
-
-    .container {
-      width: 100%;
-      max-width: 1400px;
-      display: flex;
-      flex-direction: column;
-      gap: 20px;
-    }
-
-    /* Анимации */
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(12px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    @keyframes pulseGlow {
-      0% { box-shadow: 0 0 0 0 var(--primary-glow); }
-      70% { box-shadow: 0 0 0 10px rgba(59, 130, 246, 0); }
-      100% { box-shadow: 0 0 0 0 rgba(59, 130, 246, 0); }
-    }
-
-    .card {
-      background: var(--card-bg);
-      backdrop-filter: blur(16px);
-      -webkit-backdrop-filter: blur(16px);
-      padding: 20px 24px;
-      border-radius: 20px;
-      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.1);
-      border: 1px solid var(--card-border);
-      animation: fadeIn 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards;
-    }
-
-    .header-title {
-      font-size: 1.4rem;
-      font-weight: 700;
-      color: #fff;
-      margin-bottom: 16px;
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      background: linear-gradient(90deg, #3b82f6, #a855f7);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    /* ОДНОСТРОЧНАЯ ЛИНЕЙНАЯ ФОРМА (Flex-row) */
-    .inline-form {
-      display: flex;
-      flex-direction: row;
-      align-items: flex-end;
-      gap: 12px;
-      width: 100%;
-      flex-wrap: nowrap;
-    }
-
-    .form-group {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-      flex: 1 1 auto;
-      min-width: 0; /* Важно для предотвращения переполнения флекс-элементов */
-    }
-
-    .form-group.small {
-      flex: 0 0 110px;
-    }
-
-    .form-group.medium {
-      flex: 0 0 180px;
-    }
-
-    label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--text-muted);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    input, select {
-      height: 46px;
-      padding: 0 14px;
-      border: 1px solid var(--border);
-      border-radius: 12px;
-      font-size: 0.95rem;
-      outline: none;
-      background-color: rgba(15, 23, 42, 0.8);
-      color: #fff;
-      transition: all 0.25s ease;
-      width: 100%;
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    select option {
-      background-color: #1e293b;
-      color: #fff;
-    }
-
-    input:focus, select:focus {
-      border-color: var(--primary);
-      background-color: rgba(15, 23, 42, 0.95);
-      box-shadow: 0 0 0 3px var(--primary-glow), inset 0 2px 4px rgba(0,0,0,0.2);
-    }
-
-    .btn-group-inline {
-      display: flex;
-      gap: 10px;
-      height: 46px;
-      flex: 0 0 auto;
-    }
-
-    button {
-      height: 46px;
-      padding: 0 20px;
-      font-size: 0.95rem;
-      font-weight: 600;
-      border: none;
-      border-radius: 12px;
-      cursor: pointer;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      white-space: nowrap;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-    }
-
-    .btn-primary { 
-      background: linear-gradient(135deg, var(--primary), var(--primary-hover)); 
-      color: white; 
-      box-shadow: 0 4px 12px var(--primary-glow);
-    }
-    .btn-primary:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 20px var(--primary-glow);
-    }
-
-    .btn-print { 
-      background: linear-gradient(135deg, #10b981, #059669); 
-      color: white; 
-      box-shadow: 0 4px 12px rgba(16, 185, 129, 0.3);
-    }
-    .btn-print:hover { 
-      transform: translateY(-2px); 
-      box-shadow: 0 6px 20px rgba(16, 185, 129, 0.4);
-    }
-
-    .btn-danger { 
-      background: rgba(239, 68, 68, 0.15); 
-      color: #f87171; 
-      border: 1px solid rgba(239, 68, 68, 0.3);
-      padding: 0;
-      width: 36px;
-      height: 36px;
-      border-radius: 10px;
-    }
-    .btn-danger:hover { 
-      background: var(--danger); 
-      color: white;
-    }
-
-    /* Таблица результатов */
-    .table-wrapper {
-      overflow-x: auto;
-      border-radius: 14px;
-      border: 1px solid var(--border);
-      background: rgba(15, 23, 42, 0.6);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      text-align: left;
-    }
-
-    th {
-      background-color: rgba(30, 41, 59, 0.9);
-      padding: 14px 16px;
-      font-size: 0.8rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-      white-space: nowrap;
-    }
-
-    td {
-      padding: 12px 16px;
-      border-bottom: 1px solid rgba(255, 255, 255, 0.05);
-      font-size: 0.95rem;
-      vertical-align: middle;
-      color: #e2e8f0;
-    }
-
-    tbody tr {
-      transition: background-color 0.15s ease;
-      animation: fadeIn 0.25s ease-out forwards;
-    }
-
-    tbody tr:hover {
-      background-color: rgba(255, 255, 255, 0.03);
-    }
-
-    /* Стильные метки */
-    .badge-container {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 6px;
-    }
-
-    .badge {
-      display: inline-flex;
-      align-items: center;
-      padding: 4px 10px;
-      background: rgba(59, 130, 246, 0.15);
-      color: #93c5fd;
-      border: 1px solid rgba(59, 130, 246, 0.3);
-      border-radius: 8px;
-      font-size: 0.8rem;
-      font-weight: 600;
-    }
-
-    .truck-badge {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 4px 10px;
-      background: rgba(139, 92, 246, 0.15);
-      color: #c084fc;
-      border: 1px solid rgba(139, 92, 246, 0.3);
-      border-radius: 8px;
-      font-weight: 600;
-    }
-
-    .zone-tag {
-      font-weight: 700;
-      color: #38bdf8;
-    }
-
-    .print-header, .print-signature {
-      display: none;
-    }
-
-    /* АДАПТИВНОСТЬ Моб. версии: если экран узкий - форма аккуратно скроллится по горизонтали или становится компактной */
-    @media (max-width: 1024px) {
-      .inline-form {
-        overflow-x: auto;
-        padding-bottom: 8px;
-      }
-      .form-group {
-        min-width: 140px;
-      }
-      .form-group.small {
-        min-width: 90px;
-      }
-    }
-
-    @media (max-width: 640px) {
-      body { padding: 10px 6px; }
-      .card { padding: 16px 12px; }
-      .inline-form {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .form-group, .form-group.small, .form-group.medium {
-        width: 100%;
-        flex: none;
-      }
-      .btn-group-inline {
-        flex-direction: column;
-        height: auto;
-      }
-      button { width: 100%; }
-    }
-
-    /* ПЕЧАТНАЯ ВЕРСИЯ (А4) */
-    @media print {
-      body {
-        background: #fff !important;
-        color: #000 !important;
-        padding: 0 !important;
-      }
-
-      .no-print {
-        display: none !important;
-      }
-
-      .card {
-        box-shadow: none !important;
-        border: none !important;
-        padding: 0 !important;
-        background: transparent !important;
-        backdrop-filter: none !important;
-      }
-
-      .print-header {
-        display: block !important;
-        margin-bottom: 20px;
-        border-bottom: 2px solid #000;
-        padding-bottom: 12px;
-      }
-
-      .print-info {
-        display: flex;
-        justify-content: space-between;
-        font-size: 1.1rem;
-        font-weight: bold;
-        margin-top: 10px;
-        color: #000;
-      }
-
-      table {
-        border: 1px solid #000 !important;
-        background: #fff !important;
-      }
-
-      th, td {
-        border: 1px solid #000 !important;
-        padding: 8px 10px !important;
-        color: #000 !important;
-        font-size: 0.9rem !important;
-      }
-
-      th {
-        background-color: #eee !important;
-        -webkit-print-color-adjust: exact;
-      }
-
-      .badge, .truck-badge {
-        background: none !important;
-        color: #000 !important;
-        border: 1px solid #666 !important;
-        padding: 1px 4px !important;
-      }
-
-      .zone-tag {
-        color: #000 !important;
-      }
-
-      .print-signature {
-        display: flex !important;
-        margin-top: 40px;
-        justify-content: space-between;
-        font-size: 1rem;
-        font-weight: bold;
-      }
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Терминал сбора данных</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 10px; padding: 0; background: #f4f4f9; }
+        h2 { text-align: center; color: #333; }
+        .input-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        input[type="text"] { flex: 1; padding: 12px; font-size: 18px; border: 2px solid #007bff; border-radius: 5px; }
+        button { padding: 12px 20px; font-size: 16px; border: none; background: #28a745; color: white; border-radius: 5px; cursor: pointer; }
+        .clear-btn { background: #dc3545; width: 100%; margin-top: 15px; }
+        table { width: 100%; border-collapse: collapse; background: white; box-shadow: 0 1px 3px rgba(0,0,0,0.2); }
+        th, td { border: 1px solid #ddd; padding: 10px; text-align: center; font-size: 16px; }
+        th { background-color: #007bff; color: white; }
+    </style>
 </head>
 <body>
 
-  <div class="container">
-    
-    <!-- ВЕСЬ ВВОД В ОДНУ СТРОЧКУ -->
-    <div class="card no-print">
-      <div class="header-title">⚡ Формирование маршрутного листа</div>
-      
-      <form onsubmit="event.preventDefault(); addOrUpdatePoint();">
-        <div class="inline-form">
-          
-          <div class="form-group medium">
-            <label for="driver">Водитель</label>
-            <input type="text" id="driver" placeholder="Иванов И.И.">
-          </div>
+    <h2>Сканирование ТСД</h2>
 
-          <div class="form-group medium">
-            <label for="truck">Автомобиль / Госномер</label>
-            <select id="truck">
-              <option value="ГАЗель 1 (А001АА)">ГАЗель 1 (А001АА)</option>
-              <option value="ГАЗель 2 (В002ВВ)">ГАЗель 2 (В002ВВ)</option>
-              <option value="Ларгус (С003СС)">Ларгус (С003СС)</option>
-              <option value="Maserati / Фура (М004ММ)">Фура (М004ММ)</option>
-            </select>
-          </div>
-
-          <div class="form-group medium">
-            <label for="date">Дата</label>
-            <input type="date" id="date">
-          </div>
-
-          <div class="form-group medium">
-            <label for="routeZone">Маршрут / Зона</label>
-            <select id="routeZone">
-              <option value="Центр">Центр</option>
-              <option value="2 Север">2 Север</option>
-              <option value="2 Левых">2 Левых</option>
-              <option value="Юго-Западный">Юго-Западный</option>
-            </select>
-          </div>
-
-          <div class="form-group">
-            <label for="pointAddress">Точка назначения (Выбор/Ввод)</label>
-            <input type="text" id="pointAddress" list="pointsDatalist" placeholder="Выберите или введите...">
-            <datalist id="pointsDatalist">
-              <option value="Магазин №1 (ул. Ленина 10)">
-              <option value="ТЦ Центральный (пер. Мира 4)">
-              <option value="База Северная (Промышленная 12)">
-              <option value="Гипермаркет (Западное шоссе 1)">
-            </datalist>
-          </div>
-
-          <div class="form-group medium">
-            <label for="productType">Товар</label>
-            <select id="productType">
-              <option value="Индейка">Индейка</option>
-              <option value="Консервы">Консервы</option>
-              <option value="Курица">Курица</option>
-              <option value="Деликатесы">Деликатесы</option>
-              <option value="Заморозка">Заморозка</option>
-              <option value="Яйца">Яйца</option>
-            </select>
-          </div>
-
-          <div class="form-group small">
-            <label for="waybillsCount">Накладные</label>
-            <input type="number" id="waybillsCount" min="1" value="1">
-          </div>
-
-          <div class="btn-group-inline">
-            <button type="submit" class="btn-primary">➕ Добавить</button>
-            <button type="button" class="btn-print" onclick="printPage()">🖨️ Печать / PDF</button>
-          </div>
-
+    <form id="scanForm" onsubmit="sendScan(event)">
+        <div class="input-group">
+            <input type="text" id="barcode" placeholder="Нажмите и пикайте..." autofocus autocomplete="off">
+            <button type="submit">Отправить</button>
         </div>
-      </form>
-    </div>
+    </form>
 
-    <!-- Область отображения и печати -->
-    <div class="card">
-      <div class="print-header">
-        <h1 style="text-align: center; margin-bottom: 10px; font-size: 1.6rem; text-transform: uppercase;">МАРШРУТНЫЙ ЛИСТ</h1>
-        <div class="print-info">
-          <span>Водитель: <span id="printDriverText">—</span></span>
-          <span>Автомобиль: <span id="printTruckText">—</span></span>
-          <span>Дата: <span id="printDateText">—</span></span>
-        </div>
-      </div>
-
-      <div class="header-title no-print" style="font-size: 1.1rem; margin-bottom: 12px;">📋 Список точек в рейсе</div>
-      
-      <div class="table-wrapper">
-        <table id="routeTable">
-          <thead>
+    <table>
+        <thead>
             <tr>
-              <th style="width: 40px;">№</th>
-              <th style="width: 140px;">Маршрут</th>
-              <th>Машина</th>
-              <th>Точка назначения</th>
-              <th>Продукция</th>
-              <th style="width: 100px; text-align: center;">Накладных</th>
-              <th class="no-print" style="width: 50px;"></th>
+                <th>Время</th>
+                <th>Штрихкод</th>
             </tr>
-          </thead>
-          <tbody id="pointsList"></tbody>
-          <tfoot>
-            <tr style="font-weight: bold; background-color: rgba(30, 41, 59, 0.8);">
-              <td colspan="5" style="text-align: right; padding: 12px;">Всего накладных на маршруте:</td>
-              <td id="totalWaybills" style="text-align: center; font-size: 1.1rem; color: #38bdf8;">0</td>
-              <td class="no-print"></td>
-            </tr>
-          </tfoot>
-        </table>
-      </div>
+        </thead>
+        <tbody id="logTable"></tbody>
+    </table>
 
-      <div class="print-signature">
-        <div>Подпись водителя: __________________</div>
-        <div>Сдал (Диспетчер): __________________</div>
-      </div>
-    </div>
+    <button class="clear-btn" onclick="clearData()">Очистить список</button>
 
-  </div>
+    <script>
+        const barcodeInput = document.getElementById('barcode');
 
-  <script>
-    document.getElementById('date').valueAsDate = new Date();
-    let points = [];
+        // Поддержка фокуса на поле ввода при клике в любое место (удобно для ТСД)
+        document.addEventListener('click', () => barcodeInput.focus());
 
-    function updatePrintHeader() {
-      const driver = document.getElementById('driver').value.trim() || '_________________';
-      const truck = document.getElementById('truck').value || '_________________';
-      const dateVal = document.getElementById('date').value;
-      
-      let formattedDate = '_________________';
-      if (dateVal) {
-        const [year, month, day] = dateVal.split('-');
-        formattedDate = `${day}.${month}.${year}`;
-      }
-
-      document.getElementById('printDriverText').textContent = driver;
-      document.getElementById('printTruckText').textContent = truck;
-      document.getElementById('printDateText').textContent = formattedDate;
-    }
-
-    function addOrUpdatePoint() {
-      const zone = document.getElementById('routeZone').value;
-      const truck = document.getElementById('truck').value;
-      const addressInput = document.getElementById('pointAddress');
-      const product = document.getElementById('productType').value;
-      const waybillsInput = document.getElementById('waybillsCount');
-
-      const address = addressInput.value.trim();
-      const count = parseInt(waybillsInput.value, 10);
-
-      if (!address) {
-        alert('Выберите или введите точку назначения.');
-        return;
-      }
-
-      if (isNaN(count) || count < 1) {
-        alert('Укажите корректное количество накладных.');
-        return;
-      }
-
-      // Группировка: проверяем совпадение Зоны, Машины и Адреса
-      const existingIndex = points.findIndex(
-        p => p.zone.toLowerCase() === zone.toLowerCase() && 
-             p.address.toLowerCase() === address.toLowerCase() &&
-             p.truck === truck
-      );
-
-      if (existingIndex !== -1) {
-        // Если такая точка у этой машины уже есть - плюсуем накладные и товары
-        points[existingIndex].count += count;
-        if (!points[existingIndex].products.includes(product)) {
-          points[existingIndex].products.push(product);
+        async function loadData() {
+            const res = await fetch('/api/scans');
+            const data = await res.json();
+            const tbody = document.getElementById('logTable');
+            tbody.innerHTML = data.map(item => `
+                <tr>
+                    <td>${item.time}</td>
+                    <td><b>${item.barcode}</b></td>
+                </tr>
+            `).join('');
         }
-      } else {
-        // Добавляем новую точку
-        points.push({
-          zone: zone,
-          truck: truck,
-          address: address,
-          products: [product],
-          count: count
-        });
-      }
 
-      addressInput.value = '';
-      waybillsInput.value = '1';
-      addressInput.focus();
+        async function sendScan(e) {
+            e.preventDefault();
+            const barcode = barcodeInput.value.trim();
+            if (!barcode) return;
 
-      renderPoints();
-    }
+            await fetch('/api/scan', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ barcode })
+            });
 
-    function removePoint(index) {
-      points.splice(index, 1);
-      renderPoints();
-    }
+            barcodeInput.value = '';
+            barcodeInput.focus();
+            loadData();
+        }
 
-    function renderPoints() {
-      const tbody = document.getElementById('pointsList');
-      tbody.innerHTML = '';
-      let totalCount = 0;
+        async function clearData() {
+            if (confirm('Очистить всю историю?')) {
+                await fetch('/api/clear', { method: 'POST' });
+                loadData();
+            }
+        }
 
-      points.forEach((pt, idx) => {
-        totalCount += pt.count;
-        const tr = document.createElement('tr');
-        
-        const productsBadges = pt.products
-          .map(p => `<span class="badge">${escapeHtml(p)}</span>`)
-          .join(' ');
-
-        tr.innerHTML = `
-          <td><b>${idx + 1}</b></td>
-          <td><span class="zone-tag">${escapeHtml(pt.zone)}</span></td>
-          <td><span class="truck-badge">🚛 ${escapeHtml(pt.truck)}</span></td>
-          <td><b>${escapeHtml(pt.address)}</b></td>
-          <td><div class="badge-container">${productsBadges}</div></td>
-          <td style="text-align: center; font-weight: bold; color: #38bdf8;">${pt.count}</td>
-          <td class="no-print" style="text-align: center;">
-            <button type="button" class="btn-danger" onclick="removePoint(${idx})" title="Удалить точку">✕</button>
-          </td>
-        `;
-        tbody.appendChild(tr);
-      });
-
-      document.getElementById('totalWaybills').textContent = totalCount;
-      updatePrintHeader();
-    }
-
-    function printPage() {
-      updatePrintHeader();
-      window.print();
-    }
-
-    function escapeHtml(str) {
-      return str.replace(/[&<>"']/g, function(m) {
-        return { '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#039;' }[m];
-      });
-    }
-
-    // PWA Service Worker
-    if ('serviceWorker' in navigator && location.protocol.startsWith('http')) {
-      try {
-        const swCode = `
-          self.addEventListener('install', e => self.skipWaiting());
-          self.addEventListener('activate', e => self.clients.claim());
-          self.addEventListener('fetch', e => e.respondWith(fetch(e.request).catch(() => caches.match(e.request))));
-        `;
-        const blob = new Blob([swCode], { type: 'application/javascript' });
-        navigator.serviceWorker.register(URL.createObjectURL(blob)).catch(() => {});
-      } catch (e) {}
-    }
-  </script>
+        // Автообновление таблицы каждые 2 секунды (чтобы видеть сканы с других устройств)
+        setInterval(loadData, 2000);
+        loadData();
+    </script>
 </body>
 </html>

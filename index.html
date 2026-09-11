@@ -1,0 +1,111 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff003c">
+<meta name="description" content="Личный календарь рабочих дней и расчёта выплат">
+<link rel="manifest" href="manifest.webmanifest">
+<title>Календарь выплат</title>
+<style>
+:root{--red:#ff003c;--red2:#ff174f;--bg:#f5f6f8;--card:#fff;--text:#17181b;--muted:#858891;--line:#e9eaee;--green:#16b364}
+*{box-sizing:border-box}html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+body{overflow-x:hidden}.app{width:min(100%,760px);margin:auto;padding:0 14px 28px}
+.hero{margin:0 -14px;padding:22px 18px 26px;background:linear-gradient(145deg,#ff003c,#ff2d5a);color:white;border-radius:0 0 28px 28px;box-shadow:0 12px 28px #ff003c2b}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px}.brand{font-weight:800;font-size:20px;letter-spacing:-.4px}.year{opacity:.82;font-size:14px}
+.balance{margin-top:26px}.balance small{opacity:.82;font-size:13px}.amount{font-size:40px;font-weight:800;letter-spacing:-1.5px;margin-top:2px}.sub{opacity:.85;font-size:13px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:22px;padding:16px;margin-top:14px;box-shadow:0 8px 24px #10182808}
+.monthbar{display:flex;align-items:center;justify-content:space-between;gap:8px}.monthtitle{font-size:19px;font-weight:800;text-transform:capitalize}
+.nav{display:flex;gap:7px}.btn{border:0;background:#f1f2f5;color:#222;border-radius:12px;width:38px;height:38px;font-size:20px;cursor:pointer;transition:.18s}.btn:active{transform:scale(.93)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:14px}.dow{text-align:center;font-size:11px;color:var(--muted);font-weight:700;padding-bottom:4px}
+.day{position:relative;aspect-ratio:1;border:1px solid transparent;background:#f7f7f9;border-radius:12px;display:flex;align-items:center;justify-content:center;cursor:pointer;user-select:none;font-size:14px;transition:.18s}
+.day:hover{transform:translateY(-1px)}.day.empty{background:transparent;cursor:default}.day.work{background:var(--red);color:#fff;font-weight:800;box-shadow:0 5px 12px #ff003c33}.day.pay{outline:2px solid #ffb3c2;outline-offset:-2px}.day.today{box-shadow:inset 0 0 0 2px #17181b}.paydot{position:absolute;right:4px;top:4px;width:5px;height:5px;border-radius:50%;background:#fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:13px;color:var(--muted);font-size:12px}.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;background:#f7f7f9;border:1px solid var(--line)}.legend i.r{background:var(--red);border:0}.legend i.p{background:#fff;outline:2px solid #ffb3c2}
+.stats{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}.stat{padding:14px;border-radius:16px;background:#f7f7f9}.stat b{display:block;font-size:22px}.stat span{font-size:12px;color:var(--muted)}
+.payrow{display:flex;justify-content:space-between;gap:12px;align-items:center;padding:13px 0;border-bottom:1px solid var(--line)}.payrow:last-child{border-bottom:0}.payrow b{font-size:16px}.payrow span{font-size:12px;color:var(--muted)}.payamount{font-weight:800;text-align:right}.payamount small{display:block;color:var(--muted);font-weight:500;font-size:11px}
+.hint{font-size:12px;color:var(--muted);line-height:1.45;margin-top:10px}
+.install{display:none;background:#17181b;color:#fff;border:0;border-radius:14px;padding:11px 14px;font-weight:700;cursor:pointer}
+@media(max-width:420px){.app{padding-left:10px;padding-right:10px}.hero{margin-left:-10px;margin-right:-10px}.amount{font-size:34px}.grid{gap:4px}.day{border-radius:10px;font-size:13px}.card{padding:13px;border-radius:19px}}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+  <div class="top"><div class="brand">Мои выплаты</div><div class="year" id="year"></div></div>
+  <div class="balance"><small>Ожидаемый доход за выбранный месяц</small><div class="amount" id="total">0 ₽</div><div class="sub" id="count">0 рабочих дней</div></div>
+</header>
+
+<section class="card">
+  <div class="monthbar"><div class="monthtitle" id="month"></div><div class="nav"><button class="btn" id="prev" aria-label="Предыдущий месяц">‹</button><button class="btn" id="next" aria-label="Следующий месяц">›</button></div></div>
+  <div class="grid" id="calendar"></div>
+  <div class="legend"><span><i class="r"></i>Рабочий день</span><span><i class="p"></i>День выплаты</span></div>
+  <div class="hint">Нажимайте на даты, чтобы отметить или снять рабочий день. Данные сохраняются на этом устройстве.</div>
+</section>
+
+<section class="card">
+  <div class="stats">
+    <div class="stat"><b id="days">0</b><span>рабочих дней</span></div>
+    <div class="stat"><b id="money">0 ₽</b><span>за месяц</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="monthbar"><div class="monthtitle">График выплат</div></div>
+  <div id="pays"></div>
+</section>
+
+<button class="install" id="install">Установить приложение</button>
+</div>
+<script>
+const RATE=8300; // используется только внутри расчёта и не отображается в интерфейсе
+const KEY='work-calendar-v1';
+let data=JSON.parse(localStorage.getItem(KEY)||'{}');
+let view=new Date(); view.setDate(1);
+const ruMonths=['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+const ruDays=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const money=n=>new Intl.NumberFormat('ru-RU').format(n)+' ₽';
+const pad=n=>String(n).padStart(2,'0');
+function key(y,m,d){return `${y}-${pad(m+1)}-${pad(d)}`}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+function daysIn(y,m){return new Date(y,m+1,0).getDate()}
+function render(){
+ const y=view.getFullYear(),m=view.getMonth(), first=(new Date(y,m,1).getDay()+6)%7, max=daysIn(y,m);
+ document.getElementById('month').textContent=ruMonths[m]+' '+y;
+ document.getElementById('year').textContent=y;
+ const cal=document.getElementById('calendar'); cal.innerHTML='';
+ ruDays.forEach(x=>{let e=document.createElement('div');e.className='dow';e.textContent=x;cal.appendChild(e)});
+ for(let i=0;i<first;i++){let e=document.createElement('div');e.className='day empty';cal.appendChild(e)}
+ const today=new Date();
+ for(let d=1;d<=max;d++){
+   const e=document.createElement('div'), k=key(y,m,d);
+   e.className='day'+(data[k]?' work':'');
+   if(y===today.getFullYear()&&m===today.getMonth()&&d===today.getDate())e.classList.add('today');
+   if(d===10||d===25){e.classList.add('pay');let dot=document.createElement('i');dot.className='paydot';e.appendChild(dot)}
+   let t=document.createTextNode(d); e.prepend(t);
+   e.onclick=()=>{data[k]=!data[k]; if(!data[k])delete data[k];save();render()}; cal.appendChild(e);
+ }
+ const worked=Array.from({length:max},(_,i)=>data[key(y,m,i+1)]).filter(Boolean).length;
+ const total=worked*RATE;
+ document.getElementById('total').textContent=money(total);
+ document.getElementById('days').textContent=worked;
+ document.getElementById('money').textContent=money(total);
+ document.getElementById('count').textContent=worked+' '+(worked%10===1&&worked%100!==11?'рабочий день':worked%10>=2&&worked%10<=4&&!(worked%100>=12&&worked%100<=14)?'рабочих дня':'рабочих дней');
+ const p=document.getElementById('pays'); p.innerHTML='';
+ [10,25].forEach(day=>{
+   const workedBefore=Array.from({length:max},(_,i)=>i+1).filter(d=>d<=day&&data[key(y,m,d)]).length;
+   const row=document.createElement('div');row.className='payrow';
+   row.innerHTML=`<div><b>${day} числа</b><span> • выплата</span></div><div class="payamount">${money(workedBefore*RATE)}<small>накоплено к этой дате</small></div>`;
+   p.appendChild(row);
+ });
+}
+document.getElementById('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};
+document.getElementById('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};
+render();
+
+let deferred;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferred=e;document.getElementById('install').style.display='block'});
+document.getElementById('install').onclick=async()=>{if(deferred){deferred.prompt();deferred=null}};
+if('serviceWorker' in navigator) navigator.serviceWorker.register('./sw.js').catch(()=>{});
+</script>
+</body>
+</html>

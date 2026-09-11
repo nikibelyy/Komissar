@@ -1,0 +1,226 @@
+<!doctype html>
+<html lang="ru">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#ff174f">
+<meta name="description" content="Личный календарь рабочих дней">
+<link rel="manifest" href="./manifest.webmanifest">
+<title>Мой график</title>
+<style>
+:root{
+  --red:#ff174f;--red2:#ff426d;--bg:#f4f5f8;--card:#fff;--text:#17181b;
+  --muted:#858891;--line:#e9eaf0;--soft:#f7f7fa;--green:#18b86a;
+}
+*{box-sizing:border-box}
+html,body{margin:0;min-height:100%;font-family:Inter,ui-sans-serif,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;color:var(--text);background:var(--bg)}
+body{overflow-x:hidden}
+body:before,body:after{content:"";position:fixed;border-radius:50%;filter:blur(50px);pointer-events:none;z-index:-1;opacity:.22}
+body:before{width:220px;height:220px;background:#ff174f;top:80px;left:-110px}
+body:after{width:260px;height:260px;background:#7c5cff;right:-140px;bottom:60px}
+button{font:inherit}
+.app{width:min(100%,760px);margin:auto;padding:0 14px 30px}
+.hero{
+  position:relative;overflow:hidden;margin:0 -14px;padding:20px 18px 24px;color:#fff;
+  background:linear-gradient(145deg,#f9003e 0%,#ff174f 52%,#ff4b72 100%);
+  border-radius:0 0 30px 30px;box-shadow:0 14px 35px #ff174f38;
+}
+.hero:before,.hero:after{content:"";position:absolute;border:1px solid #ffffff25;border-radius:50%;animation:float 7s ease-in-out infinite}
+.hero:before{width:170px;height:170px;right:-55px;top:-75px}
+.hero:after{width:95px;height:95px;right:75px;bottom:-55px;animation-delay:-2s}
+.top{display:flex;align-items:center;justify-content:space-between;gap:12px;position:relative;z-index:1}
+.brand{font-weight:850;font-size:21px;letter-spacing:-.5px}
+.year{opacity:.8;font-size:13px;font-weight:650}
+.balance{margin-top:24px;position:relative;z-index:1}
+.balance small{opacity:.82;font-size:13px}
+.balance .label{display:flex;align-items:center;gap:7px}
+.dot-live{width:7px;height:7px;border-radius:50%;background:#fff;animation:pulse 1.8s infinite}
+.amount{font-size:36px;font-weight:850;letter-spacing:-1.5px;margin-top:7px}
+.sub{opacity:.88;font-size:13px}
+.card{
+  background:rgba(255,255,255,.94);backdrop-filter:blur(12px);
+  border:1px solid var(--line);border-radius:23px;padding:16px;margin-top:14px;
+  box-shadow:0 10px 30px #10182809;animation:rise .45s ease both;
+}
+.card:nth-of-type(2){animation-delay:.05s}.card:nth-of-type(3){animation-delay:.1s}
+.monthbar{display:flex;align-items:center;justify-content:space-between;gap:8px}
+.monthtitle{font-size:19px;font-weight:850;text-transform:capitalize;letter-spacing:-.4px}
+.nav{display:flex;gap:7px}
+.btn{
+  border:0;background:var(--soft);color:#222;border-radius:13px;width:40px;height:40px;
+  font-size:22px;cursor:pointer;transition:transform .18s,background .18s;
+}
+.btn:hover{background:#eeeef3}.btn:active{transform:scale(.9)}
+.grid{display:grid;grid-template-columns:repeat(7,1fr);gap:5px;margin-top:14px}
+.dow{text-align:center;font-size:11px;color:var(--muted);font-weight:750;padding-bottom:4px}
+.day{
+  position:relative;aspect-ratio:1;border:1px solid transparent;background:var(--soft);
+  border-radius:13px;display:flex;align-items:center;justify-content:center;cursor:pointer;
+  user-select:none;font-size:14px;transition:transform .18s,background .18s,box-shadow .18s;
+}
+.day:hover{transform:translateY(-2px)}
+.day.empty{background:transparent;cursor:default}
+.day.work{
+  background:linear-gradient(145deg,var(--red),var(--red2));color:#fff;font-weight:850;
+  box-shadow:0 7px 15px #ff174f32;animation:pop .22s ease;
+}
+.day.today{box-shadow:inset 0 0 0 2px #17181b}
+.day.today.work{box-shadow:0 7px 15px #ff174f32,inset 0 0 0 2px #fff}
+.legend{display:flex;gap:14px;flex-wrap:wrap;margin-top:13px;color:var(--muted);font-size:12px}
+.legend i{display:inline-block;width:9px;height:9px;border-radius:3px;margin-right:5px;background:var(--soft);border:1px solid var(--line)}
+.legend i.r{background:var(--red);border:0}
+.hint{font-size:12px;color:var(--muted);line-height:1.45;margin-top:10px}
+.stats{display:grid;grid-template-columns:1fr;gap:10px}
+.stat{padding:15px;border-radius:17px;background:linear-gradient(145deg,#f8f8fb,#f2f3f7)}
+.stat b{display:block;font-size:25px;letter-spacing:-.6px}
+.stat span{font-size:12px;color:var(--muted)}
+.status{
+  display:flex;align-items:center;justify-content:space-between;gap:12px;
+  padding:14px 15px;border-radius:17px;background:#f7f7fa
+}
+.status-left{display:flex;align-items:center;gap:11px}
+.status-icon{width:34px;height:34px;border-radius:11px;background:#e9fff2;color:var(--green);display:grid;place-items:center;font-weight:900}
+.status b{font-size:14px}.status span{display:block;color:var(--muted);font-size:11px;margin-top:2px}
+.clear{
+  border:0;background:transparent;color:var(--red);font-size:12px;font-weight:750;
+  padding:8px;cursor:pointer;border-radius:9px
+}
+.clear:active{background:#fff0f3}
+.install{
+  display:none;width:100%;margin-top:14px;background:#17181b;color:#fff;border:0;border-radius:16px;
+  padding:13px 14px;font-weight:800;cursor:pointer;box-shadow:0 8px 20px #10182820
+}
+@keyframes rise{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+@keyframes pop{0%{transform:scale(.72)}100%{transform:scale(1)}}
+@keyframes pulse{0%,100%{transform:scale(1);opacity:.65}50%{transform:scale(1.35);opacity:1}}
+@keyframes float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(9px) rotate(5deg)}}
+@media(max-width:420px){
+  .app{padding-left:10px;padding-right:10px}.hero{margin-left:-10px;margin-right:-10px}
+  .amount{font-size:33px}.grid{gap:4px}.day{border-radius:10px;font-size:13px}.card{padding:13px;border-radius:20px}
+}
+@media(prefers-reduced-motion:reduce){
+  *{animation:none!important;transition:none!important}
+}
+</style>
+</head>
+<body>
+<div class="app">
+<header class="hero">
+  <div class="top"><div class="brand">Мой график</div><div class="year" id="year"></div></div>
+  <div class="balance">
+    <div class="label"><span class="dot-live"></span><small>Отмеченные рабочие дни</small></div>
+    <div class="amount" id="total">0 дней</div>
+    <div class="sub" id="count">Отметьте даты, когда работаете</div>
+  </div>
+</header>
+
+<section class="card">
+  <div class="monthbar">
+    <div class="monthtitle" id="month"></div>
+    <div class="nav">
+      <button class="btn" id="prev" aria-label="Предыдущий месяц">‹</button>
+      <button class="btn" id="next" aria-label="Следующий месяц">›</button>
+    </div>
+  </div>
+  <div class="grid" id="calendar"></div>
+  <div class="legend"><span><i class="r"></i>Рабочий день</span></div>
+  <div class="hint">Нажимайте на даты, чтобы отметить или снять рабочий день. Данные сохраняются на этом устройстве.</div>
+</section>
+
+<section class="card">
+  <div class="stats">
+    <div class="stat"><b id="days">0</b><span>рабочих дней в выбранном месяце</span></div>
+  </div>
+</section>
+
+<section class="card">
+  <div class="status">
+    <div class="status-left">
+      <div class="status-icon">✓</div>
+      <div><b>График сохранён</b><span>Только ваши рабочие дни — без зарплаты и выплат</span></div>
+    </div>
+    <button class="clear" id="clear">Очистить месяц</button>
+  </div>
+</section>
+
+<button class="install" id="install">Установить приложение</button>
+</div>
+
+<script>
+const KEY='work-calendar-v2';
+let data=JSON.parse(localStorage.getItem(KEY)||'{}');
+let view=new Date(); view.setDate(1);
+
+const ruMonths=['январь','февраль','март','апрель','май','июнь','июль','август','сентябрь','октябрь','ноябрь','декабрь'];
+const ruDays=['Пн','Вт','Ср','Чт','Пт','Сб','Вс'];
+const pad=n=>String(n).padStart(2,'0');
+const key=(y,m,d)=>`${y}-${pad(m+1)}-${pad(d)}`;
+const daysIn=(y,m)=>new Date(y,m+1,0).getDate();
+
+function word(n,a,b,c){
+  n=Math.abs(n)%100; const n1=n%10;
+  if(n>10&&n<20)return c;
+  if(n1===1)return a;
+  if(n1>=2&&n1<=4)return b;
+  return c;
+}
+function save(){localStorage.setItem(KEY,JSON.stringify(data))}
+
+function render(){
+  const y=view.getFullYear(),m=view.getMonth();
+  const first=(new Date(y,m,1).getDay()+6)%7, max=daysIn(y,m);
+  const month=document.getElementById('month');
+  month.textContent=ruMonths[m]+' '+y;
+  document.getElementById('year').textContent=y;
+
+  const cal=document.getElementById('calendar'); cal.innerHTML='';
+  ruDays.forEach(x=>{const e=document.createElement('div');e.className='dow';e.textContent=x;cal.appendChild(e)});
+  for(let i=0;i<first;i++){const e=document.createElement('div');e.className='day empty';cal.appendChild(e)}
+
+  const today=new Date();
+  for(let d=1;d<=max;d++){
+    const e=document.createElement('div'),k=key(y,m,d);
+    e.className='day'+(data[k]?' work':'');
+    if(y===today.getFullYear()&&m===today.getMonth()&&d===today.getDate())e.classList.add('today');
+    e.textContent=d;
+    e.onclick=()=>{
+      if(data[k]) delete data[k]; else data[k]=true;
+      save(); render();
+    };
+    cal.appendChild(e);
+  }
+
+  const worked=Array.from({length:max},(_,i)=>data[key(y,m,i+1)]).filter(Boolean).length;
+  document.getElementById('total').textContent=worked+' '+word(worked,'день','дня','дней');
+  document.getElementById('days').textContent=worked;
+  document.getElementById('count').textContent=worked
+    ? 'Продолжайте отмечать свои рабочие даты'
+    : 'Отметьте даты, когда работаете';
+}
+
+document.getElementById('prev').onclick=()=>{view.setMonth(view.getMonth()-1);render()};
+document.getElementById('next').onclick=()=>{view.setMonth(view.getMonth()+1);render()};
+document.getElementById('clear').onclick=()=>{
+  const y=view.getFullYear(),m=view.getMonth(),max=daysIn(y,m);
+  for(let d=1;d<=max;d++)delete data[key(y,m,d)];
+  save();render();
+};
+
+render();
+
+let deferred;
+window.addEventListener('beforeinstallprompt',e=>{
+  e.preventDefault(); deferred=e; document.getElementById('install').style.display='block';
+});
+document.getElementById('install').onclick=async()=>{
+  if(!deferred)return;
+  deferred.prompt(); await deferred.userChoice; deferred=null;
+  document.getElementById('install').style.display='none';
+};
+
+if('serviceWorker' in navigator){
+  navigator.serviceWorker.register('./sw.js').catch(()=>{});
+}
+</script>
+</body>
+</html>

@@ -1,208 +1,191 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>VPN для телефона и компьютера — Atlanta VPN</title>
-  <meta name="description" content="Atlanta VPN — простой способ подключиться к VPN на телефоне и компьютере. Узнайте, как начать пользоваться VPN за несколько минут.">
-  <meta name="robots" content="index,follow">
-  <meta name="theme-color" content="#07111f">
-  <link rel="canonical" href="https://YOUR-DOMAIN.RU/">
-  <link rel="icon" href="/favicon.svg" type="image/svg+xml">
-  <meta property="og:type" content="website">
-  <meta property="og:title" content="Atlanta VPN — VPN для телефона и компьютера">
-  <meta property="og:description" content="Простой старт с VPN. Подключение через Telegram-бота Atlanta VPN.">
-  <meta property="og:url" content="https://YOUR-DOMAIN.RU/">
-  <meta name="twitter:card" content="summary_large_image">
-
-  <script type="application/ld+json">
-  {
-    "@context":"https://schema.org",
-    "@type":"WebSite",
-    "name":"Atlanta VPN",
-    "url":"https://YOUR-DOMAIN.RU/",
-    "inLanguage":"ru-RU",
-    "description":"Информационная страница Atlanta VPN с переходом к Telegram-боту."
-  }
-  </script>
-
-  <style>
-    :root{
-      --bg:#050912; --bg2:#081322; --card:rgba(14,27,47,.72);
-      --line:rgba(255,255,255,.09); --text:#f5f8ff; --muted:#9eacc2;
-      --accent:#6c7cff; --accent2:#2ee6a6; --shadow:0 25px 80px rgba(0,0,0,.38);
-      --radius:24px;
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:
-      radial-gradient(circle at 15% 0%,rgba(108,124,255,.17),transparent 35%),
-      radial-gradient(circle at 90% 15%,rgba(46,230,166,.10),transparent 30%),
-      var(--bg);color:var(--text);font-family:Inter,system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;line-height:1.6}
-    a{text-decoration:none;color:inherit}
-    .container{width:min(1120px,calc(100% - 36px));margin:auto}
-    .nav{height:76px;display:flex;align-items:center;justify-content:space-between}
-    .logo{display:flex;align-items:center;gap:11px;font-weight:800;letter-spacing:-.03em}
-    .logo-mark{width:38px;height:38px;border-radius:12px;background:linear-gradient(135deg,var(--accent),#8f5cff);display:grid;place-items:center;box-shadow:0 8px 30px rgba(108,124,255,.3)}
-    .logo-mark svg{width:21px}
-    .nav-links{display:flex;gap:26px;color:var(--muted);font-size:14px}
-    .nav-links a:hover{color:#fff}
-    .btn{display:inline-flex;align-items:center;justify-content:center;gap:9px;border:1px solid var(--line);border-radius:14px;padding:13px 19px;font-weight:750;font-size:14px;transition:.25s ease;cursor:pointer}
-    .btn:hover{transform:translateY(-2px);border-color:rgba(255,255,255,.2)}
-    .btn-primary{background:linear-gradient(135deg,#7080ff,#7657ed);box-shadow:0 14px 35px rgba(108,124,255,.25);border:0}
-    .btn-ghost{background:rgba(255,255,255,.035)}
-    .hero{padding:72px 0 86px;position:relative;overflow:hidden}
-    .hero-grid{display:grid;grid-template-columns:1.06fr .94fr;gap:60px;align-items:center}
-    .eyebrow{display:inline-flex;align-items:center;gap:8px;border:1px solid rgba(46,230,166,.2);background:rgba(46,230,166,.06);color:#9cf2d4;padding:7px 11px;border-radius:999px;font-size:12px;font-weight:700;margin-bottom:20px}
-    .dot{width:7px;height:7px;border-radius:50%;background:var(--accent2);box-shadow:0 0 14px var(--accent2)}
-    h1{font-size:clamp(44px,6vw,76px);line-height:1.02;letter-spacing:-.055em;margin:0 0 22px;max-width:780px}
-    .gradient{background:linear-gradient(100deg,#fff 20%,#9ca8ff 56%,#5ff1bf);-webkit-background-clip:text;background-clip:text;color:transparent}
-    .lead{font-size:19px;color:var(--muted);max-width:650px;margin:0 0 30px}
-    .actions{display:flex;flex-wrap:wrap;gap:12px}
-    .note{font-size:12px;color:#74839a;margin-top:14px}
-    .visual{min-height:430px;position:relative;display:grid;place-items:center}
-    .orb{position:absolute;width:300px;height:300px;border-radius:50%;background:radial-gradient(circle,#6d7cff 0,rgba(108,124,255,.22) 35%,transparent 70%);filter:blur(5px);animation:pulse 5s ease-in-out infinite}
-    .phone{position:relative;width:245px;height:450px;border:7px solid #17263c;border-radius:39px;background:linear-gradient(155deg,#111d31,#07101c);box-shadow:var(--shadow),0 0 0 1px rgba(255,255,255,.08);padding:14px;transform:rotate(4deg);animation:float 6s ease-in-out infinite}
-    .phone:before{content:"";display:block;width:80px;height:21px;background:#07101c;border-radius:0 0 16px 16px;margin:-14px auto 18px}
-    .screen{height:calc(100% - 25px);border-radius:26px;background:linear-gradient(180deg,#0e1a2c,#09111e);padding:20px;display:flex;flex-direction:column;justify-content:space-between}
-    .screen-top{display:flex;justify-content:space-between;font-size:11px;color:#91a0b6}
-    .shield{width:90px;height:90px;border-radius:30px;margin:auto;background:linear-gradient(145deg,#7282ff,#5345c9);display:grid;place-items:center;box-shadow:0 20px 50px rgba(108,124,255,.32)}
-    .shield svg{width:43px}
-    .status{text-align:center}.status strong{display:block;font-size:20px}.status span{color:#8f9db0;font-size:12px}
-    .phone-btn{background:linear-gradient(135deg,#38e6a5,#1fcf91);color:#062318;border-radius:13px;text-align:center;padding:11px;font-weight:800;font-size:13px}
-    .float-card{position:absolute;z-index:2;padding:13px 16px;border:1px solid var(--line);border-radius:16px;background:rgba(9,18,31,.8);backdrop-filter:blur(14px);box-shadow:var(--shadow);font-size:13px}
-    .float-card.one{top:55px;right:10px}.float-card.two{bottom:70px;left:0}
-    .float-card b{display:block}.float-card span{color:#7f8da2;font-size:11px}
-    section{padding:82px 0}.section-head{max-width:700px;margin-bottom:34px}.kicker{color:#8d9cff;text-transform:uppercase;letter-spacing:.16em;font-size:11px;font-weight:800}.section-head h2{font-size:clamp(30px,4vw,48px);letter-spacing:-.04em;line-height:1.1;margin:9px 0 12px}.section-head p{color:var(--muted);margin:0}
-    .cards{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .card{padding:26px;border:1px solid var(--line);background:var(--card);border-radius:var(--radius);backdrop-filter:blur(14px);transition:.3s}
-    .card:hover{transform:translateY(-5px);border-color:rgba(108,124,255,.3)}
-    .icon{width:45px;height:45px;border-radius:14px;background:rgba(108,124,255,.12);display:grid;place-items:center;margin-bottom:20px}
-    .icon svg{width:22px}.card h3{margin:0 0 8px;font-size:19px}.card p{margin:0;color:var(--muted);font-size:14px}
-    .steps{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}.step{position:relative;padding:28px;border-radius:var(--radius);background:linear-gradient(180deg,rgba(255,255,255,.045),rgba(255,255,255,.02));border:1px solid var(--line)}.num{font-size:12px;color:#92a0ff;font-weight:800}.step h3{margin:14px 0 8px}.step p{color:var(--muted);font-size:14px;margin:0}
-    .seo-copy{max-width:850px}.seo-copy p,.seo-copy li{color:#a7b2c3}.seo-copy ul{padding-left:20px}
-    .faq{max-width:850px}.faq-item{border-top:1px solid var(--line)}.faq-q{width:100%;background:none;border:0;color:#fff;text-align:left;padding:22px 0;font:inherit;font-weight:750;display:flex;justify-content:space-between;cursor:pointer}.faq-a{max-height:0;overflow:hidden;color:var(--muted);transition:max-height .35s ease}.faq-a p{margin:0 0 20px}.faq-item.open .faq-a{max-height:200px}.plus{transition:.25s}.faq-item.open .plus{transform:rotate(45deg)}
-    .cta{padding:40px;border-radius:30px;border:1px solid rgba(108,124,255,.25);background:radial-gradient(circle at 85% 20%,rgba(46,230,166,.1),transparent 30%),linear-gradient(135deg,rgba(108,124,255,.12),rgba(255,255,255,.025));display:flex;justify-content:space-between;align-items:center;gap:30px}.cta h2{margin:0 0 7px;font-size:32px;letter-spacing:-.03em}.cta p{margin:0;color:var(--muted)}
-    footer{padding:35px 0 45px;border-top:1px solid var(--line);color:#738198;font-size:12px}.footer-row{display:flex;justify-content:space-between;gap:20px}.footer-links{display:flex;gap:20px}
-    @keyframes float{0%,100%{transform:rotate(4deg) translateY(0)}50%{transform:rotate(2deg) translateY(-12px)}}@keyframes pulse{0%,100%{transform:scale(1);opacity:.75}50%{transform:scale(1.08);opacity:1}}
-    @media(max-width:820px){.nav-links{display:none}.hero{padding-top:45px}.hero-grid{grid-template-columns:1fr;gap:20px}.visual{min-height:420px}.cards,.steps{grid-template-columns:1fr}.cta{flex-direction:column;align-items:flex-start}.footer-row{flex-direction:column}.float-card.one{right:0}.float-card.two{left:5px}}
-    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.phone,.orb{animation:none}.btn,.card{transition:none}}
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Быстрый и Анонимный VPN в Telegram | Подключение за 15 секунд</title>
+    <meta name="description" content="Обходите блокировки с помощью быстрого VPN прямо в Telegram. Без скачивания лишних приложений, без регистраций. Высокая скорость и защита данных.">
+    <meta name="keywords" content="vpn в телеграм, скачать vpn, обход блокировок, быстрый впн, vpn бот, анонимный интернет">
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #0f172a;
+            color: #f8fafc;
+            line-height: 1.6;
+        }
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        header {
+            padding: 20px 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: #38bdf8;
+            text-decoration: none;
+        }
+        .hero {
+            text-align: center;
+            padding: 100px 0;
+        }
+        .hero h1 {
+            font-size: 3.5em;
+            margin-bottom: 20px;
+            line-height: 1.2;
+        }
+        .hero h1 span {
+            color: #38bdf8;
+        }
+        .hero p {
+            font-size: 1.2em;
+            color: #94a3b8;
+            max-width: 600px;
+            margin: 0 auto 40px auto;
+        }
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #0284c7, #38bdf8);
+            color: white;
+            padding: 18px 45px;
+            font-size: 1.2em;
+            font-weight: bold;
+            text-decoration: none;
+            border-radius: 50px;
+            box-shadow: 0 4px 15px rgba(56, 189, 248, 0.4);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        .cta-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(56, 189, 248, 0.6);
+        }
+        .features {
+            display: flex;
+            justify-content: space-between;
+            flex-wrap: wrap;
+            padding: 60px 0;
+            gap: 20px;
+        }
+        .feature-card {
+            background-color: #1e293b;
+            padding: 30px;
+            border-radius: 15px;
+            flex-basis: 30%;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .feature-card h3 {
+            color: #38bdf8;
+            margin-top: 0;
+        }
+        .how-it-works {
+            background-color: #1e293b;
+            padding: 80px 0;
+            text-align: center;
+        }
+        .steps {
+            display: flex;
+            justify-content: center;
+            flex-wrap: wrap;
+            gap: 30px;
+            margin-top: 40px;
+        }
+        .step {
+            max-width: 250px;
+        }
+        .step-number {
+            background-color: #38bdf8;
+            color: #0f172a;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin: 0 auto 15px auto;
+        }
+        footer {
+            text-align: center;
+            padding: 30px 0;
+            color: #64748b;
+            font-size: 0.9em;
+        }
+        @media (max-width: 768px) {
+            .hero h1 { font-size: 2.5em; }
+            .feature-card { flex-basis: 100%; }
+        }
+    </style>
 </head>
 <body>
-<header>
-  <nav class="container nav" aria-label="Основная навигация">
-    <a class="logo" href="/" aria-label="Atlanta VPN">
-      <span class="logo-mark"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5.2c0 4.4-2.9 8.3-7 9.8-4.1-1.5-7-5.4-7-9.8V6l7-3Z" stroke="white" stroke-width="1.8"/><path d="m8.7 12 2.1 2.1 4.6-4.7" stroke="white" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
-      <span>Atlanta VPN</span>
-    </a>
-    <div class="nav-links">
-      <a href="#benefits">Возможности</a><a href="#how">Как начать</a><a href="#faq">FAQ</a>
-    </div>
-    <a class="btn btn-primary" href="https://t.me/AtlantaVPN_bot?start=partner_6Lpp0Y" rel="nofollow sponsored">Подключиться</a>
-  </nav>
-</header>
 
-<main>
-<section class="hero">
-  <div class="container hero-grid">
-    <div>
-      <div class="eyebrow"><span class="dot"></span> VPN-сервис через Telegram</div>
-      <h1>VPN без лишней <span class="gradient">сложности</span></h1>
-      <p class="lead">Atlanta VPN — простой способ начать пользоваться VPN на телефоне и компьютере. Перейдите в Telegram-бота и следуйте инструкции.</p>
-      <div class="actions">
-        <a class="btn btn-primary" href="https://t.me/AtlantaVPN_bot?start=partner_6Lpp0Y" rel="nofollow sponsored">Открыть Atlanta VPN <span>→</span></a>
-        <a class="btn btn-ghost" href="#how">Как это работает</a>
-      </div>
-      <div class="note">Переход откроет Telegram-бота Atlanta VPN.</div>
+    <div class="container">
+        <header>
+            <a href="#" class="logo">SecureVPN Bot</a>
+        </header>
+
+        <section class="hero">
+            <h1>Доступ к любому сайту <br><span>прямо через Telegram</span></h1>
+            <p>Забудьте о сложных настройках и постоянных блокировках. Получите высокоскоростной VPN-канал без регистрации и установки сторонних программ.</p>
+            <a href="https://t.me/AtlantaVPN_bot?start=partner_6Lpp0Y" class="cta-button">Подключить VPN сейчас</a>
+        </section>
     </div>
-    <div class="visual" aria-hidden="true">
-      <div class="orb"></div>
-      <div class="float-card one"><b>Подключение</b><span>через Telegram</span></div>
-      <div class="float-card two"><b>Простой старт</b><span>без сложной настройки</span></div>
-      <div class="phone">
-        <div class="screen">
-          <div class="screen-top"><span>Atlanta VPN</span><span>●</span></div>
-          <div class="shield"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5.2c0 4.4-2.9 8.3-7 9.8-4.1-1.5-7-5.4-7-9.8V6l7-3Z" stroke="white" stroke-width="1.5"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="white" stroke-width="1.5" stroke-linecap="round"/></svg></div>
-          <div class="status"><strong>Готово к старту</strong><span>Откройте Telegram-бота</span></div>
-          <div class="phone-btn">Подключиться</div>
+
+    <div class="container">
+        <section class="features">
+            <div class="feature-card">
+                <h3>🚀 Высокая Скорость</h3>
+                <p>Смотрите 4K видео и скачивайте файлы без ограничений по скорости и трафику.</p>
+            </div>
+            <div class="feature-card">
+                <h3>🛡️ Полная Анонимность</h3>
+                <p>Мы не ведем логи. Ваш трафик надежно зашифрован, а реальный IP-адрес скрыт.</p>
+            </div>
+            <div class="feature-card">
+                <h3>📱 Простота Telegram</h3>
+                <p>Управление серверами, балансом и настройками происходит прямо в удобном Telegram-боте.</p>
+            </div>
+        </section>
+    </div>
+
+    <section class="how-it-works">
+        <div class="container">
+            <h2>Как начать пользоваться?</h2>
+            <div class="steps">
+                <div class="step">
+                    <div class="step-number">1</div>
+                    <h3>Перейдите в бота</h3>
+                    <p>Нажмите на кнопку на этом сайте, чтобы открыть официального Telegram-бота.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">2</div>
+                    <h3>Нажмите /start</h3>
+                    <p>Запустите бота и получите настройки для вашего устройства за пару кликов.</p>
+                </div>
+                <div class="step">
+                    <div class="step-number">3</div>
+                    <h3>Свободный интернет</h3>
+                    <p>Подключитесь и наслаждайтесь доступом к заблокированным социальным сетям и сайтам.</p>
+                </div>
+            </div>
+            <br><br>
+            <a href="https://t.me/AtlantaVPN_bot?start=partner_6Lpp0Y" class="cta-button">Открыть бота в Telegram</a>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<section id="benefits">
-  <div class="container">
-    <div class="section-head"><div class="kicker">Почему VPN</div><h2>Всё необходимое — на одной странице</h2><p>Минималистичный интерфейс и понятный путь от первого знакомства до запуска.</p></div>
-    <div class="cards">
-      <article class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M12 3l7 3v5.2c0 4.4-2.9 8.3-7 9.8-4.1-1.5-7-5.4-7-9.8V6l7-3Z" stroke="#9da8ff" stroke-width="1.7"/><path d="m8.5 12 2.2 2.2 4.8-5" stroke="#9da8ff" stroke-width="1.7"/></svg></div><h3>Простой старт</h3><p>Не нужно разбираться в сложных настройках — начните с Telegram-бота.</p></article>
-      <article class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><rect x="5" y="3" width="14" height="18" rx="3" stroke="#9da8ff" stroke-width="1.7"/><path d="M9 18h6" stroke="#9da8ff" stroke-width="1.7" stroke-linecap="round"/></svg></div><h3>Для разных устройств</h3><p>Страница рассчитана на пользователей смартфонов, планшетов и компьютеров.</p></article>
-      <article class="card"><div class="icon"><svg viewBox="0 0 24 24" fill="none"><path d="M4 12h16M12 4v16" stroke="#9da8ff" stroke-width="1.7" stroke-linecap="round"/><circle cx="12" cy="12" r="8.5" stroke="#9da8ff" stroke-width="1.7"/></svg></div><h3>Понятная инструкция</h3><p>Пошаговый сценарий без перегруженных экранов и лишних действий.</p></article>
-    </div>
-  </div>
-</section>
+    <footer>
+        <div class="container">
+            <p>&copy; 2026 SecureVPN Bot. Все права защищены. Сервис предоставляется через платформу Telegram.</p>
+        </div>
+    </footer>
 
-<section id="how">
-  <div class="container">
-    <div class="section-head"><div class="kicker">Как начать</div><h2>Три простых шага</h2><p>Начать можно прямо со смартфона.</p></div>
-    <div class="steps">
-      <article class="step"><div class="num">01 / ОТКРОЙТЕ</div><h3>Перейдите в Telegram</h3><p>Нажмите кнопку «Открыть Atlanta VPN» на этой странице.</p></article>
-      <article class="step"><div class="num">02 / СЛЕДУЙТЕ</div><h3>Выберите нужный вариант</h3><p>В Telegram-боте ознакомьтесь с доступными вариантами и инструкцией.</p></article>
-      <article class="step"><div class="num">03 / НАСТРОЙТЕ</div><h3>Завершите подключение</h3><p>Выполните шаги, которые покажет бот, и используйте VPN согласно его инструкции.</p></article>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container seo-copy">
-    <div class="section-head"><div class="kicker">VPN</div><h2>Что такое VPN и зачем он нужен?</h2></div>
-    <p>VPN (Virtual Private Network) — технология, которая создает защищенное соединение между устройством пользователя и VPN-сервером. В зависимости от конфигурации VPN может помогать защищать трафик в недоверенных сетях и менять сетевой маршрут подключения.</p>
-    <p>Если вы ищете VPN для телефона, VPN для Android, VPN для iPhone или VPN для компьютера, сначала стоит проверить совместимость сервиса с вашим устройством и ознакомиться с условиями конкретного провайдера.</p>
-    <ul>
-      <li>VPN для телефона — удобный вариант для мобильного подключения.</li>
-      <li>VPN для компьютера — может использоваться дома, в дороге и в общественных сетях.</li>
-      <li>VPN через Telegram — быстрый способ перейти к инструкции и настройке через бота.</li>
-    </ul>
-  </div>
-</section>
-
-<section id="faq">
-  <div class="container">
-    <div class="section-head"><div class="kicker">FAQ</div><h2>Частые вопросы</h2></div>
-    <div class="faq">
-      <div class="faq-item"><button class="faq-q">Как начать пользоваться Atlanta VPN?<span class="plus">＋</span></button><div class="faq-a"><p>Нажмите любую кнопку подключения на сайте — она откроет Telegram-бота Atlanta VPN. Далее следуйте инструкциям бота.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Работает ли VPN на телефоне?<span class="plus">＋</span></button><div class="faq-a"><p>Сервис предназначен для пользователей разных устройств. Перед подключением проверьте актуальные требования и инструкцию непосредственно в Telegram-боте.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Что нужно для подключения?<span class="plus">＋</span></button><div class="faq-a"><p>Для перехода к настройке нужен Telegram. Дальнейшие шаги и доступные варианты подключения показываются в боте.</p></div></div>
-      <div class="faq-item"><button class="faq-q">Где узнать условия и стоимость?<span class="plus">＋</span></button><div class="faq-a"><p>Актуальные условия, доступные тарифы и другие детали лучше смотреть непосредственно в Telegram-боте Atlanta VPN.</p></div></div>
-    </div>
-  </div>
-</section>
-
-<section>
-  <div class="container">
-    <div class="cta">
-      <div><h2>Готовы начать?</h2><p>Откройте Telegram и перейдите к настройке Atlanta VPN.</p></div>
-      <a class="btn btn-primary" href="https://t.me/AtlantaVPN_bot?start=partner_6Lpp0Y" rel="nofollow sponsored">Перейти в Telegram →</a>
-    </div>
-  </div>
-</section>
-</main>
-
-<footer>
-  <div class="container footer-row">
-    <div>© 2026 Atlanta VPN. Информационный лендинг.</div>
-    <div class="footer-links"><a href="#benefits">Возможности</a><a href="#faq">FAQ</a><a href="https://t.me/AtlantaVPN_bot?start=partner_6Lpp0Y" rel="nofollow sponsored">Telegram</a></div>
-  </div>
-</footer>
-
-<script>
-  document.querySelectorAll('.faq-q').forEach(btn=>{
-    btn.addEventListener('click',()=>{
-      const item=btn.parentElement;
-      item.classList.toggle('open');
-    });
-  });
-</script>
 </body>
 </html>

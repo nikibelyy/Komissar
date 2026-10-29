@@ -1,0 +1,1425 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>112dtp.ru — Аварийный комиссар Воронеж 24/7 | Оформление ДТП за 15 минут</title>
+    <meta name="description" content="Служба аварийных комиссаров 112dtp в Воронеже. Прибытие за 15-20 минут, оформление ДТП без ожидания ГАИ, 100% гарантия для страховой. Звоните: +7 (951) 870-39-34">
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Google Fonts: Inter & Montserrat for bold automotive typography -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Montserrat:ital,wght@0,700;0,800;0,900;1,800;1,900&display=swap" rel="stylesheet">
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Inter', 'sans-serif'],
+                        display: ['Montserrat', 'sans-serif'],
+                    },
+                    colors: {
+                        carbon: {
+                            950: '#070709',
+                            900: '#0D0D11',
+                            800: '#14141A',
+                            700: '#1E1E26',
+                        },
+                        signal: {
+                            red: '#E61919',
+                            bright: '#FF1E27',
+                            dark: '#990B0B',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+
+    <style>
+        /* Custom Carbon & Livery Styling inspired by the 112dtp.ru SUV */
+        body {
+            background-color: #070709;
+            color: #FFFFFF;
+            overflow-x: hidden;
+        }
+
+        /* Subtle Carbon Fiber Pattern */
+        .bg-carbon-pattern {
+            background-color: #09090c;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(230, 25, 25, 0.14) 0%, transparent 60%),
+                linear-gradient(27deg, #0d0d12 5px, transparent 5px),
+                linear-gradient(207deg, #0d0d12 5px, transparent 5px),
+                linear-gradient(27deg, #121218 5px, transparent 5px),
+                linear-gradient(207deg, #121218 5px, transparent 5px),
+                linear-gradient(90deg, #0a0a0e 10px, transparent 10px),
+                linear-gradient(#0d0d12 25%, #0a0a0e 25%, #0a0a0e 50%, transparent 50%, transparent 75%, #111117 75%, #111117);
+            background-size: 100% 100%, 20px 20px, 20px 20px, 20px 20px, 20px 20px, 20px 20px, 20px 20px;
+            background-position: 0 0, 0 5px, 10px 0, 0 10px, 10px 5px, 0 0, 0 0;
+        }
+
+        /* Signature Red-White Chevron Stripes (like on the rear & lower doors of the 112dtp SUV) */
+        .chevron-hazard-bar {
+            background: repeating-linear-gradient(
+                -55deg,
+                #E61919,
+                #E61919 22px,
+                #FFFFFF 22px,
+                #FFFFFF 44px
+            );
+            background-size: 62px 100%;
+            animation: chevronSlide 3s linear infinite;
+        }
+
+        .chevron-hazard-subtle {
+            background: repeating-linear-gradient(
+                -55deg,
+                rgba(230, 25, 25, 0.85),
+                rgba(230, 25, 25, 0.85) 16px,
+                rgba(255, 255, 255, 0.9) 16px,
+                rgba(255, 255, 255, 0.9) 32px
+            );
+        }
+
+        @keyframes chevronSlide {
+            0% { background-position: 0 0; }
+            100% { background-position: 62px 0; }
+        }
+
+        /* Pulse Glow for Emergency Buttons */
+        @keyframes emergencyPulse {
+            0%, 100% {
+                box-shadow: 0 0 0 0 rgba(255, 30, 39, 0.7), 0 10px 30px -5px rgba(230, 25, 25, 0.6);
+            }
+            50% {
+                box-shadow: 0 0 0 12px rgba(255, 30, 39, 0), 0 15px 40px -3px rgba(255, 30, 39, 0.85);
+            }
+        }
+
+        .btn-emergency-pulse {
+            animation: emergencyPulse 2.2s infinite;
+        }
+
+        /* Strobe Light Effect on SUV Card */
+        @keyframes strobeRed {
+            0%, 45%, 100% { opacity: 0.15; transform: scale(0.95); }
+            10%, 30% { opacity: 0.95; transform: scale(1.1); }
+            20% { opacity: 0.3; }
+        }
+        @keyframes strobeWhite {
+            0%, 50%, 95%, 100% { opacity: 0.1; transform: scale(0.95); }
+            60%, 80% { opacity: 0.85; transform: scale(1.08); }
+            70% { opacity: 0.2; }
+        }
+
+        .strobe-flash-red {
+            animation: strobeRed 1.4s infinite;
+        }
+        .strobe-flash-white {
+            animation: strobeWhite 1.4s infinite;
+        }
+
+        /* Scroll Reveal Animation Classes */
+        .reveal {
+            opacity: 0;
+            transform: translateY(28px);
+            transition: all 0.7s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Glossy Card Hover Effects */
+        .livery-card {
+            background: linear-gradient(145deg, rgba(24, 24, 32, 0.92) 0%, rgba(12, 12, 16, 0.98) 100%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            transition: all 0.35s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .livery-card:hover {
+            border-color: rgba(230, 25, 25, 0.55);
+            transform: translateY(-4px);
+            box-shadow: 0 20px 40px -15px rgba(0, 0, 0, 0.8), 0 0 25px -5px rgba(230, 25, 25, 0.25);
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #070709;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E61919;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body class="bg-carbon-pattern font-sans antialiased selection:bg-signal-red selection:text-white pb-24 md:pb-16">
+
+    <!-- Top Signature Livery Stripe -->
+    <div class="h-1.5 w-full chevron-hazard-bar fixed top-0 left-0 z-50"></div>
+
+    <!-- HEADER -->
+    <header id="main-header" class="fixed top-1.5 left-0 right-0 z-40 transition-all duration-300 bg-carbon-950/85 backdrop-blur-xl border-b border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-3">
+            
+            <!-- Brand Logo (Exact match to SUV door emblem + 112dtp.ru with red underline) -->
+            <a href="#" class="flex items-center gap-3 group focus:outline-none">
+                <!-- Heraldic Shield SVG from SUV front door -->
+                <div class="relative w-11 h-12 sm:w-12 sm:h-14 flex-shrink-0 transition-transform duration-300 group-hover:scale-105">
+                    <svg viewBox="0 0 100 115" class="w-full h-full drop-shadow-[0_0_10px_rgba(230,25,25,0.5)]">
+                        <!-- Outer White Shield Border -->
+                        <path d="M50 3 L94 18 L94 56 C94 84 74 103 50 112 C26 103 6 84 6 56 L6 18 Z" fill="#FFFFFF"/>
+                        <!-- Inner Red/Black Shield -->
+                        <path d="M50 8 L89 21.5 L89 55 C89 80 71 97.5 50 106 C29 97.5 11 80 11 55 L11 21.5 Z" fill="#B80F14"/>
+                        <!-- Lower Dark Highway Perspective on Shield -->
+                        <path d="M24 91 C32 97 41 102 50 105 C59 102 68 97 76 91 L58 63 L42 63 Z" fill="#0B0B0E"/>
+                        <!-- Road Center Dashed Line -->
+                        <line x1="50" y1="66" x2="50" y2="102" stroke="#FFFFFF" stroke-width="2.5" stroke-dasharray="5,4"/>
+                        <!-- Stylized Heraldic Eagle / Wings Silhouette -->
+                        <path d="M50 22 C43 22 38 26 36 32 C28 29 19 31 17 38 C23 41 28 43 34 43 C27 48 24 54 27 59 C34 56 40 52 44 48 L42 63 L58 63 L56 48 C60 52 66 56 73 59 C76 54 73 48 66 43 C72 43 77 41 83 38 C81 31 72 29 64 32 C62 26 57 22 50 22 Z" fill="#FFFFFF"/>
+                        <!-- Inner Shield Center Emblem -->
+                        <circle cx="50" cy="43" r="6" fill="#E61919"/>
+                    </svg>
+                </div>
+
+                <div class="flex flex-col">
+                    <div class="flex items-baseline gap-1.5">
+                        <span class="font-display font-black text-2xl sm:text-3xl tracking-tight text-white leading-none">
+                            112dtp<span class="text-white">.ru</span>
+                        </span>
+                        <span class="hidden sm:inline-block bg-signal-red text-white font-display font-extrabold text-[10px] px-1.5 py-0.5 rounded uppercase tracking-wider">
+                            ДТП
+                        </span>
+                    </div>
+                    <!-- Signature Red Bar Under 112dtp.ru like on the car doors -->
+                    <div class="h-1.5 w-full bg-gradient-to-r from-signal-bright via-signal-red to-white rounded-full mt-1 mb-0.5"></div>
+                    <span class="text-[10px] sm:text-xs text-gray-300 font-medium tracking-wide uppercase">
+                        Аварийные комиссары • Воронеж
+                    </span>
+                </div>
+            </a>
+
+            <!-- Desktop Navigation & Live Crew Badge -->
+            <nav class="hidden xl:flex items-center gap-6 text-sm font-medium text-gray-300">
+                <a href="#why-us" class="hover:text-white transition-colors">Почему не ГАИ?</a>
+                <a href="#check-case" class="hover:text-white transition-colors">Экспресс-проверка</a>
+                <a href="#steps" class="hover:text-white transition-colors">Порядок действий</a>
+                <a href="#districts" class="hover:text-white transition-colors">Районы Воронежа</a>
+            </nav>
+
+            <!-- Live Patrol Indicator (Tablet/Desktop) -->
+            <div class="hidden lg:flex items-center gap-2.5 bg-white/5 border border-white/10 px-3.5 py-2 rounded-xl">
+                <span class="relative flex h-3 w-3">
+                    <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75"></span>
+                    <span class="relative inline-flex rounded-full h-3 w-3 bg-green-500"></span>
+                </span>
+                <div class="text-xs leading-tight">
+                    <div class="font-bold text-white">Экипажи на дежурстве</div>
+                    <div class="text-gray-400">Прибытие 15–20 мин по Воронежу</div>
+                </div>
+            </div>
+
+            <!-- Header Action Buttons -->
+            <div class="flex items-center gap-2 sm:gap-3">
+                <!-- Messenger MAX Button -->
+                <a href="https://max.ru/u/f9LHodD0cOKOJvt61w0ZQ-N23Avgulz6sHGZhwmj-8AFZTjvmNekZ5-nyKc" 
+                   target="_blank" rel="noopener noreferrer"
+                   class="flex items-center gap-2 bg-white/10 hover:bg-white/20 text-white border border-white/20 px-3 sm:px-4 py-2.5 rounded-xl font-semibold text-xs sm:text-sm transition-all hover:scale-[1.02] active:scale-95"
+                   title="Написать в мессенджер MAX">
+                    <span class="w-6 h-6 rounded-lg bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 flex items-center justify-center font-display font-black text-[11px] text-white shadow">
+                        M
+                    </span>
+                    <span class="hidden md:inline">Мессенджер</span>
+                    <span class="font-display font-bold tracking-wide">MAX</span>
+                </a>
+
+                <!-- Direct Phone Call Button -->
+                <a href="tel:+79518703934" 
+                   class="flex items-center gap-2 bg-signal-red hover:bg-signal-bright text-white px-3.5 sm:px-5 py-2.5 rounded-xl font-display font-bold text-xs sm:text-sm shadow-lg shadow-signal-red/30 transition-all hover:scale-[1.02] active:scale-95">
+                    <i class="fa-solid fa-phone-volume animate-bounce"></i>
+                    <span>+7 (951) 870-39-34</span>
+                </a>
+            </div>
+        </div>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="relative pt-28 sm:pt-36 pb-16 sm:pb-24 overflow-hidden">
+        <!-- Background Dynamic Livery Slash Lines -->
+        <div class="pointer-events-none select-none absolute inset-0 overflow-hidden">
+            <div class="absolute -top-24 -right-24 w-[550px] h-[550px] bg-signal-red/15 rounded-full blur-[130px]"></div>
+            <div class="absolute top-1/2 -left-32 w-[400px] h-[400px] bg-signal-red/10 rounded-full blur-[110px]"></div>
+            <!-- Diagonal Speed Lines -->
+            <div class="absolute top-20 right-0 w-full h-1 bg-gradient-to-r from-transparent via-signal-red/30 to-white/20 -rotate-6 transform origin-right"></div>
+        </div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 lg:gap-8 items-center">
+                
+                <!-- Left Column: High-Impact Offer & CTAs -->
+                <div class="lg:col-span-7 space-y-6 text-left">
+                    
+                    <!-- Top Emergency Pill -->
+                    <div class="inline-flex flex-wrap items-center gap-2 bg-carbon-800/90 border border-signal-red/40 rounded-full p-1.5 pr-4 shadow-lg">
+                        <span class="bg-signal-red text-white text-xs font-display font-extrabold uppercase px-3 py-1 rounded-full tracking-wider flex items-center gap-1.5">
+                            <span class="w-2 h-2 rounded-full bg-white animate-ping"></span>
+                            Срочный выезд 24/7
+                        </span>
+                        <span class="text-xs sm:text-sm font-medium text-gray-200">
+                            Воронеж и трасса М-4 «Дон» • Вызов в 1 клик
+                        </span>
+                    </div>
+
+                    <!-- Main Headline -->
+                    <h1 class="font-display font-black text-3xl sm:text-5xl xl:text-6xl leading-[1.1] tracking-tight text-white">
+                        Попали в ДТП в Воронеже? <br>
+                        <span class="text-transparent bg-clip-text bg-gradient-to-r from-white via-gray-100 to-gray-300">
+                            Прибудем за
+                        </span>
+                        <span class="relative inline-block text-signal-bright px-2">
+                            15 минут
+                            <span class="absolute bottom-0 left-0 w-full h-1.5 bg-signal-red rounded-full"></span>
+                        </span>
+                        и оформим всё <span class="underline decoration-signal-red decoration-4 underline-offset-4">без ожидания ГАИ!</span>
+                    </h1>
+
+                    <!-- Subtitle explaining value -->
+                    <p class="text-base sm:text-lg text-gray-300 max-w-2xl leading-relaxed">
+                        Не теряйте <strong class="text-white">от 4 до 8 часов</strong> в ожидании экипажа ДПС и не рискуйте получить отказ от страховой из-за ошибки в схеме. Аварийные комиссары <strong class="text-white font-semibold">112dtp.ru</strong> профессионально зафиксируют ДТП и подготовят полный пакет документов прямо на месте.
+                    </p>
+
+                    <!-- Primary Action Buttons -->
+                    <div class="pt-2 flex flex-col sm:flex-row items-stretch sm:items-center gap-4">
+                        <!-- Call Button -->
+                        <a href="tel:+79518703934" 
+                           class="btn-emergency-pulse group relative overflow-hidden bg-gradient-to-r from-signal-red to-signal-bright text-white px-7 py-4 sm:py-5 rounded-2xl font-display font-black text-base sm:text-lg tracking-wide flex items-center justify-center gap-3.5 transition-transform active:scale-95">
+                            <div class="w-11 h-11 rounded-xl bg-white/15 flex items-center justify-center text-xl group-hover:rotate-12 transition-transform">
+                                <i class="fa-solid fa-phone-volume"></i>
+                            </div>
+                            <div class="text-left">
+                                <div class="text-[11px] font-sans font-semibold uppercase tracking-widest text-red-100">Экстренный вызов комиссара</div>
+                                <div class="text-lg sm:text-xl leading-tight">+7 (951) 870-39-34</div>
+                            </div>
+                        </a>
+
+                        <!-- Messenger MAX Button -->
+                        <a href="https://max.ru/u/f9LHodD0cOKOJvt61w0ZQ-N23Avgulz6sHGZhwmj-8AFZTjvmNekZ5-nyKc" 
+                           target="_blank" rel="noopener noreferrer"
+                           class="group relative bg-carbon-800 hover:bg-carbon-700 border-2 border-white/20 hover:border-white/40 text-white px-6 py-4 sm:py-5 rounded-2xl font-display font-bold text-base flex items-center justify-center gap-3.5 transition-all hover:shadow-xl active:scale-95">
+                            <div class="w-11 h-11 rounded-xl bg-gradient-to-br from-blue-500 via-indigo-600 to-purple-600 flex items-center justify-center text-lg font-black shadow-md group-hover:scale-110 transition-transform">
+                                MAX
+                            </div>
+                            <div class="text-left">
+                                <div class="text-[11px] font-sans font-medium uppercase tracking-wider text-gray-400">Отправить фото / геопозицию</div>
+                                <div class="text-base sm:text-lg leading-tight flex items-center gap-1.5">
+                                    Написать в MAX
+                                    <i class="fa-solid fa-arrow-up-right-from-square text-xs text-gray-400 group-hover:translate-x-0.5 group-hover:-translate-y-0.5 transition-transform"></i>
+                                </div>
+                            </div>
+                        </a>
+                    </div>
+
+                    <!-- Quick Copy Phone Utility & Instant Reassurance -->
+                    <div class="flex flex-wrap items-center gap-4 pt-1 text-xs sm:text-sm text-gray-400">
+                        <button onclick="copyPhoneNumber()" class="inline-flex items-center gap-2 text-gray-300 hover:text-white bg-white/5 hover:bg-white/10 border border-white/10 px-3.5 py-1.5 rounded-lg transition-colors">
+                            <i class="fa-regular fa-copy text-signal-bright"></i>
+                            <span>Скопировать номер: +7 (951) 870-39-34</span>
+                        </button>
+                        <span class="flex items-center gap-1.5">
+                            <i class="fa-solid fa-shield-halved text-signal-bright"></i>
+                            Консультация по телефону — <strong class="text-white">бесплатно</strong>
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Right Column: Custom Branded 112dtp.ru Black SUV Showcase (Matching User's Photo) -->
+                <div class="lg:col-span-5">
+                    <div class="relative rounded-3xl bg-gradient-to-b from-carbon-800 to-carbon-950 border border-white/15 p-5 sm:p-6 shadow-2xl overflow-hidden group">
+                        
+                        <!-- Top Card Header: Live Telemetry -->
+                        <div class="flex items-center justify-between gap-2 mb-4 pb-3 border-b border-white/10">
+                            <div class="flex items-center gap-2">
+                                <span class="px-2.5 py-1 rounded bg-signal-red text-white font-display font-black text-xs uppercase tracking-wider">
+                                    СПЕЦТРАНСПОРТ
+                                </span>
+                                <span class="text-xs sm:text-sm font-semibold text-gray-200">
+                                    Оперативный экипаж 112dtp.ru
+                                </span>
+                            </div>
+                            <button id="toggle-strobe-btn" onclick="toggleVehicleStrobes()" class="text-xs bg-white/10 hover:bg-white/20 text-white px-2.5 py-1 rounded-lg border border-white/15 flex items-center gap-1.5 transition-colors" title="Переключить спецсигналы">
+                                <i class="fa-solid fa-bolt text-signal-bright"></i>
+                                <span>Маячки: ВКЛ</span>
+                            </button>
+                        </div>
+
+                        <!-- Ambient Emergency Glows behind the SUV -->
+                        <div id="strobe-glow-container" class="pointer-events-none">
+                            <div class="strobe-flash-red absolute top-16 left-12 w-40 h-28 bg-signal-red/40 rounded-full blur-2xl"></div>
+                            <div class="strobe-flash-white absolute top-16 right-12 w-40 h-28 bg-white/20 rounded-full blur-2xl"></div>
+                        </div>
+
+                        <!-- Custom Detailed Vector Illustration of the Black 112dtp.ru Crossover from the Photo -->
+                        <div class="relative py-4 select-none">
+                            <svg viewBox="0 0 800 390" class="w-full h-auto drop-shadow-[0_20px_25px_rgba(0,0,0,0.95)]">
+                                <defs>
+                                    <!-- Glossy Black Paint Gradient -->
+                                    <linearGradient id="glossBlack" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#2A2B36"/>
+                                        <stop offset="22%" stop-color="#121318"/>
+                                        <stop offset="55%" stop-color="#070709"/>
+                                        <stop offset="85%" stop-color="#14151C"/>
+                                        <stop offset="100%" stop-color="#050507"/>
+                                    </linearGradient>
+                                    <!-- Tinted Windows Gradient -->
+                                    <linearGradient id="tintedGlass" x1="0%" y1="0%" x2="0%" y2="100%">
+                                        <stop offset="0%" stop-color="#2F3242"/>
+                                        <stop offset="40%" stop-color="#14161F"/>
+                                        <stop offset="100%" stop-color="#08090C"/>
+                                    </linearGradient>
+                                    <!-- Red Livery Stripe Gradient -->
+                                    <linearGradient id="redLivery" x1="0%" y1="0%" x2="100%" y2="0%">
+                                        <stop offset="0%" stop-color="#FF2A2A"/>
+                                        <stop offset="50%" stop-color="#E61919"/>
+                                        <stop offset="100%" stop-color="#B80D0D"/>
+                                    </linearGradient>
+                                    <!-- Clip Path for SUV Body so stripes fit cleanly -->
+                                    <clipPath id="suvBodyClip">
+                                        <path d="M55 245 L62 190 C66 172 85 160 120 154 L235 138 L330 78 C355 64 390 58 440 58 L655 62 C688 64 712 75 728 100 L758 152 C768 168 772 190 768 235 L756 268 C750 278 735 284 715 284 L85 284 C65 284 55 268 55 245 Z"/>
+                                    </clipPath>
+                                </defs>
+
+                                <!-- Ground Shadow & Garage Reflection -->
+                                <ellipse cx="415" cy="332" rx="355" ry="22" fill="rgba(0,0,0,0.85)"/>
+                                <ellipse cx="415" cy="335" rx="280" ry="8" fill="rgba(230,25,25,0.22)"/>
+
+                                <!-- SUV MAIN BODY (Clipped Group for exact Livery from photo) -->
+                                <g clip-path="url(#suvBodyClip)">
+                                    <!-- Glossy Black Base Coat -->
+                                    <rect x="40" y="50" width="750" height="250" fill="url(#glossBlack)"/>
+
+                                    <!-- White Roof Highlight (as seen on the top edge of the SUV in photo) -->
+                                    <path d="M335 72 C365 58 410 56 450 56 L665 60 L685 70 L325 76 Z" fill="#F3F4F6"/>
+
+                                    <!-- Tinted Greenhouse / Windows -->
+                                    <path d="M252 138 L342 80 C362 69 390 66 435 66 L655 70 C678 71 695 80 710 105 L725 135 L252 138 Z" fill="url(#tintedGlass)" stroke="#2A2B36" stroke-width="3"/>
+                                    <!-- Window Pillars (B-pillar & C-pillar) with Gloss Reflections -->
+                                    <line x1="445" y1="66" x2="435" y2="140" stroke="#08080A" stroke-width="14"/>
+                                    <line x1="449" y1="68" x2="439" y2="138" stroke="#FFFFFF" stroke-width="2" stroke-opacity="0.35"/>
+                                    <line x1="595" y1="68" x2="585" y2="140" stroke="#08080A" stroke-width="12"/>
+
+                                    <!-- SIGNATURE UPPER RED & WHITE STRIPE (Running from hood along beltline, kicking up over rear quarter like in photo) -->
+                                    <path d="M62 178 L585 150 L642 120 L755 120 L755 134 L646 134 L590 164 L62 188 Z" fill="url(#redLivery)"/>
+                                    <path d="M62 186 L588 160 L645 130 L755 130 L755 136 L646 136 L590 166 L62 191 Z" fill="#FFFFFF"/>
+
+                                    <!-- REAR QUARTER "ДТП" TEXT (Bold White on Black C-pillar area) -->
+                                    <text x="642" y="168" fill="#FFFFFF" font-family="Montserrat, sans-serif" font-weight="900" font-size="30" letter-spacing="1">ДТП</text>
+
+                                    <!-- REAR QUARTER RED & WHITE CHEVRON STRIPES (Under "ДТП" on rear fender) -->
+                                    <g transform="translate(595, 178)">
+                                        <polygon points="0,26 24,0 44,0 20,26" fill="#E61919"/>
+                                        <polygon points="26,26 50,0 70,0 46,26" fill="#FFFFFF"/>
+                                        <polygon points="52,26 76,0 96,0 72,26" fill="#E61919"/>
+                                        <polygon points="78,26 102,0 122,0 98,26" fill="#FFFFFF"/>
+                                        <polygon points="104,26 128,0 148,0 124,26" fill="#E61919"/>
+                                    </g>
+                                    <!-- Rear Bumper Lower Chevrons -->
+                                    <g transform="translate(675, 212)">
+                                        <polygon points="0,32 28,0 48,0 20,32" fill="#FFFFFF"/>
+                                        <polygon points="24,32 52,0 72,0 44,32" fill="#E61919"/>
+                                        <polygon points="48,32 76,0 96,0 68,32" fill="#FFFFFF"/>
+                                    </g>
+
+                                    <!-- LOWER DOOR SILL RED & WHITE CHEVRON BAR (Between Front and Rear Wheels) -->
+                                    <g transform="translate(230, 224)">
+                                        <!-- Front diagonal flare up -->
+                                        <polygon points="-18,-30 8,-30 34,26 8,26" fill="#E61919"/>
+                                        <polygon points="8,-30 32,-30 58,26 34,26" fill="#FFFFFF"/>
+                                        <!-- Horizontal lower rocker stripe -->
+                                        <polygon points="40,10 68,10 56,26 28,26" fill="#E61919"/>
+                                        <polygon points="68,10 100,10 88,26 56,26" fill="#FFFFFF"/>
+                                        <polygon points="100,10 132,10 120,26 88,26" fill="#E61919"/>
+                                        <polygon points="132,10 164,10 152,26 120,26" fill="#FFFFFF"/>
+                                        <polygon points="164,10 196,10 184,26 152,26" fill="#E61919"/>
+                                        <polygon points="196,10 228,10 216,26 184,26" fill="#FFFFFF"/>
+                                        <polygon points="228,10 260,10 248,26 216,26" fill="#E61919"/>
+                                        <polygon points="260,10 292,10 280,26 248,26" fill="#FFFFFF"/>
+                                        <polygon points="292,10 324,10 312,26 280,26" fill="#E61919"/>
+                                    </g>
+
+                                    <!-- FRONT DOOR HERALDIC SHIELD EMBLEM -->
+                                    <g transform="translate(278, 174) scale(0.46)">
+                                        <path d="M50 0 L96 16 L96 56 C96 86 75 106 50 116 C25 106 4 86 4 56 L4 16 Z" fill="#FFFFFF"/>
+                                        <path d="M50 6 L90 20 L90 55 C90 81 71 99 50 108 C29 99 10 81 10 55 L10 20 Z" fill="#C81016"/>
+                                        <path d="M22 92 L50 107 L78 92 L58 62 L42 62 Z" fill="#09090C"/>
+                                        <path d="M50 20 C42 20 36 25 34 32 C25 29 16 32 14 39 C22 42 28 44 34 44 C26 50 24 56 28 61 C35 58 41 53 45 49 L42 62 L58 62 L55 49 C59 53 65 58 72 61 C76 56 74 50 66 44 C72 44 78 42 86 39 C84 32 75 29 66 32 C64 25 58 20 50 20 Z" fill="#FFFFFF"/>
+                                    </g>
+
+                                    <!-- CENTER DOORS "112dtp.ru" + RED BAR UNDERLINE -->
+                                    <text x="348" y="211" fill="#FFFFFF" font-family="Montserrat, sans-serif" font-weight="900" font-size="38" letter-spacing="0.5">112dtp.ru</text>
+                                    <rect x="348" y="219" width="198" height="7" rx="2" fill="#E61919"/>
+
+                                    <!-- LED Headlight (Front Left) -->
+                                    <polygon points="58,185 95,176 102,192 60,200" fill="#E0F2FE"/>
+                                    <polygon points="62,188 92,180 96,189 64,195" fill="#FFFFFF"/>
+
+                                    <!-- LED Taillight (Rear Right) -->
+                                    <polygon points="738,142 766,148 768,172 732,166" fill="#FF1E27"/>
+                                    <polygon points="744,148 764,152 765,164 740,160" fill="#FF8080"/>
+
+                                    <!-- Matte Black Lower Cladding / Wheel Arch Trim -->
+                                    <rect x="50" y="256" width="720" height="30" fill="#0B0B0E"/>
+                                </g>
+
+                                <!-- Side Mirror -->
+                                <path d="M248 130 L272 122 C278 120 282 125 280 132 L272 142 L248 140 Z" fill="#0E0E12" stroke="#FFFFFF" stroke-width="1.5"/>
+
+                                <!-- Wheel Arches Cutouts -->
+                                <path d="M98 285 C98 215 222 215 222 285" fill="#050507" stroke="#1E1F29" stroke-width="6"/>
+                                <path d="M556 285 C556 215 680 215 680 285" fill="#050507" stroke="#1E1F29" stroke-width="6"/>
+
+                                <!-- FRONT WHEEL (Gloss Black 5-Twin-Spoke Alloy Rim like in Photo) -->
+                                <g transform="translate(160, 282)">
+                                    <!-- Tire -->
+                                    <circle cx="0" cy="0" r="52" fill="#121317" stroke="#23252E" stroke-width="3"/>
+                                    <circle cx="0" cy="0" r="42" fill="#09090C" stroke="#2E303B" stroke-width="1.5"/>
+                                    <!-- Red Brake Caliper -->
+                                    <path d="M16 -26 C26 -18 30 -5 28 8 L16 6 C18 -4 15 -14 8 -20 Z" fill="#E61919"/>
+                                    <!-- Gloss Black Spokes -->
+                                    <g stroke="#22242E" stroke-width="6" stroke-linecap="round">
+                                        <line x1="0" y1="0" x2="0" y2="-38"/>
+                                        <line x1="0" y1="0" x2="36" y2="-12"/>
+                                        <line x1="0" y1="0" x2="22" y2="31"/>
+                                        <line x1="0" y1="0" x2="-22" y2="31"/>
+                                        <line x1="0" y1="0" x2="-36" y2="-12"/>
+                                    </g>
+                                    <circle cx="0" cy="0" r="10" fill="#181920" stroke="#E61919" stroke-width="2"/>
+                                </g>
+
+                                <!-- REAR WHEEL (Gloss Black Alloy Rim) -->
+                                <g transform="translate(618, 282)">
+                                    <circle cx="0" cy="0" r="52" fill="#121317" stroke="#23252E" stroke-width="3"/>
+                                    <circle cx="0" cy="0" r="42" fill="#09090C" stroke="#2E303B" stroke-width="1.5"/>
+                                    <!-- Red Brake Caliper -->
+                                    <path d="M-16 -26 C-26 -18 -30 -5 -28 8 L-16 6 C-18 -4 -15 -14 -8 -20 Z" fill="#E61919"/>
+                                    <!-- Gloss Black Spokes -->
+                                    <g stroke="#22242E" stroke-width="6" stroke-linecap="round">
+                                        <line x1="0" y1="0" x2="0" y2="-38"/>
+                                        <line x1="0" y1="0" x2="36" y2="-12"/>
+                                        <line x1="0" y1="0" x2="22" y2="31"/>
+                                        <line x1="0" y1="0" x2="-22" y2="31"/>
+                                        <line x1="0" y1="0" x2="-36" y2="-12"/>
+                                    </g>
+                                    <circle cx="0" cy="0" r="10" fill="#181920" stroke="#E61919" stroke-width="2"/>
+                                </g>
+
+                                <!-- Traffic Cone on the Right (Just like in the user's photo!) -->
+                                <g transform="translate(730, 265)">
+                                    <polygon points="10,68 48,68 35,5 23,5" fill="#EA580C"/>
+                                    <polygon points="20,22 38,22 40,32 18,32" fill="#FFFFFF"/>
+                                    <polygon points="16,42 42,42 44,52 14,52" fill="#FFFFFF"/>
+                                    <rect x="4" y="65" width="50" height="7" rx="2" fill="#C2410C"/>
+                                </g>
+                            </svg>
+                        </div>
+
+                        <!-- Bottom Vehicle Card Status Bar -->
+                        <div class="mt-2 bg-carbon-950/90 border border-white/10 rounded-2xl p-3.5 flex flex-wrap items-center justify-between gap-3">
+                            <div class="flex items-center gap-3">
+                                <div class="w-10 h-10 rounded-xl bg-signal-red/20 border border-signal-red/40 flex items-center justify-center text-signal-bright font-display font-black">
+                                    112
+                                </div>
+                                <div>
+                                    <div class="text-xs text-gray-400">Оформление ДТП • Воронеж</div>
+                                    <div class="text-sm font-bold text-white flex items-center gap-2">
+                                        <span>Ближайший экипаж готов к выезду</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <a href="tel:+79518703934" class="bg-white text-carbon-950 hover:bg-gray-200 font-display font-extrabold text-xs px-3.5 py-2 rounded-xl transition-colors">
+                                Вызвать сейчас →
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- KEY STATS BAR (4 Pillars) -->
+            <div class="mt-12 sm:mt-16 grid grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
+                <div class="livery-card rounded-2xl p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-signal-red"></div>
+                    <div class="font-display font-black text-2xl sm:text-4xl text-white mb-1">
+                        15–20 <span class="text-signal-bright text-lg sm:text-2xl">мин</span>
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium">
+                        Среднее время прибытия комиссара в любой район Воронежа
+                    </div>
+                </div>
+
+                <div class="livery-card rounded-2xl p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-white"></div>
+                    <div class="font-display font-black text-2xl sm:text-4xl text-white mb-1">
+                        24 / 7 <span class="text-signal-bright text-lg sm:text-2xl">КРУГЛОСУТОЧНО</span>
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium">
+                        Дежурим без выходных, в праздники, ночью и в любую погоду
+                    </div>
+                </div>
+
+                <div class="livery-card rounded-2xl p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-signal-red"></div>
+                    <div class="font-display font-black text-2xl sm:text-4xl text-white mb-1">
+                        100% <span class="text-signal-bright text-lg sm:text-2xl">ГАРАНТИЯ</span>
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium">
+                        Юридически безупречные документы для выплаты по ОСАГО и КАСКО
+                    </div>
+                </div>
+
+                <div class="livery-card rounded-2xl p-5 relative overflow-hidden">
+                    <div class="absolute top-0 left-0 w-1.5 h-full bg-white"></div>
+                    <div class="font-display font-black text-2xl sm:text-4xl text-white mb-1">
+                        0 ₽ <span class="text-signal-bright text-lg sm:text-2xl">РИСКА</span>
+                    </div>
+                    <div class="text-xs sm:text-sm text-gray-300 font-medium">
+                        Исключаем ошибки в схемах ДТП, из-за которых отказывают страховые
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: WHY COMMISSIONERS 112DTP ARE BETTER THAN WAITING FOR GAI (ГИБДД) -->
+    <section id="why-us" class="py-16 sm:py-24 relative border-t border-white/10 bg-carbon-900/60">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <!-- Section Header -->
+            <div class="text-center max-w-3xl mx-auto mb-12 sm:mb-16 reveal">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-signal-red/15 border border-signal-red/40 text-signal-bright text-xs font-display font-bold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-scale-balanced"></i>
+                    Честное сравнение
+                </div>
+                <h2 class="font-display font-black text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                    Почему оформить ДТП через <span class="text-signal-bright">112dtp.ru</span> лучше, чем ждать ГАИ?
+                </h2>
+                <p class="mt-4 text-gray-300 text-sm sm:text-base">
+                    Инспекторы ДПС перегружены вызовами по всему городу: мелкие и средние аварии без пострадавших обслуживаются в последнюю очередь. Посмотрите разницу:
+                </p>
+            </div>
+
+            <!-- Interactive Comparison Cards Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 sm:gap-8 items-stretch reveal">
+                
+                <!-- LEFT CARD: Waiting for GAI / Self-filing (Negative/Pain Points) -->
+                <div class="rounded-3xl bg-carbon-950/90 border border-white/10 p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden">
+                    <div>
+                        <div class="flex items-center justify-between gap-4 pb-5 mb-6 border-b border-white/10">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-red-950/60 border border-red-500/30 flex items-center justify-center text-red-400 text-xl">
+                                    <i class="fa-solid fa-hourglass-half"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-extrabold text-lg sm:text-xl text-gray-200">
+                                        Ожидание ГАИ (ГИБДД)
+                                    </h3>
+                                    <p class="text-xs text-gray-400">Или самостоятельное заполнение на коленке</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-white/5 text-gray-400 text-xs font-semibold">
+                                Потеря времени и нервов
+                            </span>
+                        </div>
+
+                        <ul class="space-y-5">
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">Ожидание от 3 до 8+ часов на дороге</div>
+                                    <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                                        Экипажи ГАИ едут часами. Вы стоите в пробке, на морозе или жаре, сжигаете бензин и отменяете все свои дела.
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">70% ошибок при заполнении без опыта</div>
+                                    <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                                        Неверная формулировка маневра, неточная схема или пропущенная галочка в извещении — частый повод для отказа страховой в выплате или регрессного иска.
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">Давление и конфликты со вторым водителем</div>
+                                    <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                                        В состоянии стресса сложно объективно оценить ПДД, заметить скрытые повреждения автомобиля и защитить свою правоту.
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-red-500/20 text-red-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-xmark"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">Дополнительные поездки в отдел ГИБДД</div>
+                                    <p class="text-xs sm:text-sm text-gray-400 mt-1">
+                                        Часто дежурный просто просит водителей самим сфотографировать машины и ехать в отдел ГАИ сидеть в живой очереди еще полдня.
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-white/10 flex items-center justify-between text-xs sm:text-sm text-gray-400">
+                        <span>Итог самостоятельного ожидания:</span>
+                        <span class="font-bold text-red-400">Потерянный день + риск отказа ОСАГО</span>
+                    </div>
+                </div>
+
+                <!-- RIGHT CARD: Emergency Commissioners 112dtp.ru (Winner Card) -->
+                <div class="rounded-3xl bg-gradient-to-b from-carbon-800 to-carbon-950 border-2 border-signal-red p-6 sm:p-8 flex flex-col justify-between relative overflow-hidden shadow-[0_0_50px_-12px_rgba(230,25,25,0.35)]">
+                    <!-- Top Chevron Accent -->
+                    <div class="absolute top-0 left-0 right-0 h-2 chevron-hazard-bar"></div>
+
+                    <div>
+                        <div class="flex items-center justify-between gap-4 pb-5 mb-6 border-b border-white/15 mt-1">
+                            <div class="flex items-center gap-3">
+                                <div class="w-12 h-12 rounded-2xl bg-signal-red flex items-center justify-center text-white text-xl shadow-lg shadow-signal-red/40">
+                                    <i class="fa-solid fa-bolt"></i>
+                                </div>
+                                <div>
+                                    <h3 class="font-display font-black text-lg sm:text-xl text-white">
+                                        Аварийные комиссары 112dtp.ru
+                                    </h3>
+                                    <p class="text-xs text-signal-bright font-semibold">Профессиональное оформление на месте</p>
+                                </div>
+                            </div>
+                            <span class="px-3 py-1 rounded-full bg-signal-red text-white text-xs font-display font-bold uppercase">
+                                Выбор водителей
+                            </span>
+                        </div>
+
+                        <ul class="space-y-5">
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">Прибытие за 15–20 минут + оформление за 25 минут</div>
+                                    <p class="text-xs sm:text-sm text-gray-300 mt-1">
+                                        Наши брендированные экипажи дежурят во всех районах Воронежа. Уже через 40 минут после аварии вы свободны и можете ехать по делам!
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">100% юридическая точность для страховой</div>
+                                    <p class="text-xs sm:text-sm text-gray-300 mt-1">
+                                        Проводим детальную фото- и видеофиксацию с привязкой к местности, составляем точную схему ДТП, фиксируем все видимые и скрытые повреждения.
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">Независимый автоюрист и защита на месте</div>
+                                    <p class="text-xs sm:text-sm text-gray-300 mt-1">
+                                        Грамотно разберем ситуацию по ПДД, успокоим конфликтного участника, проверим подлинность полисов ОСАГО по базе НСИС/РСА.
+                                    </p>
+                                </div>
+                            </li>
+
+                            <li class="flex items-start gap-3.5">
+                                <span class="w-6 h-6 rounded-full bg-green-500/20 text-green-400 flex items-center justify-center flex-shrink-0 mt-0.5 text-xs">
+                                    <i class="fa-solid fa-check"></i>
+                                </span>
+                                <div>
+                                    <div class="font-bold text-white text-sm sm:text-base">Оформление как Европротокола, так и пакета для ГИБДД</div>
+                                    <p class="text-xs sm:text-sm text-gray-300 mt-1">
+                                        Если ущерб большой или есть спор — подготовим полный рапорт, схему и объяснения для ускоренной регистрации в ГИБДД за 15 минут без очередей.
+                                    </p>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <div class="mt-8 pt-4 border-t border-white/15 flex flex-col sm:flex-row items-stretch sm:items-center justify-between gap-3">
+                        <div class="text-xs sm:text-sm text-gray-200">
+                            Результат: <strong class="text-green-400">Быстро, законно и максимальная выплата</strong>
+                        </div>
+                        <a href="tel:+79518703934" class="bg-signal-red hover:bg-signal-bright text-white font-display font-bold text-xs sm:text-sm px-4 py-2.5 rounded-xl text-center transition-colors">
+                            Вызвать экипаж 112dtp
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: INTERACTIVE EXPRESS CHECKER ("ПОДОЙДЕТ ЛИ ВАШ СЛУЧАЙ?") -->
+    <section id="check-case" class="py-16 sm:py-24 relative">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="livery-card rounded-3xl p-6 sm:p-10 border border-white/15 relative overflow-hidden reveal">
+                <div class="absolute top-0 right-0 w-72 h-72 bg-signal-red/10 rounded-full blur-3xl pointer-events-none"></div>
+
+                <div class="flex flex-col md:flex-row md:items-center justify-between gap-4 pb-6 mb-8 border-b border-white/10">
+                    <div>
+                        <span class="text-signal-bright font-display font-bold text-xs uppercase tracking-widest">
+                            Интерактивный калькулятор ситуации
+                        </span>
+                        <h2 class="font-display font-black text-2xl sm:text-3xl text-white mt-1">
+                            Экспресс-проверка вашего ДТП за 10 секунд
+                        </h2>
+                        <p class="text-gray-400 text-xs sm:text-sm mt-1">
+                            Отметьте условия вашей аварии, чтобы узнать формат оформления без ГАИ и сумму покрытия:
+                        </p>
+                    </div>
+                    <div class="flex-shrink-0">
+                        <span class="inline-flex items-center gap-2 bg-white/5 border border-white/10 px-3.5 py-2 rounded-xl text-xs text-gray-300">
+                            <i class="fa-solid fa-sliders text-signal-bright"></i>
+                            Отметьте пункты ниже
+                        </span>
+                    </div>
+                </div>
+
+                <!-- Interactive Checkboxes -->
+                <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-8">
+                    <label class="cursor-pointer flex items-start gap-3.5 p-4 rounded-2xl bg-carbon-950/80 border border-white/10 hover:border-signal-red/50 transition-all select-none">
+                        <input type="checkbox" id="chk-no-injured" checked onchange="evaluateAccidentCase()" class="mt-1 w-5 h-5 accent-signal-red rounded cursor-pointer">
+                        <div>
+                            <div class="font-bold text-white text-sm sm:text-base">В ДТП нет пострадавших людей</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Повреждены только транспортные средства</div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer flex items-start gap-3.5 p-4 rounded-2xl bg-carbon-950/80 border border-white/10 hover:border-signal-red/50 transition-all select-none">
+                        <input type="checkbox" id="chk-two-cars" checked onchange="evaluateAccidentCase()" class="mt-1 w-5 h-5 accent-signal-red rounded cursor-pointer">
+                        <div>
+                            <div class="font-bold text-white text-sm sm:text-base">Участвует 2 автомобиля</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Столкновение двух ТС без повреждения столбов/ограждений</div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer flex items-start gap-3.5 p-4 rounded-2xl bg-carbon-950/80 border border-white/10 hover:border-signal-red/50 transition-all select-none">
+                        <input type="checkbox" id="chk-osago" checked onchange="evaluateAccidentCase()" class="mt-1 w-5 h-5 accent-signal-red rounded cursor-pointer">
+                        <div>
+                            <div class="font-bold text-white text-sm sm:text-base">У обоих водителей есть полис ОСАГО</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Бумажный или электронный полис (проверим по базе на месте)</div>
+                        </div>
+                    </label>
+
+                    <label class="cursor-pointer flex items-start gap-3.5 p-4 rounded-2xl bg-carbon-950/80 border border-white/10 hover:border-signal-red/50 transition-all select-none">
+                        <input type="checkbox" id="chk-agreement" checked onchange="evaluateAccidentCase()" class="mt-1 w-5 h-5 accent-signal-red rounded cursor-pointer">
+                        <div>
+                            <div class="font-bold text-white text-sm sm:text-base">Нет споров о том, кто виноват</div>
+                            <div class="text-xs text-gray-400 mt-0.5">Один из участников признает нарушение ПДД</div>
+                        </div>
+                    </label>
+                </div>
+
+                <!-- Dynamic Verdict Output Box -->
+                <div id="verdict-box" class="rounded-2xl bg-gradient-to-r from-carbon-900 via-carbon-800 to-carbon-900 border-l-4 border-signal-red p-5 sm:p-6 flex flex-col lg:flex-row items-start lg:items-center justify-between gap-6">
+                    <div class="space-y-1.5">
+                        <div id="verdict-badge" class="inline-flex items-center gap-1.5 text-xs font-display font-extrabold uppercase tracking-wider text-green-400">
+                            <i class="fa-solid fa-circle-check"></i>
+                            Отлично! Оформление на месте за 20 минут без ГАИ
+                        </div>
+                        <h3 id="verdict-title" class="font-display font-bold text-lg sm:text-xl text-white">
+                            Ваш случай на 100% подходит для быстрого оформления с комиссаром 112dtp с лимитом выплаты до 400 000 ₽!
+                        </h3>
+                        <p id="verdict-desc" class="text-xs sm:text-sm text-gray-300">
+                            Комиссар приедет за 15–20 минут, проведет профессиональную фотофиксацию, проверит полисы ОСАГО и составит полный пакет документов. Ждать ДПС не нужно!
+                        </p>
+                    </div>
+
+                    <div class="flex flex-col sm:flex-row lg:flex-col gap-2.5 w-full lg:w-auto flex-shrink-0">
+                        <a href="tel:+79518703934" class="bg-signal-red hover:bg-signal-bright text-white font-display font-bold text-sm px-6 py-3.5 rounded-xl text-center whitespace-nowrap shadow-lg shadow-signal-red/30 transition-all">
+                            <i class="fa-solid fa-phone mr-1.5"></i> Вызвать: +7 (951) 870-39-34
+                        </a>
+                        <a href="https://max.ru/u/f9LHodD0cOKOJvt61w0ZQ-N23Avgulz6sHGZhwmj-8AFZTjvmNekZ5-nyKc" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white font-semibold text-xs sm:text-sm px-6 py-3 rounded-xl text-center whitespace-nowrap border border-white/15 transition-all">
+                            Написать в мессенджер MAX
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: STEP-BY-STEP ACTION PLAN ("ПОРЯДОК ДЕЙСТВИЙ ПРИ ДТП") -->
+    <section id="steps" class="py-16 sm:py-24 relative border-t border-white/10 bg-carbon-950/70">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            
+            <div class="flex flex-col lg:flex-row lg:items-end justify-between mb-12 gap-6 reveal">
+                <div>
+                    <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-signal-red/15 border border-signal-red/40 text-signal-bright text-xs font-display font-bold uppercase tracking-wider mb-3">
+                        <i class="fa-solid fa-list-check"></i>
+                        Инструкция для водителя
+                    </div>
+                    <h2 class="font-display font-black text-2xl sm:text-4xl lg:text-5xl text-white tracking-tight">
+                        Порядок действий при ДТП
+                    </h2>
+                    <p class="mt-3 text-gray-300 text-sm sm:text-base max-w-2xl">
+                        Если вы прямо сейчас находитесь на месте аварии — сохраняйте спокойствие и нажимайте на карточки по мере выполнения шагов:
+                    </p>
+                </div>
+
+                <!-- Interactive Checklist Progress Indicator -->
+                <div class="bg-carbon-800 border border-white/10 rounded-2xl p-4 min-w-[260px]">
+                    <div class="flex items-center justify-between text-xs font-semibold mb-2">
+                        <span class="text-gray-300">Выполнено шагов:</span>
+                        <span id="steps-progress-text" class="text-signal-bright font-display font-bold">0 из 5</span>
+                    </div>
+                    <div class="w-full h-2.5 bg-carbon-950 rounded-full overflow-hidden">
+                        <div id="steps-progress-bar" class="h-full bg-gradient-to-r from-signal-red to-signal-bright w-0 transition-all duration-300"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5 Interactive Steps Grid -->
+            <div class="space-y-4 sm:space-y-5 reveal">
+                
+                <!-- STEP 1 -->
+                <div onclick="toggleStepDone(1)" id="step-card-1" class="livery-card rounded-2xl p-5 sm:p-7 cursor-pointer relative overflow-hidden group">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4 sm:gap-6">
+                            <div id="step-badge-1" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-signal-red text-white font-display font-black text-xl sm:text-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-signal-red/30 transition-colors">
+                                01
+                            </div>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <h3 class="font-display font-bold text-lg sm:text-xl text-white">
+                                        Остановитесь, включите «аварийку» и выставите знак
+                                    </h3>
+                                    <span class="text-[11px] bg-white/10 text-gray-200 px-2.5 py-0.5 rounded-full font-medium">
+                                        Пункт 2.5 ПДД РФ
+                                    </span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                                    <strong class="text-white">Не трогайте автомобиль с места!</strong> Заглушите двигатель, включите аварийную сигнализацию и обязательно выставите знак аварийной остановки: минимум <strong class="text-signal-bright">15 метров</strong> от авто в населенном пункте и <strong class="text-signal-bright">30 метров</strong> вне города.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center text-xs font-semibold text-gray-400 group-hover:text-white flex-shrink-0">
+                            <span id="step-status-1">Отметить выполненным</span>
+                            <div id="step-check-1" class="w-7 h-7 rounded-lg border border-white/20 flex items-center justify-center">
+                                <i class="fa-solid fa-check opacity-0 transition-opacity"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 2 -->
+                <div onclick="toggleStepDone(2)" id="step-card-2" class="livery-card rounded-2xl p-5 sm:p-7 cursor-pointer relative overflow-hidden group">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4 sm:gap-6">
+                            <div id="step-badge-2" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-carbon-700 border border-white/15 text-white font-display font-black text-xl sm:text-2xl flex items-center justify-center flex-shrink-0 transition-colors">
+                                02
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-lg sm:text-xl text-white mb-1">
+                                    Убедитесь, что нет пострадавших людей
+                                </h3>
+                                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                                    Проверьте самочувствие всех водителей и пассажиров. Если кому-то требуется медицинская помощь — незамедлительно вызовите скорую (103 или 112), после чего свяжитесь с нами для юридического сопровождения.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center text-xs font-semibold text-gray-400 group-hover:text-white flex-shrink-0">
+                            <span id="step-status-2">Отметить выполненным</span>
+                            <div id="step-check-2" class="w-7 h-7 rounded-lg border border-white/20 flex items-center justify-center">
+                                <i class="fa-solid fa-check opacity-0 transition-opacity"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 3 (HIGHLIGHTED: CALL 112DTP) -->
+                <div id="step-card-3" class="livery-card rounded-2xl p-5 sm:p-7 border-2 border-signal-red/70 relative overflow-hidden">
+                    <div class="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
+                        <div class="flex items-start gap-4 sm:gap-6 cursor-pointer" onclick="toggleStepDone(3)">
+                            <div id="step-badge-3" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-signal-red text-white font-display font-black text-xl sm:text-2xl flex items-center justify-center flex-shrink-0 shadow-lg shadow-signal-red/40">
+                                03
+                            </div>
+                            <div>
+                                <div class="flex flex-wrap items-center gap-2 mb-1">
+                                    <h3 class="font-display font-black text-lg sm:text-xl text-white">
+                                        Сразу позвоните в «112dtp» или напишите в мессенджер MAX
+                                    </h3>
+                                    <span class="text-[11px] bg-signal-red text-white px-2.5 py-0.5 rounded-full font-display font-bold uppercase">
+                                        Главный шаг
+                                    </span>
+                                </div>
+                                <p class="text-xs sm:text-sm text-gray-200 leading-relaxed">
+                                    Назовите диспетчеру адрес или ориентир в Воронеже. Мы сразу подскажем, что делать в вашей ситуации, и направим ближайший дежурный экипаж <strong class="text-white">112dtp.ru</strong> (время прибытия 15–20 минут).
+                                </p>
+                            </div>
+                        </div>
+
+                        <!-- Embedded Action Buttons inside Step 3 -->
+                        <div class="flex flex-wrap items-center gap-3 pl-0 sm:pl-16 lg:pl-0 flex-shrink-0">
+                            <a href="tel:+79518703934" class="bg-signal-red hover:bg-signal-bright text-white font-display font-bold text-xs sm:text-sm px-4 py-3 rounded-xl flex items-center gap-2 shadow-lg shadow-signal-red/30 transition-transform active:scale-95">
+                                <i class="fa-solid fa-phone-volume"></i>
+                                <span>+7 (951) 870-39-34</span>
+                            </a>
+                            <a href="https://max.ru/u/f9LHodD0cOKOJvt61w0ZQ-N23Avgulz6sHGZhwmj-8AFZTjvmNekZ5-nyKc" target="_blank" rel="noopener noreferrer" class="bg-white/10 hover:bg-white/20 text-white border border-white/20 font-display font-bold text-xs sm:text-sm px-4 py-3 rounded-xl flex items-center gap-2 transition-transform active:scale-95">
+                                <span class="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-[10px] font-black">M</span>
+                                <span>Написать в MAX</span>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 4 -->
+                <div onclick="toggleStepDone(4)" id="step-card-4" class="livery-card rounded-2xl p-5 sm:p-7 cursor-pointer relative overflow-hidden group">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4 sm:gap-6">
+                            <div id="step-badge-4" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-carbon-700 border border-white/15 text-white font-display font-black text-xl sm:text-2xl flex items-center justify-center flex-shrink-0 transition-colors">
+                                04
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-lg sm:text-xl text-white mb-1">
+                                    Ничего не подписывайте и не убирайте авто до приезда комиссара
+                                </h3>
+                                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                                    Не поддавайтесь на уговоры второго участника «разъехаться по расписке» или сдвинуть машины с проезжей части до проведения профессиональной панорамной фото- и видеофиксации нашим специалистом.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center text-xs font-semibold text-gray-400 group-hover:text-white flex-shrink-0">
+                            <span id="step-status-4">Отметить выполненным</span>
+                            <div id="step-check-4" class="w-7 h-7 rounded-lg border border-white/20 flex items-center justify-center">
+                                <i class="fa-solid fa-check opacity-0 transition-opacity"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- STEP 5 -->
+                <div onclick="toggleStepDone(5)" id="step-card-5" class="livery-card rounded-2xl p-5 sm:p-7 cursor-pointer relative overflow-hidden group">
+                    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                        <div class="flex items-start gap-4 sm:gap-6">
+                            <div id="step-badge-5" class="w-12 h-12 sm:w-14 sm:h-14 rounded-2xl bg-carbon-700 border border-white/15 text-white font-display font-black text-xl sm:text-2xl flex items-center justify-center flex-shrink-0 transition-colors">
+                                05
+                            </div>
+                            <div>
+                                <h3 class="font-display font-bold text-lg sm:text-xl text-white mb-1">
+                                    Получите готовый пакет документов на месте за 20–30 минут
+                                </h3>
+                                <p class="text-xs sm:text-sm text-gray-300 leading-relaxed">
+                                    Аварийный комиссар 112dtp составит схему ДТП, заполнит извещение или бланки объяснений без единой ошибки и передаст вам готовый комплект документов для гарантированной страховой выплаты.
+                                </p>
+                            </div>
+                        </div>
+                        <div class="flex items-center gap-2 self-end sm:self-center text-xs font-semibold text-gray-400 group-hover:text-white flex-shrink-0">
+                            <span id="step-status-5">Отметить выполненным</span>
+                            <div id="step-check-5" class="w-7 h-7 rounded-lg border border-white/20 flex items-center justify-center">
+                                <i class="fa-solid fa-check opacity-0 transition-opacity"></i>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: VORONEZH DISTRICTS OPERATIONAL PATROL MAP -->
+    <section id="districts" class="py-16 sm:py-24 relative border-t border-white/10">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="text-center max-w-3xl mx-auto mb-12 reveal">
+                <div class="inline-flex items-center gap-2 px-3.5 py-1.5 rounded-full bg-white/5 border border-white/15 text-white text-xs font-display font-bold uppercase tracking-wider mb-3">
+                    <i class="fa-solid fa-location-crosshairs text-signal-bright"></i>
+                    География работы 24/7
+                </div>
+                <h2 class="font-display font-black text-2xl sm:text-4xl text-white">
+                    Экипажи <span class="text-signal-bright">112dtp.ru</span> дежурят во всех районах Воронежа
+                </h2>
+                <p class="mt-3 text-gray-400 text-sm sm:text-base">
+                    Выберите ваш район, чтобы посмотреть статус дежурной машины и расчетное время прибытия:
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 reveal">
+                <!-- District 1 -->
+                <div class="livery-card rounded-2xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-display font-bold text-base text-white">Коминтерновский</span>
+                        <span class="flex items-center gap-1.5 text-xs text-green-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> На линии
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Московский пр-т, Северный мкр, Антонова-Овсеенко, бульвар Победы</p>
+                    <div class="text-xs font-semibold text-white bg-white/5 px-3 py-2 rounded-xl flex justify-between">
+                        <span>Подача экипажа:</span>
+                        <span class="text-signal-bright font-display font-bold">~12–15 мин</span>
+                    </div>
+                </div>
+
+                <!-- District 2 -->
+                <div class="livery-card rounded-2xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-display font-bold text-base text-white">Центральный</span>
+                        <span class="flex items-center gap-1.5 text-xs text-green-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> На линии
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Пр-т Революции, Плехановская, Кольцовская, Набережная, СХИ</p>
+                    <div class="text-xs font-semibold text-white bg-white/5 px-3 py-2 rounded-xl flex justify-between">
+                        <span>Подача экипажа:</span>
+                        <span class="text-signal-bright font-display font-bold">~10–15 мин</span>
+                    </div>
+                </div>
+
+                <!-- District 3 -->
+                <div class="livery-card rounded-2xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-display font-bold text-base text-white">Левобережный</span>
+                        <span class="flex items-center gap-1.5 text-xs text-green-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> На линии
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Ленинский пр-т, Остужева, Димитрова, ВАИ, Машмет</p>
+                    <div class="text-xs font-semibold text-white bg-white/5 px-3 py-2 rounded-xl flex justify-between">
+                        <span>Подача экипажа:</span>
+                        <span class="text-signal-bright font-display font-bold">~15 мин</span>
+                    </div>
+                </div>
+
+                <!-- District 4 -->
+                <div class="livery-card rounded-2xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-display font-bold text-base text-white">Советский</span>
+                        <span class="flex items-center gap-1.5 text-xs text-green-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> На линии
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Юго-Западный мкр, Героев Сибиряков, Ворошилова, 9 Января, Шилово</p>
+                    <div class="text-xs font-semibold text-white bg-white/5 px-3 py-2 rounded-xl flex justify-between">
+                        <span>Подача экипажа:</span>
+                        <span class="text-signal-bright font-display font-bold">~15–18 мин</span>
+                    </div>
+                </div>
+
+                <!-- District 5 -->
+                <div class="livery-card rounded-2xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-display font-bold text-base text-white">Ленинский</span>
+                        <span class="flex items-center gap-1.5 text-xs text-green-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> На линии
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Цирк, 20-летия Октября, Кирова, Краснознаменная, Грамши</p>
+                    <div class="text-xs font-semibold text-white bg-white/5 px-3 py-2 rounded-xl flex justify-between">
+                        <span>Подача экипажа:</span>
+                        <span class="text-signal-bright font-display font-bold">~12–15 мин</span>
+                    </div>
+                </div>
+
+                <!-- District 6 -->
+                <div class="livery-card rounded-2xl p-5 border border-white/10">
+                    <div class="flex items-center justify-between mb-3">
+                        <span class="font-display font-bold text-base text-white">Железнодорожный</span>
+                        <span class="flex items-center gap-1.5 text-xs text-green-400 font-semibold">
+                            <span class="w-2 h-2 rounded-full bg-green-400 animate-ping"></span> На линии
+                        </span>
+                    </div>
+                    <p class="text-xs text-gray-400 mb-3">Отрожка, Богдана Хмельницкого, Минская, Землячки, Сомово</p>
+                    <div class="text-xs font-semibold text-white bg-white/5 px-3 py-2 rounded-xl flex justify-between">
+                        <span>Подача экипажа:</span>
+                        <span class="text-signal-bright font-display font-bold">~15–20 мин</span>
+                    </div>
+                </div>
+
+                <!-- District 7 & 8 Combined Banner: M4 Don & Suburbs -->
+                <div class="sm:col-span-2 livery-card rounded-2xl p-5 border border-signal-red/40 bg-gradient-to-r from-carbon-800 to-carbon-900 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                    <div>
+                        <div class="flex items-center gap-2 mb-1">
+                            <span class="px-2 py-0.5 rounded bg-signal-red text-white font-display font-bold text-[10px] uppercase">Трасса и пригород</span>
+                            <span class="font-display font-bold text-base text-white">Трасса М-4 «Дон», обход Воронежа, Ямное, Новая Усмань, Семилуки</span>
+                        </div>
+                        <p class="text-xs text-gray-300">
+                            Оперативный выезд на трассу, помощь с эвакуацией поврежденного авто и полное оформление на месте.
+                        </p>
+                    </div>
+                    <a href="tel:+79518703934" class="bg-signal-red hover:bg-signal-bright text-white font-display font-bold text-xs px-4 py-3 rounded-xl whitespace-nowrap transition-colors">
+                        Вызвать на трассу
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER / FINAL EMERGENCY CTA -->
+    <footer class="border-t border-white/15 bg-carbon-950 relative overflow-hidden">
+        <!-- Top Chevron Bar -->
+        <div class="h-2 w-full chevron-hazard-bar"></div>
+
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12 sm:py-16">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-10 items-center pb-10 border-b border-white/10">
+                
+                <!-- Brand Info -->
+                <div class="lg:col-span-5 space-y-4">
+                    <div class="flex items-center gap-3">
+                        <div class="w-10 h-10 rounded-xl bg-signal-red flex items-center justify-center font-display font-black text-white text-lg">
+                            112
+                        </div>
+                        <div>
+                            <div class="font-display font-black text-2xl text-white leading-none">112dtp.ru</div>
+                            <div class="h-1 w-full bg-signal-red rounded-full mt-1"></div>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-400 leading-relaxed max-w-md">
+                        Служба аварийных комиссаров в Воронеже. Круглосуточный выезд на место ДТП, грамотное составление Европротокола и пакета документов для ГИБДД и страховых компаний, независимая автоэкспертиза и эвакуатор.
+                    </p>
+                </div>
+
+                <!-- Direct Contact Cards -->
+                <div class="lg:col-span-7 grid grid-cols-1 sm:grid-cols-2 gap-4">
+                    <!-- Phone Box -->
+                    <div class="p-5 rounded-2xl bg-carbon-900 border border-white/10 flex flex-col justify-between">
+                        <div class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">
+                            Круглосуточный телефон в Воронеже
+                        </div>
+                        <a href="tel:+79518703934" class="font-display font-black text-xl sm:text-2xl text-white hover:text-signal-bright transition-colors my-1">
+                            +7 (951) 870-39-34
+                        </a>
+                        <div class="flex items-center gap-3 mt-3">
+                            <a href="tel:+79518703934" class="bg-signal-red hover:bg-signal-bright text-white text-xs font-display font-bold px-3.5 py-2 rounded-lg transition-colors">
+                                Позвонить
+                            </a>
+                            <button onclick="copyPhoneNumber()" class="text-xs text-gray-300 hover:text-white underline underline-offset-4">
+                                Скопировать номер
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- Messenger MAX Box -->
+                    <div class="p-5 rounded-2xl bg-carbon-900 border border-white/10 flex flex-col justify-between">
+                        <div class="text-xs text-gray-400 uppercase font-semibold tracking-wider mb-1">
+                            Связь в мессенджере MAX
+                        </div>
+                        <div class="font-display font-black text-xl text-white my-1 flex items-center gap-2">
+                            <span class="w-7 h-7 rounded-lg bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-xs">M</span>
+                            <span>Чат с диспетчером 112dtp</span>
+                        </div>
+                        <div class="mt-3">
+                            <a href="https://max.ru/u/f9LHodD0cOKOJvt61w0ZQ-N23Avgulz6sHGZhwmj-8AFZTjvmNekZ5-nyKc" 
+                               target="_blank" rel="noopener noreferrer"
+                               class="inline-flex items-center gap-2 bg-white text-carbon-950 hover:bg-gray-200 text-xs font-display font-extrabold px-4 py-2 rounded-lg transition-colors">
+                                <span>Открыть мессенджер MAX</span>
+                                <i class="fa-solid fa-arrow-up-right-from-square"></i>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="pt-6 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-gray-500">
+                <div>© 2026 «112dtp.ru» — Аварийные комиссары г. Воронеж. Все права защищены.</div>
+                <div>Оформление ДТП 24/7 • Тел.: +7 (951) 870-39-34</div>
+            </div>
+        </div>
+    </footer>
+
+    <!-- STICKY MOBILE & DESKTOP QUICK ACTION BAR -->
+    <div class="fixed bottom-0 left-0 right-0 z-50 bg-carbon-950/95 backdrop-blur-xl border-t border-signal-red/50 p-2.5 sm:px-6 shadow-[0_-10px_30px_rgba(0,0,0,0.8)]">
+        <div class="max-w-5xl mx-auto flex items-center justify-between gap-2.5 sm:gap-4">
+            <div class="hidden md:flex items-center gap-3">
+                <span class="w-3 h-3 rounded-full bg-signal-bright animate-ping"></span>
+                <span class="text-xs sm:text-sm font-bold text-white">
+                    Нужен аварийный комиссар в Воронеже? Выезд за 15 минут:
+                </span>
+            </div>
+
+            <div class="flex items-center gap-2.5 w-full md:w-auto">
+                <a href="tel:+79518703934" 
+                   class="flex-1 md:flex-initial bg-signal-red hover:bg-signal-bright text-white font-display font-extrabold text-xs sm:text-sm px-4 sm:px-6 py-3 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-signal-red/30 active:scale-95 transition-transform">
+                    <i class="fa-solid fa-phone-volume"></i>
+                    <span>+7 (951) 870-39-34</span>
+                </a>
+
+                <a href="https://max.ru/u/f9LHodD0cOKOJvt61w0ZQ-N23Avgulz6sHGZhwmj-8AFZTjvmNekZ5-nyKc" 
+                   target="_blank" rel="noopener noreferrer"
+                   class="flex-1 md:flex-initial bg-carbon-800 hover:bg-carbon-700 border border-white/25 text-white font-display font-bold text-xs sm:text-sm px-4 sm:px-5 py-3 rounded-xl flex items-center justify-center gap-2 active:scale-95 transition-transform">
+                    <span class="w-5 h-5 rounded bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center text-[10px] font-black">M</span>
+                    <span>Написать в MAX</span>
+                </a>
+            </div>
+        </div>
+    </div>
+
+    <!-- CUSTOM TOAST NOTIFICATION FOR CLIPBOARD COPY -->
+    <div id="copy-toast" class="fixed top-24 right-4 z-50 pointer-events-none opacity-0 translate-y-[-10px] transition-all duration-300 bg-carbon-800 border-2 border-signal-red text-white px-4 py-3 rounded-2xl shadow-2xl flex items-center gap-3">
+        <div class="w-8 h-8 rounded-xl bg-signal-red flex items-center justify-center text-white">
+            <i class="fa-solid fa-check"></i>
+        </div>
+        <div class="text-xs sm:text-sm">
+            <div class="font-bold">Номер скопирован!</div>
+            <div class="text-gray-300">+7 (951) 870-39-34</div>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        // 1. Copy Phone Number to Clipboard (with fallback for iframe compatibility)
+        function copyPhoneNumber() {
+            const phone = '+79518703934';
+            try {
+                const tempInput = document.createElement('textarea');
+                tempInput.value = phone;
+                document.body.appendChild(tempInput);
+                tempInput.select();
+                document.execCommand('copy');
+                document.body.removeChild(tempInput);
+                showCopyToast();
+            } catch (err) {
+                console.error('Copy error:', err);
+            }
+        }
+
+        function showCopyToast() {
+            const toast = document.getElementById('copy-toast');
+            toast.classList.remove('opacity-0', 'translate-y-[-10px]');
+            toast.classList.add('opacity-100', 'translate-y-0');
+            setTimeout(() => {
+                toast.classList.remove('opacity-100', 'translate-y-0');
+                toast.classList.add('opacity-0', 'translate-y-[-10px]');
+            }, 3000);
+        }
+
+        // 2. Toggle Emergency Strobe Glow on SUV Card
+        let strobesActive = true;
+        function toggleVehicleStrobes() {
+            strobesActive = !strobesActive;
+            const glowContainer = document.getElementById('strobe-glow-container');
+            const btn = document.getElementById('toggle-strobe-btn');
+            if (strobesActive) {
+                glowContainer.style.display = 'block';
+                btn.innerHTML = '<i class="fa-solid fa-bolt text-signal-bright"></i><span>Маячки: ВКЛ</span>';
+            } else {
+                glowContainer.style.display = 'none';
+                btn.innerHTML = '<i class="fa-solid fa-power-off text-gray-400"></i><span>Маячки: ВЫКЛ</span>';
+            }
+        }
+
+        // 3. Interactive Express Accident Case Evaluator
+        function evaluateAccidentCase() {
+            const noInjured = document.getElementById('chk-no-injured').checked;
+            const twoCars = document.getElementById('chk-two-cars').checked;
+            const hasOsago = document.getElementById('chk-osago').checked;
+            const hasAgreement = document.getElementById('chk-agreement').checked;
+
+            const badge = document.getElementById('verdict-badge');
+            const title = document.getElementById('verdict-title');
+            const desc = document.getElementById('verdict-desc');
+
+            if (!noInjured) {
+                badge.className = 'inline-flex items-center gap-1.5 text-xs font-display font-extrabold uppercase tracking-wider text-signal-bright';
+                badge.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i> Требуется вызов спецслужб и юридическая защита';
+                title.textContent = 'При наличии пострадавших обязательно вызывается Скорая и ГИБДД — наш комиссар защитит ваши интересы на месте!';
+                desc.textContent = 'Сразу позвоните нам: комиссар 112dtp оперативно прибудет на место, поможет правильно зафиксировать следы ДТП, схему и показания до приезда ДПС.';
+            } else if (twoCars && hasOsago && hasAgreement) {
+                badge.className = 'inline-flex items-center gap-1.5 text-xs font-display font-extrabold uppercase tracking-wider text-green-400';
+                badge.innerHTML = '<i class="fa-solid fa-circle-check"></i> Отлично! Оформление на месте за 20 минут без ГАИ';
+                title.textContent = 'Ваш случай на 100% подходит для быстрого оформления с комиссаром 112dtp с лимитом выплаты до 400 000 ₽!';
+                desc.textContent = 'Комиссар приедет за 15–20 минут, проведет профессиональную фотофиксацию, проверит полисы ОСАГО и составит полный пакет документов. Ждать ДПС не нужно!';
+            } else if (twoCars && hasOsago && !hasAgreement) {
+                badge.className = 'inline-flex items-center gap-1.5 text-xs font-display font-extrabold uppercase tracking-wider text-amber-400';
+                badge.innerHTML = '<i class="fa-solid fa-shield-halved"></i> Спорная ситуация — тем более нужен аварийный комиссар!';
+                title.textContent = 'Разберем ситуацию по ПДД на месте и оформим документы без многочасового ожидания ДПС!';
+                desc.textContent = 'Часто спор возникает из-за незнания ПДД. Наш эксперт объективно разъяснит виновность или подготовит полный рапорт и фотофиксацию для ускоренного оформления.';
+            } else {
+                badge.className = 'inline-flex items-center gap-1.5 text-xs font-display font-extrabold uppercase tracking-wider text-blue-400';
+                badge.innerHTML = '<i class="fa-solid fa-file-shield"></i> Ускоренное оформление через пакет документов для ГИБДД';
+                title.textContent = 'Оформим полную схему ДТП, объяснения и фототаблицу прямо на месте за 25 минут!';
+                desc.textContent = 'Даже если в ДТП 3+ участника или у виновника нет ОСАГО — вам не нужно ждать экипаж ГАИ 6 часов на дороге. Комиссар 112dtp подготовит готовый пакет документов для быстрой регистрации.';
+            }
+        }
+
+        // 4. Interactive 5-Step Checklist for Drivers at the Accident Scene
+        const completedSteps = new Set();
+        function toggleStepDone(stepNumber) {
+            const card = document.getElementById(`step-card-${stepNumber}`);
+            const badge = document.getElementById(`step-badge-${stepNumber}`);
+            const statusText = document.getElementById(`step-status-${stepNumber}`);
+            const checkIconBox = document.getElementById(`step-check-${stepNumber}`);
+
+            if (completedSteps.has(stepNumber)) {
+                completedSteps.delete(stepNumber);
+                card.classList.remove('border-green-500/60');
+                if (badge) {
+                    badge.classList.remove('bg-green-600');
+                    badge.innerHTML = `0${stepNumber}`;
+                }
+                if (statusText) statusText.textContent = 'Отметить выполненным';
+                if (checkIconBox) {
+                    checkIconBox.className = 'w-7 h-7 rounded-lg border border-white/20 flex items-center justify-center';
+                    checkIconBox.querySelector('i').classList.add('opacity-0');
+                }
+            } else {
+                completedSteps.add(stepNumber);
+                card.classList.add('border-green-500/60');
+                if (badge) {
+                    badge.classList.add('bg-green-600');
+                    badge.innerHTML = '<i class="fa-solid fa-check"></i>';
+                }
+                if (statusText) statusText.textContent = 'Шаг выполнен';
+                if (checkIconBox) {
+                    checkIconBox.className = 'w-7 h-7 rounded-lg bg-green-600 text-white flex items-center justify-center';
+                    checkIconBox.querySelector('i').classList.remove('opacity-0');
+                }
+            }
+
+            // Update Progress Bar
+            const count = completedSteps.size;
+            const progressText = document.getElementById('steps-progress-text');
+            const progressBar = document.getElementById('steps-progress-bar');
+            if (progressText && progressBar) {
+                progressText.textContent = `${count} из 5`;
+                progressBar.style.width = `${(count / 5) * 100}%`;
+            }
+        }
+
+        // 5. Scroll Reveal Observer
+        document.addEventListener('DOMContentLoaded', () => {
+            const reveals = document.querySelectorAll('.reveal');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('active');
+                    }
+                });
+            }, { threshold: 0.12 });
+
+            reveals.forEach(el => observer.observe(el));
+        });
+    </script>
+</body>
+</html>
